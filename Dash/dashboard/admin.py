@@ -1,5 +1,10 @@
 from django.contrib import admin
 
+#from .models import Author
+#@admin.register(Author)
+#class AuthorAdmin(admin.ModelAdmin)
+#    pass
+
 # Register your models here.
 from .models import Usuarios
 from .models import Departamentos
