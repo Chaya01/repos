@@ -10,7 +10,7 @@ urlpatterns = [
 
     path(
         '',
-        views.inicio,
-        name='inicio',
-    ),
+        views.Usuarios,
+        name='Usuarios',
+    )
 ]

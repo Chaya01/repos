@@ -1,0 +1,119 @@
+{% extends 'directorio/inicio.html' %}
+
+{% block contenido %}
+
+    <div class="card border-secondary ">
+        <div class="card-header" >
+            <a href="{% url 'reserva:crear_usuario' %}" class="btn btn-success pull-right">
+                <i class="fa fa-plus" aria-hidden="true"></i> Nuevo
+            </a>
+            <h3 class="card-title">
+                <i  class="fa fa-users"></i> Profesores <span class="badge badge-secondary">
+                {{ personas.paginator.count }}
+            </span>
+            </h3>
+            <p class="text-muted card-subtitle"> Listado de Profes...</p>
+            <div class="">
+                <form action="." method="get">
+                    <div class="input-group ">
+                        <input type="text" class="form-control col-md-4"
+                               id="inputPassword2" name="filtro" placeholder="buscar" value="{{ request.GET.filtro }}">
+                        <span class="input-group-btn">
+                       <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-search" ></i> buscar</button>
+                    </span>
+
+                    </div>
+                    {% if request.GET.filtro %}
+                        <a href="{{ request.path }}" >
+                            <i class="fa fa-filter"></i> Quitar filtro</a>
+                    {% endif %}
+
+                </form>
+                <div class="text-center">
+                    <a href='{% url 'reserva:inicio'  %}' class=' btn btn-success '>
+                        <i class='fa fa-arrow-left'></i> Volver</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <br>
+            <table class="table table-responsive">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>rut</th>
+                    <th>nombre</th>
+                    <th>apellido</th>
+                    <th>correo</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for usuario in Usuarios %}
+                    <tr>
+                        <td>
+                            <img src="{{ profesor.url_foto }}"
+                                 alt="{{ profesor.rut }}" class="img-responsive rounded"
+                                 width="60px">
+                        </td>
+                        <td> {{ Usuarios.rut }}</td>
+                        <td>{{ Usuarios.nombre }}</td>
+                        <td>{{ Usuarios.apellido}}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a   href="{% url 'reserva:mostrar_usuario' Usuario.id %}"
+                                     class="btn btn-dark btn-sm" >
+                                    <i class="fa fa-eye " ></i> Mostrar
+                                </a>
+                                <a  href="{% url 'reserva:editar_usuario' Usuario.id %}"
+                                    class="btn btn-success btn-sm">
+                                    <i class="fa fa-edit " ></i> Editar
+                                </a>
+                                <a  href="{% url 'reserva:eliminar_usuario' Usuario.id %}"
+                                    class="btn btn-danger btn-sm">
+                                    <i class="fa fa-edit " ></i> Borrar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+
+    <nav aria-label="...">
+        <ul class="pagination justify-content-center">
+            {% if Usuarios.has_previous %}
+                <li class="page-item">
+                    <a class="page-link"  data-toggle="popover" href="?page={{ Usuarios.previous_page_number }}">
+                        Anterior</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            {% endif %}
+            <li class="page-item active">
+                        <span class="page-link">
+                             Página {{ Usuarios.number }} de {{ personas.paginator.num_pages }}
+                            <span class="sr-only">(current)</span>
+                        </span>
+            </li>
+            {% if Usuarios.has_next %}
+                <li class="page-item">
+                    <a class="page-link"  data-toggle="popover" href="?page={{ Usuarios.next_page_number }}">
+                        Siguiente
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Siguiente</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <br>
+
+{% endblock %}
