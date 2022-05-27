@@ -159,6 +159,14 @@
   </header>
 
   <div class="b-example-divider"></div>
+
+<div>
+  <form action="/your-name/" method="post">
+  <label for="nombre_usuario">Nombre: </label>
+  <input id="nombre_usuario" type="text" name="nombre_usuario" value="{{ current_name }}">
+  <input type="submit" value="OK">
+  </form>
+</div>
 </main>
 
 {% load static %}
