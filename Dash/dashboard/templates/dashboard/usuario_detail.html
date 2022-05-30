@@ -1,9 +1,9 @@
-<h1>{{ Usuarios.name }}</h1>
-<p>rut: <i>{{ Usuarios.rut }}</i></p>
-<p>nombre: <i>{{ Usuarios.nombre }}</i></p>
-<p>area: <i>{{ Usuarios.area }}</i></p>
-<p>correo: <i>{{ Usuarios.correo }}</i></p>
-<p>telefono: <i>{{ Usuarios.telefono }}</i></p>
+<h1>{{ object.nombre }}</h1>
+<p>rut: <i>{{ object.rut }}</i></p>
+<p>nombre: <i>{{ object.nombre }}</i></p>
+<p>area: <i>{{ object.area }}</i></p>
+<p>correo: <i>{{ object.correo }}</i></p>
+<p>telefono: <i>{{ object.telefono }}</i></p>
 <p>
     <a href="{% url "dashboard:list" %}">Regresar</a>
 </p>

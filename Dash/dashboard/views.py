@@ -48,12 +48,16 @@ from django.views.generic.edit import (CreateView,UpdateView,DeleteView)
 
 class listado(ListView):
     model = Usuarios
+    template_name: str = 'dashboard/listado.html'
 
 class detalle_usuario(DetailView):
     model = Usuarios
+    template_name: str = 'dashboard/usuario_detail.html'
+
 
 class crear_usuario(CreateView):
     model = Usuarios
+    template_name: str = 'dashboard/usuario_detail.html'
     success_url = reverse_lazy('directorio:list')
     fields = ['rut', 'nombre','area', 'correo', 'telefono']
 
