@@ -54,17 +54,17 @@ class detalle_usuario(DetailView):
 
 class crear_usuario(CreateView):
     model = Usuarios
-    exito_url = reverse_lazy('directorio:list')
-    campos = ['rut', 'nombre','area', 'correo', 'telefono']
+    success_url = reverse_lazy('directorio:list')
+    fields = ['rut', 'nombre','area', 'correo', 'telefono']
 
 class actualizar_usuario(UpdateView):
     model = Usuarios
-    exito_url = reverse_lazy('directorio:list')
-    campos = ['rut', 'nombre','area', 'correo', 'telefono']
+    success_url = reverse_lazy('directorio:list')
+    fields = ['rut', 'nombre','area', 'correo', 'telefono']
 
 class borrar_usuario(DeleteView):
     model = Usuarios
-    exito_url = reverse_lazy('directorio:list')
+    success_url = reverse_lazy('directorio:list')
     
 
 
