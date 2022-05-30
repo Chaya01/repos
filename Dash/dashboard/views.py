@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from .forms import nombre_usuario
 from django.views import View
 from .models import Usuarios
+from .forms import *
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import (CreateView,UpdateView,DeleteView)
@@ -48,27 +49,29 @@ from django.views.generic.edit import (CreateView,UpdateView,DeleteView)
 
 class listado(ListView):
     model = Usuarios
-    template_name: str = 'dashboard/listado.html'
+    template_name = 'dashboard/listado.html'
 
 class detalle_usuario(DetailView):
     model = Usuarios
-    template_name: str = 'dashboard/usuario_detail.html'
+    template_name = 'dashboard/usuario_detail.html'
 
 
 class crear_usuario(CreateView):
     model = Usuarios
-    template_name: str = 'dashboard/usuario_detail.html'
-    success_url = reverse_lazy('directorio:list')
-    fields = ['rut', 'nombre','area', 'correo', 'telefono']
+    form_class = usuario_form
+    template_name = 'dashboard/usuario_form.html'
+    success_url = reverse_lazy('dashboard:list')
 
 class actualizar_usuario(UpdateView):
     model = Usuarios
-    success_url = reverse_lazy('directorio:list')
+    form_class = usuario_form
+    template_name = 'dashboard/usuario_form.html'
+    success_url = reverse_lazy('dashboard:list')
     fields = ['rut', 'nombre','area', 'correo', 'telefono']
 
 class borrar_usuario(DeleteView):
     model = Usuarios
-    success_url = reverse_lazy('directorio:list')
+    success_url = reverse_lazy('dashboard:list')
     
 
 
