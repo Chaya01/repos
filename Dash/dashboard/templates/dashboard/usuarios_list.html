@@ -5,13 +5,13 @@
 </p>
 
 <ul>
-    {% for course in object_list %}
+    {% for usuario in object_list %}
         <li>
             <p>{{ dashboard.name }}</p>
             <p>
-                <a href="{% url "dashboard:detail" Usuarios.id %}">Ver</a> | 
-                <a href="{% url "dashboard:edit" Usuarios.id %}">Editar</a> | 
-                <a href="{% url "dashboard:delete" Usuarios.id %}">Borrar</a> 
+                <a href="{% url "dashboard:detail" usuario.pk %}">Ver</a> | 
+                <a href="{% url "dashboard:edit" usuario.pk %}">Editar</a> | 
+                <a href="{% url "dashboard:delete" usuario.pk %}">Borrar</a> 
             </p>
         </li>
     {% endfor %}

@@ -16,9 +16,10 @@ app_name = 'dashboard'
 urlpatterns = [
     #path('', views.index, name='index'),
     #path('',views.inicio,name='inicio',),
-    re_path(r'^$', listado.as_view(), name='list'),
-    re_path(r'^(?P<pk>\d+)$', detalle_usuario.as_view(), name='detail'),
-    re_path(r'^nuevo$', crear_usuario.as_view(), name='new'),
-    re_path(r'^editar/(?P<pk>\d+)$',actualizar_usuario.as_view(), name='edit'),
-    re_path(r'^eliminar/(?P<pk>\d+)$', borrar_usuario.as_view(), name='delete'),
+    path('', listado.as_view(), name='list'),
+    path('usuario/<str:pk>', detalle_usuario.as_view(), name='detail'),
+    path('usuario/nuevo', detalle_usuario.as_view(), name='new'),
+    path('usuario/<str:pk>', detalle_usuario.as_view(), name='edit'),
+    path('usuario/<str:pk>', detalle_usuario.as_view(), name='delete'),
+
 ]
