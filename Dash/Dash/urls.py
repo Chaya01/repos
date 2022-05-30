@@ -14,10 +14,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, re_path, path
+#from dashboard.views import mi_vista
+
 
 urlpatterns = [
+    re_path(r'dashboard/', include('dashboard.urls', namespace='dashboard')),
+    #(r'^admin/', admin.site.url),
     path('admin/', admin.site.urls),
-    path('dashboard/', include('dashboard.urls')),
+    #path('dashboard/', include('dashboard.urls')),
     #path('index', include('dashboard.urls'))
+    #path('dashboard/', mi_vista.as_view()),
+
 ]

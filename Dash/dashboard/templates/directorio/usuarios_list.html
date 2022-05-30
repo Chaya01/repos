@@ -1,0 +1,18 @@
+<h1>Listado Usuarios</h1>
+
+<p>
+    <a href="{% url "dashboard:new" %}">Agregar usuario</a>
+</p>
+
+<ul>
+    {% for course in object_list %}
+        <li>
+            <p>{{ dashboard.name }}</p>
+            <p>
+                <a href="{% url "dashboard:detail" Usuarios.id %}">Ver</a> | 
+                <a href="{% url "dashboard:edit" Usuarios.id %}">Editar</a> | 
+                <a href="{% url "dashboard:delete" Usuarios.id %}">Borrar</a> 
+            </p>
+        </li>
+    {% endfor %}
+</ul>
