@@ -49,29 +49,30 @@ from django.views.generic.edit import (CreateView,UpdateView,DeleteView)
 
 class listado(ListView):
     model = Usuarios
-    template_name = 'dashboard/listado.html'
+    template_name = 'dashboard/usuarios_list.html'
 
 class detalle_usuario(DetailView):
     model = Usuarios
-    template_name = 'dashboard/usuario_detail.html'
+    template_name = 'dashboard/usercrud/usuario_detail.html'
 
 
 class crear_usuario(CreateView):
     model = Usuarios
     form_class = usuario_form
     #fields = ['rut','nombre','apellido','area','correo','telefono']
-    template_name = 'dashboard/usuario_form.html'
+    template_name = 'dashboard/usercrud/usuario_form.html'
     success_url = reverse_lazy('dashboard:list')
 
 class actualizar_usuario(UpdateView):
     model = Usuarios
     form_class = usuario_form
-    template_name_suffix = '_update_form'
+    template_name = 'dashboard/usercrud/usuarios_update_form.html'
     success_url = reverse_lazy('dashboard:list')
     #fields = ['rut', 'nombre','apellido','area', 'correo', 'telefono']
 
 class borrar_usuario(DeleteView):
     model = Usuarios
+    template_name = 'dashboard/usercrud/usuarios_confirm_delete.html'
     success_url = reverse_lazy('dashboard:list')
     
 
