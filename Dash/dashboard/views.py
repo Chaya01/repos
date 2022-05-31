@@ -59,15 +59,16 @@ class detalle_usuario(DetailView):
 class crear_usuario(CreateView):
     model = Usuarios
     form_class = usuario_form
+    #fields = ['rut','nombre','apellido','area','correo','telefono']
     template_name = 'dashboard/usuario_form.html'
     success_url = reverse_lazy('dashboard:list')
 
 class actualizar_usuario(UpdateView):
     model = Usuarios
     form_class = usuario_form
-    template_name = 'dashboard/usuario_form.html'
+    template_name_suffix = '_update_form'
     success_url = reverse_lazy('dashboard:list')
-    fields = ['rut', 'nombre','area', 'correo', 'telefono']
+    #fields = ['rut', 'nombre','apellido','area', 'correo', 'telefono']
 
 class borrar_usuario(DeleteView):
     model = Usuarios
