@@ -11,10 +11,10 @@ class usuario_form(forms.ModelForm):
         fields = ['rut', 'nombre','apellido','area', 'correo', 'telefono']
 
     def validar_rut(self,form):
-        super(usuario_form, self).clean()   
+        super(usuario_form, self).clean()
         txt = "rut"
         x = re.search("[0-9]{8}[0-9kK]{1}$", txt)
-        if bool(x) == True:
+        if x == True:
             return super().validar_rut(form)
         else:
-            raise forms.ValidationError("rut no valido")
+            raise forms.ValidationError(_('rut no valido'))
