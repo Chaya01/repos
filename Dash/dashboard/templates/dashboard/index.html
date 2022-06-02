@@ -22,11 +22,13 @@
     <a href="{% url "dashboard:newdepa" %}">Agregar departamento</a>
 </p>
 <ul>
-    {% for departamento in object_list %}
+    {% for departamento in Departamentos %}
         <li>
             <p>{{dashboard.name}}</p>
             <p>
                 <a href="{% url "dashboard:depadetail" departamento.pk %}">Ver</a> |
+                <a href="{% url "dashboard:editdepa" departamento.pk %}">Editar</a> |
+                <a href="{% url "dashboard:deletedepa" departamento.pk %}">borrar</a>
             </p>
         </li>
     {% endfor %}

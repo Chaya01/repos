@@ -1,5 +1,6 @@
 from audioop import reverse
 from re import U
+from tokenize import Single
 from typing import List
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -29,10 +30,20 @@ from django.views.generic.edit import (CreateView,UpdateView,DeleteView)
 #        'directorio/inicio.html',
 #        ctx
 #    )
-
 class index(ListView):
-    model = Usuarios
+    context_object_name = 'index'
     template_name = 'dashboard/index.html'
+    queryset = Usuarios.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(index, self).get_context_data(**kwargs)
+        context['Usuarios'] = Usuarios.objects.all()
+        context['Departamentos'] = Departamentos.objects.all()
+
+        return context
+        #return super().get_context_data(**kwargs)
+
+
 
 ###### CRUD USUARIO ######
 
@@ -107,8 +118,6 @@ class crear_departamento(CreateView):
     template_name = 'dashboard/crud/form.html'
     success_url = reverse_lazy('dashboard:index')
 
-    #def form_valid(self,form):
-
 class actualizar_departamento(UpdateView):
     model = Departamentos
     form_class = departamento_form
@@ -120,4 +129,10 @@ class detalle_departamento(DetailView):
     form_class = departamento_form
     template_name = ('dashboard/crud/departamento_detail.html')
     succes_url = reverse_lazy('dashboard:index')
+
+class borrar_departamento(DeleteView):
+    model = Departamentos
+    form_class = departamento_form
+    template_name = 'dashboard/crud/delete.html'
+    success_url = reverse_lazy('dashboard:index')
 # Create your views here.
