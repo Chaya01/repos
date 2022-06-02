@@ -76,6 +76,19 @@ class crear_usuario(CreateView):
     #fields = ['rut','nombre','apellido','area','correo','telefono']
     template_name = 'dashboard/usercrud/usuario_form.html'
     success_url = reverse_lazy('dashboard:list')
+    
+    #validamos que el formulario sea valido
+    def form_valid(self, form):
+       rut = form.cleaned_data['rut']
+       x = re.search("[0-9]{8}[0-9kK]{1}$", rut)
+
+       if not x:
+            form.add_error('rut', 'rut invalido')
+            return self.form_invalid(form)
+        
+       return super(crear_usuario, self).form_valid(form)
+       
+    
 
 class actualizar_usuario(UpdateView):
     model = Usuarios
