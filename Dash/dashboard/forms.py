@@ -10,14 +10,9 @@ class usuario_form(forms.ModelForm):
     class Meta:
         model = Usuarios
         fields = ['rut', 'nombre','apellido','area', 'correo', 'telefono']
-        
-        
-        #super(usuario_form, self).clean()
-        #rut = self.cleaned_data.get('rut')
-        #txt = usuario.rut
-        #x = re.search("[0-9]{8}[0-9kK]{1}$", rut)
-        #if not x:
-        #    raise forms.ValidationError('rut no valido')
-        #else:
-        #    return super().validar_rut(form)
+
+class departamento_form(forms.ModelForm):
+    class Meta:
+        model = Departamentos
+        fields = ['id','area','sucursal']
             

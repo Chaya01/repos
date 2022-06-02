@@ -3,23 +3,20 @@ from django.urls import path
 #from . import views
 from dashboard import views
 from django.urls import re_path
-from .views import (
-    listado,
-    detalle_usuario,
-    crear_usuario,
-    actualizar_usuario,
-    borrar_usuario
-)
+from .views import *
 
 app_name = 'dashboard'
 
 urlpatterns = [
     #path('', views.index, name='index'),
     #path('',views.inicio,name='inicio',),
-    path('', listado.as_view(), name='list'),
-    path('usuario/<str:pk>', detalle_usuario.as_view(), name='detail'),
-    path('usuario/usuario_form/', crear_usuario.as_view(), name='new'),
-    path('usuario/usuarios_update_form/<str:pk>', actualizar_usuario.as_view(), name='edit'),
-    path('usuario/usuarios_confirm_delete/<str:pk>', borrar_usuario.as_view(), name='delete'),
+    path('', index.as_view(), name='index'),
+    path('usuario/<str:pk>', detalle_usuario.as_view(), name='userdetail'),
+    path('usuario/form/', crear_usuario.as_view(), name='newuser'),
+    path('usuario/update/<str:pk>', actualizar_usuario.as_view(), name='edituser'),
+    path('usuario/delete/<str:pk>', borrar_usuario.as_view(), name='deleteuser'),
+    path('departamento/<str:pk>', detalle_departamento.as_view(), name='depadetail'),
+    path('departamento/form/', crear_departamento.as_view(),name='newdepa'),
+
 
 ]
