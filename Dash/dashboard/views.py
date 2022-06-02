@@ -126,13 +126,11 @@ class actualizar_departamento(UpdateView):
 
 class detalle_departamento(DetailView):
     model = Departamentos
-    form_class = departamento_form
     template_name = ('dashboard/crud/departamento_detail.html')
     succes_url = reverse_lazy('dashboard:index')
 
 class borrar_departamento(DeleteView):
     model = Departamentos
-    form_class = departamento_form
     template_name = 'dashboard/crud/delete.html'
     success_url = reverse_lazy('dashboard:index')
 # Create your views here.
