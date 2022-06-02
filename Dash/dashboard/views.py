@@ -60,33 +60,30 @@ class detalle_usuario(DetailView):
 class crear_usuario(CreateView):
     model = Usuarios
     form_class = usuario_form
-    def formulario(request):
-        if request.method == 'POST':
-            if usuario_form.is_valid():
-                Rut = form.cleaned_data['rut']
-                print('Name:', Rut)
-                post = crear_usuario.save(commit=False)
-                post.save()
-                return HttpResponse("guardado exitosamente")
-            else:
-                return render(request,"dashboard/usercrud/usuario_form.html",{'dashboard:new'})
-        else:
-            form = usuario_form(None)
-        return render(request,'dashboard/usuarios_list.html',{'dashboard:list'})
     #fields = ['rut','nombre','apellido','area','correo','telefono']
     template_name = 'dashboard/usercrud/usuario_form.html'
     success_url = reverse_lazy('dashboard:list')
-    
+
     #validamos que el formulario sea valido
     def form_valid(self, form):
-       rut = form.cleaned_data['rut']
-       x = re.search("[0-9]{8}[0-9kK]{1}$", rut)
+        rut = form.cleaned_data['rut']
+        nombre = form.cleaned_data['nombre']
+        apellido = form.cleaned_data['apellido']
+        a = re.search("[a-z]$",nombre) #validar nombre
+        b = re.search("[a-z]$",apellido) #validar apellido
+        x = re.search("[0-9]{8}[0-9kK]{1}$", rut) #validar rut
 
-       if not x:
+        if not x:
             form.add_error('rut', 'rut invalido')
             return self.form_invalid(form)
-        
-       return super(crear_usuario, self).form_valid(form)
+        elif not a:
+            form.add_error('nombre', 'el nombre solo debe contener caracteres alfanumericos')
+            return self.form_invalid(form)
+        elif not b:
+            form.add_error('apellido','el apellido solo debe contener caracteres alfanumericos')
+            return self.form_invalid(form)
+        return super(crear_usuario, self).form_valid(form)
+
        
     
 

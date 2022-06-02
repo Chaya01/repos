@@ -60,7 +60,7 @@ class  Usuarios(models.Model):
     nombre = models.CharField(max_length=20, null=False)
     apellido = models.CharField(max_length=20, null=False)
     area = models.ForeignKey(Departamentos,on_delete=models.CASCADE) #revisar
-    correo = models.CharField(max_length=50)
+    correo = models.EmailField(max_length=50)
     telefono = models.ForeignKey(Num_telefono,on_delete=models.CASCADE) #revisar
 
     def nombre_completo(self):

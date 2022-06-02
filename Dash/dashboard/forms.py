@@ -10,24 +10,6 @@ class usuario_form(forms.ModelForm):
     class Meta:
         model = Usuarios
         fields = ['rut', 'nombre','apellido','area', 'correo', 'telefono']
-
-    def validar_rut(self):
-        super(usuario_form, self).clean()
-        data = self.cleaned_data['rut']
-        x = re.search("[0-9]{8}[0-9kK]{1}$", data)
-        if x == False:
-            #raise forms.ValidationError('rut no valido')
-            print('rut')
-            print(x)
-            self.errors['rut'] = self.error_class(['caracteres invalidos ingresados'])
-        else:
-            print('rut')
-            print(x)
-            return self.cleaned_data
-            
-        
-        
-        
         
         
         #super(usuario_form, self).clean()
