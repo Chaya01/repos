@@ -7,7 +7,7 @@ from django.forms import NullBooleanField
 from django.utils import timezone
 
 class Departamentos(models.Model):
-    id = models.IntegerField(null=False,blank=False,unique=True,primary_key=True)
+    id = models.AutoField(null=False,blank=False,unique=True,primary_key=True)
     area = models.CharField(max_length=20,null=False)
     sucursal = models.CharField(max_length=20,null=False)
 
@@ -20,7 +20,7 @@ class Departamentos(models.Model):
         return self.area
 
 class Num_telefono(models.Model):
-    id = models.IntegerField(null=False,blank=False,unique=True,primary_key=True)
+    id = models.AutoField(null=False,blank=False,unique=True,primary_key=True)
     numero_tel = models.CharField(max_length=10,null=False,blank=False,unique=True)
     activo = models.BooleanField(default=False) #numero activo o dado de baja
 
@@ -34,7 +34,7 @@ class Num_telefono(models.Model):
         return self.activo
 
 class Series(models.Model):
-    id = models.IntegerField(null=False,blank=False,unique=True,primary_key=True)
+    id = models.AutoField(null=False,blank=False,unique=True,primary_key=True)
     serie = models.CharField(max_length=20,null=False,blank=False,unique=True)
     fecha_compra = models.DateTimeField(default=timezone.now) #Establece la fecha local
     valor = models.IntegerField(blank=True)
@@ -75,7 +75,7 @@ class  Usuarios(models.Model):
         )
 
 class Equipos(models.Model):
-    id = models.IntegerField(unique=True, null=False,blank=False,primary_key=True)
+    id = models.AutoField(unique=True, null=False,blank=False,primary_key=True)
     usuario = models.ForeignKey(Usuarios,on_delete=models.CASCADE,null=True)
     tipo = models.CharField(max_length=10,null=False)
     modelo = models.CharField(max_length=20,null=False)
@@ -99,7 +99,7 @@ class Equipos(models.Model):
         )
 
 class Historial(models.Model):
-    id = models.IntegerField(unique=True,null=False,blank=False,primary_key=True)
+    id = models.AutoField(unique=True,null=False,blank=False,primary_key=True)
     usuario = models.ForeignKey(Usuarios,on_delete=models.CASCADE)
     equipo = models.ForeignKey(Equipos,on_delete=models.CASCADE)
     fecha_recepcion = models.DateTimeField(default=timezone.now)
