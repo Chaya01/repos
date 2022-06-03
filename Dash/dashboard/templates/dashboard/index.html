@@ -28,7 +28,24 @@
             <p>
                 <a href="{% url "dashboard:depadetail" departamento.pk %}">Ver</a> |
                 <a href="{% url "dashboard:editdepa" departamento.pk %}">Editar</a> |
-                <a href="{% url "dashboard:deletedepa" departamento.pk %}">borrar</a>
+                <a href="{% url "dashboard:deletedepa" departamento.pk %}"">borrar</a>
+            </p>
+        </li>
+    {% endfor %}
+</ul>
+
+<h2>Listado telefonos</h2>
+<p>
+    <a href="{% url "dashboard:newtel" %}">Agregar telefono</a>
+</p>
+<ul>
+    {% for telefono in Num_telefono %}
+        <li>
+            <p>{{dashboard.name}}</p>
+            <p>
+                <a href="{% url "dashboard:teldetail" telefono.pk %}">Ver</a> |
+                <a href="{% url "dashboard:edittel" telefono.pk %}">Editar</a> |
+                <a href="{% url "dashboard:deletetel" telefono.pk %}"">borrar</a>
             </p>
         </li>
     {% endfor %}

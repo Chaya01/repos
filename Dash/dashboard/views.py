@@ -39,11 +39,10 @@ class index(ListView):
         context = super(index, self).get_context_data(**kwargs)
         context['Usuarios'] = Usuarios.objects.all()
         context['Departamentos'] = Departamentos.objects.all()
+        context['Num_telefono'] = Num_telefono.objects.all()
 
         return context
         #return super().get_context_data(**kwargs)
-
-
 
 ###### CRUD USUARIO ######
 
@@ -118,11 +117,37 @@ class crear_departamento(CreateView):
     template_name = 'dashboard/crud/form.html'
     success_url = reverse_lazy('dashboard:index')
 
-class actualizar_departamento(UpdateView):
+    def form_valid(self,form):
+        area = form.cleaned_data['area']
+        sucursal = form.cleaned_data['sucursal']
+        a = re.search("[a-z]$", area) #validar area
+        b = re.search("[a-z]$", sucursal)#validar sucursal
+        if not a:
+            form.add_error('area', 'El area solo debe contener caracteres alfanumericos')
+            return self.form_invalid(form)
+        elif not b:
+            form.add_error('sucursal','La sucursal solo debe contener caracteres alfanumericos')
+            return self.form_invalid(form)
+        return super(crear_departamento, self).form_valid(form)
+
+class actualizar_departamento (UpdateView):
     model = Departamentos
     form_class = departamento_form
     template_name = 'dashboard/crud/update.html'
     success_url = reverse_lazy('dashboard:index')
+
+    def form_valid(self,form):
+        area = form.cleaned_data['area']
+        sucursal = form.cleaned_data['sucursal']
+        a = re.search("[a-z]$", area) #validar area
+        b = re.search("[a-z]$", sucursal)#validar sucursal
+        if not a:
+            form.add_error('area', 'El area solo debe contener caracteres alfanumericos')
+            return self.form_invalid(form)
+        elif not b:
+            form.add_error('sucursal','La sucursal solo debe contener caracteres alfanumericos')
+            return self.form_invalid(form)
+        return super(actualizar_departamento, self).form_valid(form)
 
 class detalle_departamento(DetailView):
     model = Departamentos
@@ -133,4 +158,29 @@ class borrar_departamento(DeleteView):
     model = Departamentos
     template_name = 'dashboard/crud/delete.html'
     success_url = reverse_lazy('dashboard:index')
+
+##### CRUD Num_telefono#####
+
+class crear_telefono(CreateView):
+    model = Num_telefono
+    template_name = 'dashboard/crud/form.html'
+    form_class = telefono_form
+    success_url = reverse_lazy('dashboard:index')
+
+class actualizar_telefono(UpdateView):
+    model = Num_telefono
+    template_name = 'dashboard/crud/update.html'
+    success_url = reverse_lazy('dashboard:index')
+    form_class = telefono_form
+
+class detalle_telefono(DetailView):
+    model = Num_telefono
+    template_name = 'dashboard/crud/telefono_detail.html'
+    success_url = reverse_lazy('dashboard:index')
+
+class borrar_telefono(DeleteView):
+    model = Num_telefono
+    template_name = 'dashboard/crud/delete.html'
+    success_url = reverse_lazy('dashboard:index')
+
 # Create your views here.

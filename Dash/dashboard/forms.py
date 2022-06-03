@@ -15,4 +15,8 @@ class departamento_form(forms.ModelForm):
     class Meta:
         model = Departamentos
         fields = ['id','area','sucursal']
-            
+
+class telefono_form(forms.ModelForm):
+    class Meta:
+        model = Num_telefono
+        fields = ['id','numero_tel','activo']
