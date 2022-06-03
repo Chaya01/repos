@@ -1,0 +1,9 @@
+<h1>{{ object.serie }}</h1>
+<p>Numero de serie: <i>{{ object.serie }}</i></p>
+<p>Fecha de compra: <i>{{ object.fecha_compra }}</i></p>
+<p>Valor del producto: <i>{{ object.valor}}</i></p>
+<p>Imei 1: <i>{{ object.imei_1}}</i></p>
+<p>Imei 2: <i>{{ object.imei_2}}</i></p>
+<p>
+    <a href="{% url "dashboard:index" %}">Regresar</a>
+</p>

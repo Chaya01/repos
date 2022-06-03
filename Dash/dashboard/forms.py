@@ -20,3 +20,8 @@ class telefono_form(forms.ModelForm):
     class Meta:
         model = Num_telefono
         fields = ['id','numero_tel','activo']
+
+class series_form(forms.ModelForm):
+    class Meta:
+        model = Series
+        fields = ['id','serie','fecha_compra','valor','imei_1','imei_2']

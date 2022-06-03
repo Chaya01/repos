@@ -34,7 +34,7 @@
     {% endfor %}
 </ul>
 
-<h2>Listado telefonos</h2>
+<h3>Listado telefonos</h3>
 <p>
     <a href="{% url "dashboard:newtel" %}">Agregar telefono</a>
 </p>
@@ -46,6 +46,23 @@
                 <a href="{% url "dashboard:teldetail" telefono.pk %}">Ver</a> |
                 <a href="{% url "dashboard:edittel" telefono.pk %}">Editar</a> |
                 <a href="{% url "dashboard:deletetel" telefono.pk %}"">borrar</a>
+            </p>
+        </li>
+    {% endfor %}
+</ul>
+
+<h4>Listado Numeros de serie</h4>
+<p>
+    <a href="{% url "dashboard:newserie" %}">Agregar serie</a>
+</p>
+<ul>
+    {% for serie in Series %}
+        <li>
+            <p>{{dashboard.name}}</p>
+            <p>
+                <a href="{% url "dashboard:seriedetail" serie.pk %}">Ver</a> |
+                <a href="{% url "dashboard:editserie" serie.pk %}">Editar</a> |
+                <a href="{% url "dashboard:deleteserie" serie.pk %}"">borrar</a>
             </p>
         </li>
     {% endfor %}

@@ -77,10 +77,10 @@ class  Usuarios(models.Model):
 
 class Equipos(models.Model):
     id = models.AutoField(unique=True, null=False,blank=False,primary_key=True)
-    usuario = models.ForeignKey(Usuarios,on_delete=models.CASCADE,null=True)
+    usuario = models.ForeignKey(Usuarios,on_delete=models.SET_NULL,null=True)
     tipo = models.CharField(max_length=10,null=False)
     modelo = models.CharField(max_length=20,null=False)
-    serie = models.ForeignKey(Series,on_delete=models.CASCADE)
+    serie = models.ForeignKey(Series,on_delete=models.SET_NULL, null=True)
     operativo = models.BooleanField(default=True, null=False)
     nuevo = models.BooleanField(default=True,null=False) #Nuevo / Usado
     observaciones = models.CharField(max_length=50,blank=True) #pantalla rota, con mica, etc.
@@ -101,8 +101,8 @@ class Equipos(models.Model):
 
 class Historial(models.Model):
     id = models.AutoField(unique=True,null=False,blank=False,primary_key=True)
-    usuario = models.ForeignKey(Usuarios,on_delete=models.CASCADE)
-    equipo = models.ForeignKey(Equipos,on_delete=models.CASCADE)
+    usuario = models.ForeignKey(Usuarios,on_delete=models.PROTECT)
+    equipo = models.ForeignKey(Equipos,on_delete=models.PROTECT)
     fecha_recepcion = models.DateTimeField(default=timezone.now)
     fecha_entrega = models.DateTimeField(auto_now_add=True)#(default=timezone.now)
 
