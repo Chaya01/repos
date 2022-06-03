@@ -1,6 +1,7 @@
 #from __future__ import unicode_literals
+from contextlib import nullcontext
 from enum import auto
-from pickle import TRUE
+from pickle import FALSE, TRUE
 from tkinter import CASCADE
 from django.db import models
 from django.forms import NullBooleanField
@@ -8,7 +9,7 @@ from django.utils import timezone
 
 class Departamentos(models.Model):
     id = models.AutoField(null=False,blank=False,unique=True,primary_key=True)
-    area = models.CharField(max_length=20,null=False)
+    area = models.CharField(max_length=20,null=True)
     sucursal = models.CharField(max_length=20,null=False)
 
     def nombre_departamento(self):
@@ -21,7 +22,7 @@ class Departamentos(models.Model):
 
 class Num_telefono(models.Model):
     id = models.AutoField(null=False,blank=False,unique=True,primary_key=True)
-    numero_tel = models.CharField(max_length=10,null=False,blank=False,unique=True)
+    numero_tel = models.CharField(max_length=9,null=True,blank=False)
     activo = models.BooleanField(default=False) #numero activo o dado de baja
 
     def __str__(self):
@@ -59,9 +60,9 @@ class  Usuarios(models.Model):
     rut = models.CharField(max_length=10, null=False, blank=False, unique=True,primary_key=True)
     nombre = models.CharField(max_length=20, null=False)
     apellido = models.CharField(max_length=20, null=False)
-    area = models.ForeignKey(Departamentos,on_delete=models.CASCADE) #revisar
+    area = models.ForeignKey(Departamentos,on_delete=models.SET_NULL, null=True) #revisar
     correo = models.EmailField(max_length=50)
-    telefono = models.ForeignKey(Num_telefono,on_delete=models.CASCADE) #revisar
+    telefono = models.ForeignKey(Num_telefono,on_delete=models.SET_NULL, null=True) #revisar
 
     def nombre_completo(self):
         return u"{} {}".format(

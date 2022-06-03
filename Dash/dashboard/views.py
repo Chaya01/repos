@@ -167,6 +167,14 @@ class crear_telefono(CreateView):
     form_class = telefono_form
     success_url = reverse_lazy('dashboard:index')
 
+    def form_valid(self,form):
+        numero_tel = form.cleaned_data['numero_tel']
+        a = re.search("[1-9]{9}$", numero_tel) #validar telefono
+        if not a:
+            form.add_error('numero_tel', 'El telefono debe contener 9 caracteres y solo deben ser numericos')
+            return self.form_invalid(form)
+        return super(crear_telefono, self).form_valid(form)
+
 class actualizar_telefono(UpdateView):
     model = Num_telefono
     template_name = 'dashboard/crud/update.html'
