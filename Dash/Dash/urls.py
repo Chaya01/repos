@@ -17,13 +17,11 @@ from django.contrib import admin
 from django.urls import include, re_path, path
 #from dashboard.views import mi_vista
 
+appname ='dashboard'
 
 urlpatterns = [
-    re_path(r'^dashboard/', include('dashboard.urls', namespace='dashboard')),
-    #(r'^admin/', admin.site.url),
     path('admin/', admin.site.urls),
-    #path('dashboard/', include('dashboard.urls')),
-    #path('index', include('dashboard.urls'))
-    #path('dashboard/', mi_vista.as_view()),
+    path('dashboard/', include('dashboard.urls')),
+
 
 ]

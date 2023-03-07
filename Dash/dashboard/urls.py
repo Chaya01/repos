@@ -33,10 +33,10 @@ urlpatterns = [
     path('telefonos/delete/<str:pk>', borrar_telefono.as_view(), name = 'deletetel'),
 
     ### Series ###
-    path('series/<str:pk>', detalle_serie.as_view(), name='seriedetail'),
-    path('series/form/', crear_serie.as_view(), name='newserie'),
-    path('series/update/<str:pk>', actualizar_serie.as_view(), name= 'editserie'),
-    path('series/delete/<str:pk>', borrar_serie.as_view(), name= 'deleteserie'),
+#    path('series/<str:pk>', detalle_serie.as_view(), name='seriedetail'),
+#    path('series/form/', crear_serie.as_view(), name='newserie'),
+#    path('series/update/<str:pk>', actualizar_serie.as_view(), name= 'editserie'),
+#    path('series/delete/<str:pk>', borrar_serie.as_view(), name= 'deleteserie'),
 
 
 ]

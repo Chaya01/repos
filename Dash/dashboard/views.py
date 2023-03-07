@@ -7,7 +7,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
-from .forms import nombre_usuario
 from django.views import View
 from .models import Usuarios
 from .forms import *
@@ -38,9 +37,6 @@ class index(ListView):
     def get_context_data(self, **kwargs):
         context = super(index, self).get_context_data(**kwargs)
         context['Usuarios'] = Usuarios.objects.all()
-        context['Departamentos'] = Departamentos.objects.all()
-        context['Num_telefono'] = Num_telefono.objects.all()
-        context['Series'] = Series.objects.all()
 
         return context
         #return super().get_context_data(**kwargs)
@@ -53,7 +49,7 @@ class detalle_usuario(DetailView):
 
 class crear_usuario(CreateView):
     model = Usuarios
-    form_class = usuario_form
+    form_class = UsuarioForm
     #fields = ['rut','nombre','apellido','area','correo','telefono']
     template_name = 'dashboard/crud/form.html'
     success_url = reverse_lazy('dashboard:index')
@@ -80,7 +76,7 @@ class crear_usuario(CreateView):
 
 class actualizar_usuario(UpdateView):
     model = Usuarios
-    form_class = usuario_form
+    form_class = UsuarioForm
     template_name = 'dashboard/crud/update.html'
     success_url = reverse_lazy('dashboard:index')
     #fields = ['rut', 'nombre','apellido','area', 'correo', 'telefono']
@@ -114,7 +110,7 @@ class borrar_usuario(DeleteView):
 
 class crear_departamento(CreateView):
     model = Departamentos
-    form_class = departamento_form
+    form_class = DepartamentoForm
     template_name = 'dashboard/crud/form.html'
     success_url = reverse_lazy('dashboard:index')
 
@@ -133,7 +129,7 @@ class crear_departamento(CreateView):
 
 class actualizar_departamento (UpdateView):
     model = Departamentos
-    form_class = departamento_form
+    form_class = DepartamentoForm
     template_name = 'dashboard/crud/update.html'
     success_url = reverse_lazy('dashboard:index')
 
@@ -165,7 +161,7 @@ class borrar_departamento(DeleteView):
 class crear_telefono(CreateView):
     model = Num_telefono
     template_name = 'dashboard/crud/form.html'
-    form_class = telefono_form
+    form_class = TelefonoForm
     success_url = reverse_lazy('dashboard:index')
 
     def form_valid(self,form):
@@ -180,7 +176,7 @@ class actualizar_telefono(UpdateView):
     model = Num_telefono
     template_name = 'dashboard/crud/update.html'
     success_url = reverse_lazy('dashboard:index')
-    form_class = telefono_form
+    form_class = TelefonoForm
 
     def form_valid(self,form):
         numero_tel = form.cleaned_data['numero_tel']
@@ -200,28 +196,44 @@ class borrar_telefono(DeleteView):
     template_name = 'dashboard/crud/delete.html'
     success_url = reverse_lazy('dashboard:index')
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ##### Crud Series #####
 
-class crear_serie(CreateView):
-    model = Series
-    form_class = series_form
-    template_name = 'dashboard/crud/form.html'
-    success_url = reverse_lazy('dashboard:index')
+#    class crear_serie(CreateView):
+#    model = Series
+#    form_class = series_form
+#    template_name = 'dashboard/crud/form.html'
+#    success_url = reverse_lazy('dashboard:index')
 
-class actualizar_serie(UpdateView):
-    model = Series
-    form_class = series_form
-    template_name = 'dashboard/crud/update.html'
-    success_url = reverse_lazy('dashboard:index')
+#class actualizar_serie(UpdateView):
+#    model = Series
+#    form_class = series_form
+#    template_name = 'dashboard/crud/update.html'
+#    success_url = reverse_lazy('dashboard:index')
 
-class detalle_serie(DetailView):
-    model = Series
-    template_name = 'dashboard/crud/serie_detail.html'
-    success_url = reverse_lazy('dashboard:index')
+#class detalle_serie(DetailView):
+#    model = Series
+#    template_name = 'dashboard/crud/serie_detail.html'
+#    success_url = reverse_lazy('dashboard:index')
 
-class borrar_serie(DeleteView):
-    model = Series
-    template_name = 'dashboard/crud/delete.html'
-    success_url = reverse_lazy('dashboard:index')
+#class borrar_serie(DeleteView):
+#    model = Series
+#    template_name = 'dashboard/crud/delete.html'
+#    success_url = reverse_lazy('dashboard:index')
 
 # Create your views here.
