@@ -2,6 +2,18 @@ from django import forms
 from .models import *
 import re
 from django.core.exceptions import ValidationError
+
+listado_areas =(
+    ('Administracion','Administracion'),
+    ('Terreno','Terreno'),
+    )
+
+listado_sucursales =(
+    ('Bulnes','Bulnes'),
+    ('Talca','Talca'),
+    ('Chillan','Chillan'),
+    ('Peru','Peru'),
+)
     
 class UsuarioForm(forms.ModelForm):
     class Meta:
@@ -11,7 +23,12 @@ class UsuarioForm(forms.ModelForm):
 class DepartamentoForm(forms.ModelForm):
     class Meta:
         model = Departamentos
-        fields = ['id','area','sucursal']
+        fields = ['area','sucursal']
+
+        widgets ={
+            'area' : forms.Select(choices=listado_areas,attrs={'class':'form-control'}),
+            'sucursal' : forms.Select(choices=listado_sucursales,attrs={'class':'form-control'}),
+        }
 
 class TelefonoForm(forms.ModelForm):
     class Meta:
