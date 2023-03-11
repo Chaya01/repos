@@ -1,0 +1,61 @@
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Notebooks</title>
+   <!-- Bootstrap -->
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+   {% load crispy_forms_tags %}
+</head>
+
+<h1>Panel Notebooks</h1>
+<ul>
+
+<p>
+    <a href="{% url "dashboard:newnot" %}">Agregar Notebook</a>
+</p>
+<p>{{ dashboard.name }}</p>
+
+<div class="table-responsive">
+    <table class="table table-striped"> 
+        <th>Serie</th>
+        <th>Modelo</th>
+        <th>Estado</th>
+        <th>Fecha de compra</th>
+        <th>Valor del dispositivo</th>
+        <th>Observaciones</th>
+{% for Notebooks in object_list %}
+  <tr>
+    <td>{{ Notebooks.serie_notebook }} </td> 
+    <td>{{ Notebooks.modelo_notebook }}</td>
+    <td>{{ Notebooks.estado_notebook|yesno:"Funciona,No funciona" }}</td>
+    <td>{{ Notebooks.fecha_compra_notebook }}</td>
+    <td>${{ Notebooks.valor_notebook }}</td>
+    <td>{{ Notebooks.observaciones_notebook }}</td>
+    <td><a href="{% url "dashboard:edita" Notebooks.pk %}">Editar</a> <a href="{% url "dashboard:deleta" Notebooks.pk %}">Borrar</a></td>          
+  </tr>
+{% endfor %}
+    </tr>
+    </table>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Ultima &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    <p>
+        <a href="{% url "dashboard:index" %}">Volver al indice</a>
+    </p>
+</ul>

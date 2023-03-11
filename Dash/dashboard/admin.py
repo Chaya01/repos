@@ -17,6 +17,7 @@ from .models import Tablets
 from .models import Notebooks
 from .models import Camionetas
 from .models import Asignacion
+from .models import Estados
 
 admin.site.register(Usuarios)
 admin.site.register(Departamentos)
@@ -29,3 +30,4 @@ admin.site.register(Tablets)
 admin.site.register(Notebooks)
 admin.site.register(Camionetas)
 admin.site.register(Asignacion)
+admin.site.register(Estados)

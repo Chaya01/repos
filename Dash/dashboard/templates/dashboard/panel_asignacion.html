@@ -1,0 +1,71 @@
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Asignaciones</title>
+   <!-- Bootstrap -->
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+   {% load crispy_forms_tags %}
+</head>
+
+<h1>Panel Asignaciones</h1>
+<ul>
+
+<p>
+    <a href="{% url "dashboard:newasg" %}">Registrar</a>
+</p>
+<p>{{ dashboard.name }}</p>
+
+<div class="table-responsive">
+    <table class="table table-striped"> 
+        <th>Usuario</th>
+        <th>Numero de telefono</th>
+        <th>Smartphone asignado</th>
+        <th>Fecha de entrega</th>
+        <th>Tablet asignada</th>
+        <th>Fecha de entrega</th>
+        <th>Notebook asignada</th>
+        <th>Fecha de entrega</th>
+        <th>Camioneta asignada</th>
+        <th>Fecha de entrega</th>
+        <th>Registro vigente</th>
+{% for Asignacion in object_list %}
+  <tr>
+    <td>{{ Asignacion.usuario }} </td> 
+    <td>{{ Asignacion.num }}</td>
+    <td>{{ Asignacion.smartphone_a }}</td>
+    <td>{{ Asignacion.fecha_sma }}</td>
+    <td>{{ Asignacion.tablet_a }} </td> 
+    <td>{{ Asignacion.fecha_ta }}</td>
+    <td>{{ Asignacion.notebook_a }}</td>
+    <td>{{ Asignacion.fecha_nt }}</td>
+    <td>{{ Asignacion.camionetas_a }}</td>
+    <td>{{ Asignacion.fecha_cm }}</td>
+    <td>{{ Asignacion.vigente|yesno:"Vigente,No vigente" }}</td>
+    <td><a href="{% url "dashboard:editasg" Asignacion.pk %}">Editar</a> <a href="{% url "dashboard:deletasg" Asignacion.pk %}">Borrar</a></td>          
+  </tr>
+{% endfor %}
+    </tr>
+    </table>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Ultima &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    <p>
+        <a href="{% url "dashboard:index" %}">Volver al indice</a>
+    </p>
+</ul>

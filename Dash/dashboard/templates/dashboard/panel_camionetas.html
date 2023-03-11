@@ -1,0 +1,59 @@
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Camionetas</title>
+   <!-- Bootstrap -->
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+   {% load crispy_forms_tags %}
+</head>
+
+<h1>Panel Camionetas</h1>
+<ul>
+
+<p>
+    <a href="{% url "dashboard:newcam" %}">Agregar Camioneta</a>
+</p>
+<p>{{ dashboard.name }}</p>
+
+<div class="table-responsive">
+    <table class="table table-striped"> 
+        <th>Patente</th>
+        <th>Modelo</th>
+        <th>Fecha Mantencion</th>
+        <th>Observacion</th>
+        <th>contrato vigente</th>
+{% for Camionetas in object_list %}
+  <tr>
+    <td>{{ Camionetas.patente }} </td> 
+    <td>{{ Camionetas.modelo_camioneta }}</td>
+    <td>{{ Camionetas.mantencion }}</td>
+    <td>{{ Camionetas.observaciones_camionetas }}</td>
+    <td>{{ Camionetas.disponible|yesno:"Contratada,No contratada" }}</td>
+    <td><a href="{% url "dashboard:editcam" Camionetas.pk %}">Editar</a> <a href="{% url "dashboard:deletcam" Camionetas.pk %}">Borrar</a></td>          
+  </tr>
+{% endfor %}
+    </tr>
+    </table>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Ultima &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    <p>
+        <a href="{% url "dashboard:index" %}">Volver al indice</a>
+    </p>
+</ul>

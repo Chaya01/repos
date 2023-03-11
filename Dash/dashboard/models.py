@@ -6,22 +6,32 @@ from tkinter import CASCADE
 from django.db import models
 from django.forms import NullBooleanField
 from django.utils import timezone
+from datetime import date
+from django.utils.translation import gettext as _
+from django.utils import timezone
+
+
+class Estados(models.Model):
+    e_equipos = models.BooleanField(default=False)
+
+    def __str__ (self):
+        return str(self.e_equipos)
 
 class Departamentos(models.Model):
     area = models.CharField(max_length=20,null=True)
     sucursal = models.CharField(max_length=20,null=False)
 
-    def nombre_departamento(self):
-        return u"{} {}".format(
+    def __str__ (self):
+        return str(u"{} - {}").format(
             self.area,
-            self.sucursal
+            self.sucursal,
         )
-    def __str__(self):
-        return self.area
+#    def __str__(self):          #nombre Visible#
+#        return self.area
 
 class Num_telefono(models.Model):
-    numero_tel = models.CharField(max_length=9,null=True,blank=True)
-    activo = models.BooleanField(default=False) #numero activo o dado de baja
+    numero_tel = models.CharField(max_length=9,null=True,blank=True,unique=True)
+    activo = models.ForeignKey(Estados, on_delete=models.CASCADE) #numero activo o dado de baja
 
     def __str__(self):
         return self.numero_tel
@@ -106,9 +116,9 @@ class Modelos(models.Model):
     m_modelo = models.CharField(max_length=20,unique=True)
 
     def __str__(self):
-        return str(u"{} {} {}").format(
+        return str(u"{} - {} - {}").format(
             self.m_marca,
-            self.m_modelo,
+            self.m_modelo,  
             self.m_param,
         )
 
@@ -118,10 +128,10 @@ class Smartphones(models.Model):
     modelo_smartphone = models.ForeignKey(Modelos,on_delete=models.CASCADE)
     imei1 = models.IntegerField(unique=True,)
     imei2 = models.IntegerField(unique = True, null=True)
-    estado_telefono = models.BooleanField(default=True,) #Nuevo / Usado
+    estado_telefono = models.ForeignKey(Estados,on_delete=models.CASCADE) #Funciona / no Funiona
     fecha_compra_telefono = models.DateField(help_text='Fecha en la que se recepciona el equipo en la empresa')
     valor_telefono = models.IntegerField(help_text='Por favor inserte el valor en CLP')
-    funciona_telefono = models.BooleanField(default=True, null=False) #si / no
+#    funciona_telefono = models.ForeignKey(default=True, null=False) #si / no
     observaciones_telefonos = models.CharField(max_length=50,blank=True) #pantalla rota, con mica, etc.
 
     def __str__(self):
@@ -134,6 +144,7 @@ class Tablets(models.Model): #crear views, forms and urls
     serie_tablet = models.CharField(unique=True,max_length=20)
     modelo_tablet = models.ForeignKey(Modelos,on_delete=models.CASCADE)
     imei_tb = models.CharField (max_length=20,null=True, unique=True)
+    estado_tablet = models.ForeignKey(Estados,on_delete=models.CASCADE) #funciona / no funciona
     fecha_compra_tablet = models.DateField(help_text='Fecha en la que se recepciona el equipo en la empresa')
     valor_tablet = models.IntegerField(help_text='Por favor inserte el valor en CLP')
     observaciones_tablets = models.CharField(max_length=50,blank=True)
@@ -147,6 +158,7 @@ class Tablets(models.Model): #crear views, forms and urls
 class Notebooks(models.Model):
     serie_notebook = models.CharField(unique=True,max_length=20)
     modelo_notebook = models.ForeignKey(Modelos,on_delete=models.CASCADE)
+    estado_notebook = models.ForeignKey(Estados,on_delete=models.CASCADE)
     fecha_compra_notebook = models.DateField(help_text='Fecha en la que se recepciona el equipo en la empresa')
     valor_notebook = models.IntegerField(help_text='Por favor inserte el valor en CLP')
     observaciones_notebook = models.CharField(max_length=50, blank=True)
@@ -161,9 +173,10 @@ class Camionetas(models.Model):
     modelo_camioneta = models.ForeignKey(Modelos,on_delete=models.CASCADE)
     mantencion = models.DateField()
     observaciones_camionetas = models.CharField(max_length=50)
+    disponible = models.ForeignKey(Estados,on_delete=models.CASCADE) #contratada por la empresa ?
 
     def __str__(self):
-        return u"{} {}".format(
+        return (u"{} {}").format(
             self.patente,
             self.modelo_camioneta,
         )
@@ -200,11 +213,17 @@ class Asignacion(models.Model):
     usuario = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
     num = models.ForeignKey(Num_telefono, on_delete=models.CASCADE,null=True,blank=True)
     smartphone_a = models.ForeignKey(Smartphones, on_delete=models.CASCADE)
+    fecha_sma = models.DateField(default= timezone.now())
     tablet_a = models.ForeignKey(Tablets, on_delete=models.CASCADE)
+    fecha_ta = models.DateField(default= timezone.now())
     notebook_a = models.ForeignKey(Notebooks, on_delete=models.CASCADE)
+    fecha_nt = models.DateField(default= timezone.now())
     camionetas_a =models.ForeignKey(Camionetas, on_delete=models.CASCADE)
-    vigente = models.BooleanField(help_text='marcar si es la asignacion actual del usuario.') #registro actual, si / no)
+    fecha_cm = models.DateField(default= timezone.now())
+    vigente = models.ForeignKey(Estados,on_delete=models.CASCADE,help_text='marcar si es la asignacion actual del usuario.') #registro actual, si / no)
 
+    def __str__(self):
+        return str(self.usuario)
 
 # Sin uso, modelo anterior
 

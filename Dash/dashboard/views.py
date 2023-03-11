@@ -41,6 +41,88 @@ class index(ListView):
         return context
         #return super().get_context_data(**kwargs)
 
+##### Paneles de acceso ####
+
+class panel_usuarios(ListView):
+    context_object_name = 'panel_usuarios'
+    template_name = 'dashboard/panel_usuarios.html'
+    paginate_by = 10
+    queryset = Usuarios.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super(panel_usuarios, self).get_context_data(**kwargs)
+        context['Usuarios'] = Usuarios.objects.all()
+        return context
+
+class panel_departamentos(ListView):
+    context_object_name = 'panel_departamentos'
+    template_name = 'dashboard/panel_departamentos.html'
+    paginate_by = 10
+    queryset = Departamentos.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super(panel_departamentos, self).get_context_data(**kwargs)
+        context['Departamentos'] = Departamentos.objects.all()
+        return context
+    
+class panel_telefonos(ListView):
+    context_object_name = 'panel_telefonos'
+    template_name = 'dashboard/panel_telefonos.html'
+    paginate_by = 10
+    queryset = Num_telefono.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super(panel_telefonos, self).get_context_data(**kwargs)
+        context['Num_telefono'] = Num_telefono.objects.all()
+        return context
+
+class panel_smartphones(ListView):
+    context_object_name = 'panel_smartphones'
+    template_name = 'dashboard/panel_smartphones.html'
+    paginate_by = 10
+    queryset = Smartphones.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super(panel_smartphones, self).get_context_data(**kwargs)
+        context['Smartphones'] = Smartphones.objects.all()
+        return context
+
+class panel_tablets(ListView):
+    context_object_name = 'panel_tablets'
+    template_name = 'dashboard/panel_tablets.html'
+    paginate_by = 10
+    queryset = Tablets.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super(panel_tablets, self).get_context_data(**kwargs)
+        context['Tablets'] = Tablets.objects.all()
+        return context
+
+class panel_notebooks(ListView):
+    context_object_name = 'panel_notebooks'
+    template_name = 'dashboard/panel_notebooks.html'
+    paginate_by = 10
+    queryset = Notebooks.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super(panel_notebooks, self).get_context_data(**kwargs)
+        context['Notebooks'] = Notebooks.objects.all()
+        return context
+    
+class panel_camionetas(ListView):
+    context_object_name = 'panel_camionetas'
+    template_name = 'dashboard/panel_camionetas.html'
+    paginate_by = 10
+    queryset = Camionetas.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super(panel_camionetas, self).get_context_data(**kwargs)
+        context['Camionetas'] = Camionetas.objects.all()
+        return context
+    
+class panel_asignacion(ListView):
+    context_object_name = 'panel_asignacion'
+    template_name = 'dashboard/panel_asignacion.html'
+    paginate_by = 10
+    queryset = Asignacion.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super(panel_asignacion, self).get_context_data(**kwargs)
+        context['Asignacion'] = Asignacion.objects.all()
+        return context
+
 ###### CRUD USUARIO ######
 
 class detalle_usuario(DetailView):
@@ -112,9 +194,9 @@ class crear_departamento(CreateView):
     model = Departamentos
     form_class = DepartamentoForm
     template_name = 'dashboard/crud/form.html'
-    success_url = reverse_lazy('dashboard:index')
+    success_url = reverse_lazy('dashboard:panel_departamentos')
 
-    def form_valid(self,form):
+"""    def form_valid(self,form):
         area = form.cleaned_data['area']
         sucursal = form.cleaned_data['sucursal']
         a = re.search("[a-z]$", area) #validar area
@@ -126,7 +208,7 @@ class crear_departamento(CreateView):
             form.add_error('sucursal','La sucursal solo debe contener caracteres alfanumericos')
             return self.form_invalid(form)
         return super(crear_departamento, self).form_valid(form)
-
+"""
 class actualizar_departamento (UpdateView):
     model = Departamentos
     form_class = DepartamentoForm
@@ -162,11 +244,11 @@ class crear_telefono(CreateView):
     model = Num_telefono
     template_name = 'dashboard/crud/form.html'
     form_class = TelefonoForm
-    success_url = reverse_lazy('dashboard:index')
+    success_url = reverse_lazy('dashboard:panel_telefonos')
 
     def form_valid(self,form):
         numero_tel = form.cleaned_data['numero_tel']
-        a = re.search("[1-9]{9}$", numero_tel) #validar telefono
+        a = re.search("[0-9]{9}$", numero_tel) #validar telefono
         if not a:
             form.add_error('numero_tel', 'El telefono debe contener 9 caracteres y solo deben ser numericos')
             return self.form_invalid(form)
@@ -174,7 +256,7 @@ class crear_telefono(CreateView):
 
 class actualizar_telefono(UpdateView):
     model = Num_telefono
-    template_name = 'dashboard/crud/update.html'
+    template_name = 'dashboard/crud/update.html'    
     success_url = reverse_lazy('dashboard:index')
     form_class = TelefonoForm
 
@@ -196,9 +278,125 @@ class borrar_telefono(DeleteView):
     template_name = 'dashboard/crud/delete.html'
     success_url = reverse_lazy('dashboard:index')
 
+### Crud Smartphones ###
 
+class crear_smartphone(CreateView):
+    model = Smartphones
+    template_name = 'dashboard/crud/form.html'
+    form_class = SmartphonesForm
+    success_url = reverse_lazy('dashboard:panel_smartphones')
 
+class actualizar_smartphone(UpdateView):
+    model = Smartphones
+    template_name = 'dashboard/crud/update.html'    
+    success_url = reverse_lazy('dashboard:panel_smartphones')
+    form_class = SmartphonesForm
 
+class detalle_smartphone(DetailView):
+    model = Smartphones
+    template_name = 'dashboard/crud/smartphone_detail.html'
+    success_url = reverse_lazy('dashboard:panel_smartphones')
+
+class borrar_smartphone(DeleteView):
+    model = Smartphones
+    template_name = 'dashboard/crud/delete.html'
+    success_url = reverse_lazy('dashboard:panel_smartphones')
+
+### Crud Tablet ###
+
+class crear_tablet(CreateView):
+    model = Tablets
+    template_name = 'dashboard/crud/form.html'
+    form_class = TabletsForm
+    success_url = reverse_lazy('dashboard:panel_tablets')
+
+class actualizar_tablet(UpdateView):
+    model = Tablets
+    template_name = 'dashboard/crud/update.html'    
+    success_url = reverse_lazy('dashboard:panel_tablets')
+    form_class = TabletsForm
+
+class detalle_tablet(DetailView):
+    model = Tablets
+    template_name = 'dashboard/crud/tablet_detail.html'
+    success_url = reverse_lazy('dashboard:panel_tablet')
+
+class borrar_tablet(DeleteView):
+    model = Tablets
+    template_name = 'dashboard/crud/delete.html'
+    success_url = reverse_lazy('dashboard:panel_tablet')
+
+#### Crud Notebook ###
+
+class crear_notebook(CreateView):
+    model = Notebooks
+    template_name = 'dashboard/crud/form.html'
+    form_class = NotebooksForm
+    success_url = reverse_lazy('dashboard:panel_notebooks')
+
+class actualizar_notebook(UpdateView):
+    model = Notebooks
+    template_name = 'dashboard/crud/update.html'    
+    success_url = reverse_lazy('dashboard:panel_notebooks')
+    form_class = NotebooksForm
+
+class detalle_notebook(DetailView):
+    model = Notebooks
+    template_name = 'dashboard/crud/tablet_detail.html'
+    success_url = reverse_lazy('dashboard:panel_notebooks')
+
+class borrar_notebook(DeleteView):
+    model = Notebooks
+    template_name = 'dashboard/crud/delete.html'
+    success_url = reverse_lazy('dashboard:panel_notebooks')
+
+### Crud Camionetas ###
+
+class crear_camioneta(CreateView):
+    model = Camionetas
+    template_name = 'dashboard/crud/form.html'
+    form_class = CamionetasForm
+    success_url = reverse_lazy('dashboard:panel_camionetas')
+
+class actualizar_camioneta(UpdateView):
+    model = Camionetas
+    template_name = 'dashboard/crud/update.html'    
+    success_url = reverse_lazy('dashboard:panel_camionetas')
+    form_class = CamionetasForm
+
+class detalle_camioneta(DetailView):
+    model = Camionetas
+    template_name = 'dashboard/crud/tablet_detail.html'
+    success_url = reverse_lazy('dashboard:panel_camionetas')
+
+class borrar_camioneta(DeleteView):
+    model = Camionetas
+    template_name = 'dashboard/crud/delete.html'
+    success_url = reverse_lazy('dashboard:panel_camionetas')
+
+### Crud asginacion ###
+
+class crear_asignacion(CreateView):
+    model = Asignacion
+    template_name = 'dashboard/crud/form.html'
+    form_class = AsignacionForm
+    success_url = reverse_lazy('dashboard:panel_asignacion')
+
+class actualizar_asignacion(UpdateView):
+    model = Asignacion
+    template_name = 'dashboard/crud/update.html'    
+    success_url = reverse_lazy('dashboard:panel_asignacion')
+    form_class = AsignacionForm
+
+class detalle_asignacion(DetailView):
+    model = Asignacion
+    template_name = 'dashboard/crud/tablet_detail.html'
+    success_url = reverse_lazy('dashboard:panel_asignacion')
+
+class borrar_asignacion(DeleteView):
+    model = Asignacion
+    template_name = 'dashboard/crud/delete.html'
+    success_url = reverse_lazy('dashboard:panel_asignacion')
 
 
 

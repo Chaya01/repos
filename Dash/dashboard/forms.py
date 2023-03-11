@@ -14,7 +14,12 @@ listado_sucursales =(
     ('Chillan','Chillan'),
     ('Peru','Peru'),
 )
-    
+
+class EstadosForm(forms.ModelForm):
+    class Meta:
+        model = Estados
+        fields = ['e_equipos']
+
 class UsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuarios
@@ -40,7 +45,19 @@ class SmartphonesForm(forms.ModelForm):
         model = Smartphones
         fields = ['serie_smartphone','modelo_smartphone',
                   'imei1','imei2','estado_telefono','fecha_compra_telefono',
-                  'valor_telefono','funciona_telefono','observaciones_telefonos']
+                  'valor_telefono','observaciones_telefonos']
+        
+        widgets = {
+            'fecha_compra_telefono' : forms.DateTimeInput(
+            format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker',
+                                     'required':"true"}
+            )
+        }
+
+###### Prueba de filtro por tipo ##### no funcional actualmente
+        def __init__(self,*args,**kwargs): 
+            super (SmartphonesForm,self ).__init__(*args,**kwargs)
+            self.fields['modelo_smartphone'].queryset = Modelos.objects.filter(name__icontains="Smartphone")
 
 class MarcaForm(forms.ModelForm):
     class Meta:
@@ -60,26 +77,66 @@ class ModelosForm(forms.ModelForm):
 class TabletsForm(forms.ModelForm):
     class Meta:
         model = Tablets
-        fields = ['serie_tablet','modelo_tablet','imei_tb','fecha_compra_tablet',
+        fields = ['serie_tablet','modelo_tablet','imei_tb','estado_tablet','fecha_compra_tablet',
                   'valor_tablet','observaciones_tablets']
+        
+        widgets = {
+            'fecha_compra_tablet' : forms.DateTimeInput(
+            format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker',
+                                     'required':"true"}
+            )
+        }        
 
 class NotebooksForm(forms.ModelForm):
     class Meta:
         model = Notebooks
-        fields =['serie_notebook','modelo_notebook','fecha_compra_notebook',
+        fields =['serie_notebook','modelo_notebook','estado_notebook','fecha_compra_notebook',
                  'valor_notebook','observaciones_notebook']
+        
+        widgets = {
+            'fecha_compra_notebook' : forms.DateTimeInput(
+            format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker',
+                                     'required':"true"}
+            )
+        }        
 
 class CamionetasForm(forms.ModelForm):
     class Meta:
         model = Camionetas
         fields = ['patente','modelo_camioneta','mantencion',
-                  'observaciones_camionetas']        
+                  'observaciones_camionetas','disponible']
+
+        widgets = {
+            'mantencion' : forms.DateTimeInput(
+            format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker',
+                                     'required':"true"}
+            )
+        }        
         
 class AsignacionForm(forms.ModelForm):
     class Meta:
         model = Asignacion
-        fields = ['usuario','num','smartphone_a','tablet_a',
-                  'notebook_a','camionetas_a','vigente']
+        fields = ['usuario','num','smartphone_a','fecha_sma','tablet_a','fecha_ta',
+                  'notebook_a','fecha_nt','camionetas_a','fecha_cm','vigente']
+
+        widgets = {
+            'fecha_sma' : forms.DateTimeInput(
+            format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker',
+                                     'required':"true"}
+            ),
+            'fecha_ta' : forms.DateTimeInput(
+            format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker',
+                                     'required':"true"}
+            ),
+            'fecha_nt' : forms.DateTimeInput(
+            format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker',
+                                     'required':"true"}
+            ),
+            'fecha_cm' : forms.DateTimeInput(
+            format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker',
+                                     'required':"true"}
+            )
+        }     
 
 #marcas y modelos, respaldo poco eficiente#         
 
