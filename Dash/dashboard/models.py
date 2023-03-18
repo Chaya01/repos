@@ -1,7 +1,6 @@
 #from __future__ import unicode_literals
 from contextlib import nullcontext
 from enum import auto
-from pickle import FALSE, TRUE
 from tkinter import CASCADE
 from django.db import models
 from django.forms import NullBooleanField
@@ -9,7 +8,20 @@ from django.utils import timezone
 from datetime import date
 from django.utils.translation import gettext as _
 from django.utils import timezone
+from .listados import *
 
+class Procesador(models.Model):
+    marca_procesador = models.CharField(choices=listado_procesadores,max_length=20,verbose_name='Marca Procesador')
+    modelo_p = models.CharField(max_length=20,verbose_name='Modelo')
+    ghz = models.DecimalField(max_digits=2,decimal_places=1,verbose_name='Ghz')
+    nucleos = models.IntegerField(verbose_name='Cores')
+    año_mf = models.IntegerField(verbose_name='Año manufactura')
+
+    def __str__ (self):
+        return str(u"{} - {}").format(
+            self.marca_procesador,
+            self.modelo_p,
+        )
 
 class Estados(models.Model):
     e_equipos = models.BooleanField(default=False)
@@ -18,8 +30,8 @@ class Estados(models.Model):
         return str(self.e_equipos)
 
 class Departamentos(models.Model):
-    area = models.CharField(max_length=20,null=True)
-    sucursal = models.CharField(max_length=20,null=False)
+    area = models.CharField(choices=listado_areas,max_length=20,null=True,verbose_name='Listado Areas')
+    sucursal = models.CharField(choices=listado_sucursales,max_length=20,null=False,verbose_name='listado sucursales')
 
     def __str__ (self):
         return str(u"{} - {}").format(
@@ -29,7 +41,7 @@ class Departamentos(models.Model):
 #    def __str__(self):          #nombre Visible#
 #        return self.area
 
-class Num_telefono(models.Model):
+class Num_telefono(models.Model):    
     numero_tel = models.CharField(max_length=9,null=True,blank=True,unique=True)
     activo = models.ForeignKey(Estados, on_delete=models.CASCADE) #numero activo o dado de baja
 
@@ -41,61 +53,10 @@ class Num_telefono(models.Model):
     
     def numero_activo(self):
         return self.activo
-
-#Forma larga y poco eficiente de respaldo#    
-'''class Marcas_smartphones(models.Models):
-    marcas_sm = models.CharField(max_length=20,primary_key=True)
-
-    def __str__(self):
-        return self.marcas_sm
-
-class Modelos_smartphones(models.Models):
-    marca_sm = models.ForeignKey(Marcas_smartphones,on_delete=models.SET_NULL)
-    modelo_sm = models.CharField(max_length=20)
-
-    def __str__(self):
-        return self.modelo_sm
     
-class Marcas_tablets(models.Models):
-    marcas_tb = models.CharField(max_length=20,primary_key=True)
-
-    def __str__(self):
-        return self.marcas_tb
-
-class Modelos_tablets(models.Models):
-    marca_tb = models.ForeignKey(Marcas_tablets,on_delete=models.SET_NULL)
-    modelo_tb = models.CharField(max_length=20)
-
-    def __str__(self):
-        return self.modelo_tb
-
-class Marcas_notebook(models.Models):
-    marcas_nt = models.CharField(max_length=20,primary_key=True)
-
-    def __str__(self):
-        return self.marcas_nt
-
-class Modelos_notebook(models.Models):
-    marca_nt = models.ForeignKey(Marcas_notebook,on_delete=models.SET_NULL)
-    modelo_nt = models.CharField(max_length=20)
-
-    def __str__(self):
-        return self.modelo_nt
-
-class Marcas_camionetas(models.Models):
-    marcas_cm = models.CharField(max_length=20,primary_key=True)
-
-    def __str__(self):
-        return self.marcas_cm
-
-class Modelos_camionetas(models.Models):
-    marca_cm = models.ForeignKey(Marcas_camionetas,on_delete=models.SET_NULL)
-    modelo_cm = models.CharField(max_length=20)
-
-    def __str__(self):
-        return self.modelo_cm
-'''
-
+    class Meta:
+        verbose_name = "Telefono"
+    
 #Prueba de parametrizacion#
 
 class Marca(models.Model):
@@ -111,9 +72,11 @@ class ParamTipo(models.Model):
         return self.nombre_param
 
 class Modelos(models.Model):
+    
     m_marca = models.ForeignKey(Marca,on_delete=models.CASCADE)
     m_param = models.ForeignKey(ParamTipo,on_delete=models.CASCADE)
     m_modelo = models.CharField(max_length=20,unique=True)
+    m_procesador = models.ForeignKey(Procesador,default="01",on_delete=models.SET_DEFAULT,help_text="Por favor marcar 'No aplica' para las camionetas")
 
     def __str__(self):
         return str(u"{} - {} - {}").format(
@@ -133,6 +96,7 @@ class Smartphones(models.Model):
     valor_telefono = models.IntegerField(help_text='Por favor inserte el valor en CLP')
 #    funciona_telefono = models.ForeignKey(default=True, null=False) #si / no
     observaciones_telefonos = models.CharField(max_length=50,blank=True) #pantalla rota, con mica, etc.
+    sram = models.IntegerField(verbose_name='Memoria Ram')
 
     def __str__(self):
         return str(u"{} {}").format(
@@ -143,11 +107,12 @@ class Smartphones(models.Model):
 class Tablets(models.Model): #crear views, forms and urls
     serie_tablet = models.CharField(unique=True,max_length=20)
     modelo_tablet = models.ForeignKey(Modelos,on_delete=models.CASCADE)
-    imei_tb = models.CharField (max_length=20,null=True, unique=True)
+    imei_tb = models.CharField (max_length=20,null=True, unique=True, blank=True)
     estado_tablet = models.ForeignKey(Estados,on_delete=models.CASCADE) #funciona / no funciona
     fecha_compra_tablet = models.DateField(help_text='Fecha en la que se recepciona el equipo en la empresa')
     valor_tablet = models.IntegerField(help_text='Por favor inserte el valor en CLP')
     observaciones_tablets = models.CharField(max_length=50,blank=True)
+    tram = models.IntegerField(verbose_name='Memoria Ram')
 
     def __str__(self):
         return str(u"{} {}").format(
@@ -162,10 +127,14 @@ class Notebooks(models.Model):
     fecha_compra_notebook = models.DateField(help_text='Fecha en la que se recepciona el equipo en la empresa')
     valor_notebook = models.IntegerField(help_text='Por favor inserte el valor en CLP')
     observaciones_notebook = models.CharField(max_length=50, blank=True)
+    nram = models.IntegerField(verbose_name='Memoria Ram')
+    nhdd = models.IntegerField(verbose_name='HDD',help_text='Por favor marcar 0 si no tiene HDD')
+    nssd = models.IntegerField(verbose_name='SSD',help_text='Por favor marcar 0 si no tiene SSD')
 
     def __str__(self):
-        return str (u"{}").format(
+        return str (u"{} - {}").format(
             self.modelo_notebook,
+            self.serie_notebook,
         )
     
 class Camionetas(models.Model):
@@ -174,6 +143,8 @@ class Camionetas(models.Model):
     mantencion = models.DateField()
     observaciones_camionetas = models.CharField(max_length=50)
     disponible = models.ForeignKey(Estados,on_delete=models.CASCADE) #contratada por la empresa ?
+    modalidad = models.CharField(choices=listado_modalidades,max_length=20,verbose_name='listado modalidades')
+    vin = models.CharField(max_length=20,unique=True)
 
     def __str__(self):
         return (u"{} {}").format(
@@ -187,6 +158,9 @@ class  Usuarios(models.Model): #Editar Views and Forms.
     apellido = models.CharField(max_length=20, null=False)
     area = models.ForeignKey(Departamentos,on_delete=models.SET_NULL, null=True) #revisar
     correo = models.EmailField(max_length=50)
+    empresa = models.CharField(max_length=20)
+    gerente = models.CharField(max_length=20)
+    centro_de_costo = models.CharField(choices=listado_centrosdecostos, max_length=25, verbose_name='Centro de Costo')
 
 #    def nombre_completo(self):
 #        return u"{} {}".format(
@@ -198,6 +172,9 @@ class  Usuarios(models.Model): #Editar Views and Forms.
             self.nombre,
             self.apellido
         )
+    
+    class Meta:
+        verbose_name = "Trabajadores"
     
 #Datos Redundantes por la tabla Asignacion #
 ''' numero_asignado = models.ForeignKey(Num_telefono,on_delete=models.SET_NULL, null=True) #revisar
@@ -212,59 +189,15 @@ class  Usuarios(models.Model): #Editar Views and Forms.
 class Asignacion(models.Model):
     usuario = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
     num = models.ForeignKey(Num_telefono, on_delete=models.CASCADE,null=True,blank=True)
-    smartphone_a = models.ForeignKey(Smartphones, on_delete=models.CASCADE)
-    fecha_sma = models.DateField(default= timezone.now())
-    tablet_a = models.ForeignKey(Tablets, on_delete=models.CASCADE)
-    fecha_ta = models.DateField(default= timezone.now())
-    notebook_a = models.ForeignKey(Notebooks, on_delete=models.CASCADE)
-    fecha_nt = models.DateField(default= timezone.now())
-    camionetas_a =models.ForeignKey(Camionetas, on_delete=models.CASCADE)
-    fecha_cm = models.DateField(default= timezone.now())
+    smartphone_a = models.ForeignKey(Smartphones, on_delete=models.CASCADE, null=True,blank=True)
+    fecha_sma = models.DateField(default= None,null=True,blank=True)
+    tablet_a = models.ForeignKey(Tablets, on_delete=models.CASCADE,null=True,blank=True)
+    fecha_ta = models.DateField(default= None,null=True,blank=True)
+    notebook_a = models.ForeignKey(Notebooks, on_delete=models.CASCADE,null=True,blank=True)
+    fecha_nt = models.DateField(default= None,null=True,blank=True)
+    camionetas_a =models.ForeignKey(Camionetas, on_delete=models.CASCADE,null=True,blank=True)
+    fecha_cm = models.DateField(default= None,null=True,blank=True)
     vigente = models.ForeignKey(Estados,on_delete=models.CASCADE,help_text='marcar si es la asignacion actual del usuario.') #registro actual, si / no)
 
     def __str__(self):
         return str(self.usuario)
-
-# Sin uso, modelo anterior
-
-
-#class Series(models.Model):
-#    id = models.AutoField(null=False,blank=False,unique=True,primary_key=True)
-#    serie = models.CharField(max_length=20,null=False,blank=False,unique=True)
-#    fecha_compra = models.DateTimeField(default=timezone.now) #Establece la fecha local
-#    valor = models.IntegerField(blank=True)
-#    imei_1 = models.IntegerField(blank=True,null=True)
-#    imei_2 = models.IntegerField(blank=True,null=True)
-
-#    def __str__(self):
-#        return self.serie
-
-#    def imprimir_serie(self):
-#        return self.serie
-
- #   def imprimir_fecha_compra(self):
- #       return self.fecha_compra
-
-  #  def imprimir_valor(self):
-  #      return self.valor
-
-    #crear return de imei
-
-    #class Historial(models.Model):
-#    id = models.AutoField(unique=True,null=False,blank=False,primary_key=True)
-#    usuario = models.ForeignKey(Usuarios,on_delete=models.PROTECT)
-#    equipo = models.ForeignKey(Equipos,on_delete=models.PROTECT)
-#    fecha_recepcion = models.DateTimeField(default=timezone.now)
-#    fecha_entrega = models.DateTimeField(auto_now_add=True)#(default=timezone.now)
-#
-#    def __str__(self):
- #       return str(self.usuario)
-
-    #def registro(self):
-    #    return u"{} {} {} {}".format(
-    #        self.usuario,
-    #        self.equipo,
-    #        self.fecha_recepcion,
-    #        self.fecha_entrega
-    #    )
-

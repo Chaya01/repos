@@ -1,71 +1,77 @@
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Asignaciones</title>
-   <!-- Bootstrap -->
-   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-   {% load crispy_forms_tags %}
-</head>
-
-<h1>Panel Asignaciones</h1>
+{% extends "dashboard/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block nav %}
+    <!-- Custom navigation menu goes here -->
+{% endblock %}
+{% block content %}
+<h2>Panel Asignaciones</h2>
 <ul>
 
 <p>
-    <a href="{% url "dashboard:newasg" %}">Registrar</a>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'dashboard:newasg' %}'">Registrar</button>
 </p>
 <p>{{ dashboard.name }}</p>
 
 <div class="table-responsive">
-    <table class="table table-striped"> 
-        <th>Usuario</th>
-        <th>Numero de telefono</th>
-        <th>Smartphone asignado</th>
-        <th>Fecha de entrega</th>
-        <th>Tablet asignada</th>
-        <th>Fecha de entrega</th>
-        <th>Notebook asignada</th>
-        <th>Fecha de entrega</th>
-        <th>Camioneta asignada</th>
-        <th>Fecha de entrega</th>
-        <th>Registro vigente</th>
-{% for Asignacion in object_list %}
-  <tr>
-    <td>{{ Asignacion.usuario }} </td> 
-    <td>{{ Asignacion.num }}</td>
-    <td>{{ Asignacion.smartphone_a }}</td>
-    <td>{{ Asignacion.fecha_sma }}</td>
-    <td>{{ Asignacion.tablet_a }} </td> 
-    <td>{{ Asignacion.fecha_ta }}</td>
-    <td>{{ Asignacion.notebook_a }}</td>
-    <td>{{ Asignacion.fecha_nt }}</td>
-    <td>{{ Asignacion.camionetas_a }}</td>
-    <td>{{ Asignacion.fecha_cm }}</td>
-    <td>{{ Asignacion.vigente|yesno:"Vigente,No vigente" }}</td>
-    <td><a href="{% url "dashboard:editasg" Asignacion.pk %}">Editar</a> <a href="{% url "dashboard:deletasg" Asignacion.pk %}">Borrar</a></td>          
-  </tr>
-{% endfor %}
-    </tr>
+    <table class="table table-hover table-bordered">
+        <thead style="background-color: rgb(25, 231, 227);">
+            <tr>
+                <th>Usuario</th>
+                <th>Numero de telefono</th>
+                <th>Smartphone asignado</th>
+                <th>Fecha de entrega</th>
+                <th>Tablet asignada</th>
+                <th>Fecha de entrega</th>
+                <th>Notebook asignada</th>
+                <th>Fecha de entrega</th>
+                <th>Camioneta asignada</th>
+                <th>Fecha de entrega</th>
+                <th>Registro vigente</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for Asignacion in object_list %}
+            <tr class="table-hover">
+                <td>{{ Asignacion.usuario }}</td>
+                <td>{{ Asignacion.num }}</td>
+                <td>{{ Asignacion.smartphone_a }}</td>
+                <td>{{ Asignacion.fecha_sma }}</td>
+                <td>{{ Asignacion.tablet_a }}</td>
+                <td>{{ Asignacion.fecha_ta }}</td>
+                <td>{{ Asignacion.notebook_a }}</td>
+                <td>{{ Asignacion.fecha_nt }}</td>
+                <td>{{ Asignacion.camionetas_a }}</td>
+                <td>{{ Asignacion.fecha_cm }}</td>
+                <td>{{ Asignacion.vigente }}</td>
+                <td><a href="{% url "dashboard:editasg" Asignacion.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="{% url "dashboard:deletasg" Asignacion.pk %}" class="btn btn-danger btn-sm">Borrar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-primary">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Anterior</a>
+        {% endif %}
 
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
-            {% endif %}
-    
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
-    
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">Ultima &raquo;</a>
-            {% endif %}
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
         </span>
-    </div>
-    <p>
-        <a href="{% url "dashboard:index" %}">Volver al indice</a>
-    </p>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Siguiente</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary">Ultima &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+<p>
+    <a href="{% url "dashboard:index" %}" class="btn btn-primary">Volver al indice</a>
+</p>
 </ul>
+{% endblock %}

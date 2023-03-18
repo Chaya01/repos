@@ -1,0 +1,65 @@
+{% extends "dashboard/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block nav %}
+    <!-- Custom navigation menu goes here -->
+{% endblock %}
+{% block content %}
+<h2> Procesadores</h2>
+<ul>
+
+<p>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'dashboard:newpro' %}'">Ingresar Procesador</button>
+</p>
+<p>{{ dashboard.name }}</p>
+
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <thead style="background-color: rgb(25, 231, 227);">
+            <tr>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Velocidad</th>
+                <th>Cores</th>
+                <th>Año</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for Procesador in object_list %}
+            <tr class="table-hover">
+                <td>{{ Procesador.marca_procesador }} </td> 
+                <td>{{ Procesador.modelo_p }}</td>
+                <td>{{ Procesador.ghz }}</td>
+                <td>{{ Procesador.nucleos }}</td>
+                <td>{{ Procesador.año_mf }}</td>
+                <td><a href="{% url "dashboard:editpro" Procesador.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="{% url "dashboard:deletpro" Procesador.pk %}" class="btn btn-danger btn-sm">Borrar</a>
+                </td>          
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="btn btn-secondary">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Anterior</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Siguiente</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary">Ultima &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    <p>
+        <a href="{% url "dashboard:index" %}" class="btn btn-secondary">Volver al indice</a>
+    </p>
+</ul>
+{% endblock %}

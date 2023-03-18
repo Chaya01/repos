@@ -24,6 +24,9 @@ urlpatterns = [
     path('panel_notebooks.html',panel_notebooks.as_view(),name ='panel_notebooks'),
     path('panel_camionetas.html',panel_camionetas.as_view(),name ='panel_camionetas'),
     path('panel_asginacion.html',panel_asignacion.as_view(),name ='panel_asignacion'),
+    path('panel_modelos.html',panel_modelos.as_view(),name ='panel_modelos'),
+    path('panel_procesadores.html',panel_procesadores.as_view(),name ='panel_procesadores'),
+    path('panel_marcas.html',panel_marcas.as_view(),name ='panel_marcas'),
 
 
     ### Usuarios ###
@@ -74,6 +77,23 @@ urlpatterns = [
     path('asignacion/update/<str:pk>', actualizar_asignacion.as_view(), name= 'editasg'),
     path('asignacion/delete/<str:pk>', borrar_asignacion.as_view(), name = 'deletasg'),
 
+        ### Modelos ###
+    path('modelos/<str:pk>', detalle_modelo.as_view(), name ='moddetail'),
+    path('modelos/form/', crear_modelo.as_view(), name = 'newmod'),
+    path('modelos/update/<str:pk>', actualizar_modelo.as_view(), name= 'editmod'),
+    path('modelos/delete/<str:pk>', borrar_modelo.as_view(), name = 'deletmod'),
+
+        ### Procesador ###
+    path('procesador/<str:pk>', detalle_procesador.as_view(), name ='prodetail'),
+    path('procesador/form/', crear_procesador.as_view(), name = 'newpro'),
+    path('procesador/update/<str:pk>', actualizar_procesador.as_view(), name= 'editpro'),
+    path('procesador/delete/<str:pk>', borrar_procesador.as_view(), name = 'deletpro'),
+
+        ### Marcas ###
+    path('marcas/<str:pk>', detalle_marca.as_view(), name ='madetail'),
+    path('marcas/form/', crear_marca.as_view(), name = 'newma'),
+    path('marcas/update/<str:pk>', actualizar_marca.as_view(), name= 'editma'),
+    path('marcas/delete/<str:pk>', borrar_marca.as_view(), name = 'deletma'),
 
     ### Series ###
 #    path('series/<str:pk>', detalle_serie.as_view(), name='seriedetail'),

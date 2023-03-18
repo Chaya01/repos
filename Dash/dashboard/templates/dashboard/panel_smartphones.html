@@ -1,52 +1,59 @@
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Smartphones</title>
-   <!-- Bootstrap -->
-   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-   {% load crispy_forms_tags %}
-</head>
+{% extends "dashboard/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block nav %}
+    <!-- Custom navigation menu goes here -->
+{% endblock %}
+{% block content %}
+<h2> Smartphones </h2>
 
-<h1>Panel Telefonos</h1>
 <ul>
-
 <p>
-    <a href="{% url "dashboard:newsma" %}">Agregar Smartphone</a>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'dashboard:newsma' %}'">Ingresar Smartphone</button>
 </p>
 <p>{{ dashboard.name }}</p>
 
 <div class="table-responsive">
-    <table class="table table-striped"> 
-        <th>Numero de Serie</th>
-        <th>Modelo</th>
-        <th>Imei</th>
-        <th>Imei 2</th>
-        <th>Estado</th>
-        <th>Fecha de compra</th>
-        <th>Valor del dispositivo</th>
-        <th>Observaciones</th>
-{% for Smartphones in object_list %}
-  <tr>
-    <td>{{ Smartphones.serie_smartphone }} </td> 
-    <td>{{ Smartphones.modelo_smartphone }}</td>
-    <td>{{ Smartphones.imei1 }}</td>
-    <td>{{ Smartphones.imei2 }}</td>
-    <td>{{ Smartphones.estado_telefono|yesno:"Funciona,No funciona" }}</td>
-    <td>{{ Smartphones.fecha_compra_telefono }}</td>
-    <td>${{ Smartphones.valor_telefono }}</td>
-    <td>{{ Smartphones.observaciones_telefonos }}</td>
-    <td><a href="{% url "dashboard:editsma" Smartphones.pk %}">Editar</a> <a href="{% url "dashboard:deletsma" Smartphones.pk %}">Borrar</a></td>          
-  </tr>
-{% endfor %}
-    </tr>
+    <table class="table table-hover table-bordered">
+        <thead style="background-color: rgb(25, 231, 227);">
+            <tr>
+                <th>Numero de Serie</th>
+                <th>Modelo</th>
+                <th>RAM</th>
+                <th>Imei</th>
+                <th>Imei 2</th>
+                <th>Estado</th>
+                <th>Fecha de compra</th>
+                <th>Valor del dispositivo</th>
+                <th>Observaciones</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for Smartphones in object_list %}
+            <tr class="table-hover">
+                <td>{{ Smartphones.serie_smartphone }} </td> 
+                <td>{{ Smartphones.modelo_smartphone }}</td>
+                <td>{{ Smartphones.sram }}</td>
+                <td>{{ Smartphones.imei1 }}</td>
+                <td>{{ Smartphones.imei2 }}</td>
+                <td>{{ Smartphones.estado_telefono }}</td>
+                <td>{{ Smartphones.fecha_compra_telefono }}</td>
+                <td>${{ Smartphones.valor_telefono }}</td>
+                <td>{{ Smartphones.observaciones_telefonos }}</td>
+                <td><a href="{% url "dashboard:editsma" Smartphones.pk %}" class="btn btn-warning btn-sm">Editar</a> 
+                    <a href="{% url "dashboard:deletsma" Smartphones.pk %}" class="btn btn-danger btn-sm">Borrar</a>
+                </td>          
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
-
+</div>
     <div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                <a href="?page=1" class="btn btn-secondary btn-sm">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary btn-sm">Anterior</a>
             {% endif %}
     
             <span class="current">
@@ -54,12 +61,13 @@
             </span>
     
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">Ultima &raquo;</a>
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary btn-sm">Siguiente</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary btn-sm">Ultima &raquo;</a>
             {% endif %}
         </span>
     </div>
     <p>
-        <a href="{% url "dashboard:index" %}">Volver al indice</a>
+        <a href="{% url "dashboard:index" %}" class="btn btn-secondary btn-sm">Volver al indice</a>
     </p>
 </ul>
+{% endblock %}

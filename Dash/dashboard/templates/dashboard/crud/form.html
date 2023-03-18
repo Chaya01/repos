@@ -1,20 +1,20 @@
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New</title>
-   <!-- Bootstrap -->
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-   {% load crispy_forms_tags %}
-</head>
+{% extends "dashboard/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block nav %}
+    <!-- Custom navigation menu goes here -->
+{% endblock %}
+{% block content %}
 <body>
-<form method="post">
-    <div class ="fieldWrapper">
-    {% csrf_token %}
-    {{form.non_field_errors}}
-    {{ form.as_p}} 
-    <button type="submit" class ="btn btn-success" value="Save"> Guardar </button>
-    <input type="button" class = "btn btn-cancel" onclick="history.back();" value="Regresar">
-    </div>
-</form>
+    <h2>Ingresar {{ model_verbose_name }}</h2>
+    <form method="post">
+        <div class ="fieldWrapper">
+        {% csrf_token %}
+        {{form.non_field_errors}}
+        {{ form.as_p}} 
+        <button type="submit" class ="btn btn-success" value="Save"> Guardar </button>
+        <input type="button" class = "btn btn-cancel" onclick="history.back();" value="Regresar">
+        </div>
+    </form>
 </body>
+{% endblock %}

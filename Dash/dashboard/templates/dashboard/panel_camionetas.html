@@ -1,46 +1,56 @@
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Camionetas</title>
-   <!-- Bootstrap -->
-   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-   {% load crispy_forms_tags %}
-</head>
-
-<h1>Panel Camionetas</h1>
+{% extends "dashboard/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block nav %}
+    <!-- Custom navigation menu goes here -->
+{% endblock %}
+{% block content %}
+<h2> Camionetas </h2>
 <ul>
 
 <p>
-    <a href="{% url "dashboard:newcam" %}">Agregar Camioneta</a>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'dashboard:newcam' %}'">Ingresar Camioneta</button>
 </p>
+
 <p>{{ dashboard.name }}</p>
 
 <div class="table-responsive">
-    <table class="table table-striped"> 
-        <th>Patente</th>
-        <th>Modelo</th>
-        <th>Fecha Mantencion</th>
-        <th>Observacion</th>
-        <th>contrato vigente</th>
-{% for Camionetas in object_list %}
-  <tr>
-    <td>{{ Camionetas.patente }} </td> 
-    <td>{{ Camionetas.modelo_camioneta }}</td>
-    <td>{{ Camionetas.mantencion }}</td>
-    <td>{{ Camionetas.observaciones_camionetas }}</td>
-    <td>{{ Camionetas.disponible|yesno:"Contratada,No contratada" }}</td>
-    <td><a href="{% url "dashboard:editcam" Camionetas.pk %}">Editar</a> <a href="{% url "dashboard:deletcam" Camionetas.pk %}">Borrar</a></td>          
-  </tr>
-{% endfor %}
-    </tr>
+    <table class="table table-hover table-bordered">
+        <thead style="background-color: rgb(25, 231, 227);">
+            <tr>
+                <th>Patente</th>
+                <th>Modelo</th>
+                <th>Fecha Mantencion</th>
+                <th>Observacion</th>
+                <th>contrato vigente</th>
+                <th>Modalidad</th>
+                <th>VIN</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for Camionetas in object_list %}
+            <tr class="table-hover">
+                <td>{{ Camionetas.patente }} </td> 
+                <td>{{ Camionetas.modelo_camioneta }}</td>
+                <td>{{ Camionetas.mantencion }}</td>
+                <td>{{ Camionetas.observaciones_camionetas }}</td>
+                <td>{{ Camionetas.disponible }}</td>
+                <td>{{ Camionetas.modalidad }}</td>
+                <td>{{ Camionetas.vin }}</td>
+                <td><a href="{% url "dashboard:editcam" Camionetas.pk %}" class="btn btn-warning btn-sm">Editar</a> 
+                    <a href="{% url "dashboard:deletcam" Camionetas.pk %}" class="btn btn-danger btn-sm">Borrar</a>
+                </td>          
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
-
+</div>
     <div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                <a href="?page=1" class="btn btn-secondary">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Anterior</a>
             {% endif %}
     
             <span class="current">
@@ -48,12 +58,13 @@
             </span>
     
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">Ultima &raquo;</a>
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Siguiente</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary">Ultima &raquo;</a>
             {% endif %}
         </span>
     </div>
     <p>
-        <a href="{% url "dashboard:index" %}">Volver al indice</a>
+        <a href="{% url "dashboard:index" %}" class="btn btn-secondary">Volver al indice</a>
     </p>
 </ul>
+{% endblock %}

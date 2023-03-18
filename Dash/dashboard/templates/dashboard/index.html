@@ -1,7 +1,11 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+<!-- Desarrollado por Kevin Aroca -->
 <h1>Indice</h1>
     <h1>Indice</h1>
     <p>
-        <a href="{% url "dashboard:panel_usuarios" %}">Usuarios</a>
+        <a href="{% url "dashboard:panel_usuarios" %}">Trabajadores</a>
     </p>
     <p>
         <a href="{% url "dashboard:panel_departamentos" %}">Departamentos</a>
@@ -23,4 +27,15 @@
     </p>    
     <p>
         <a href="{% url "dashboard:panel_asignacion" %}">Registro</a>
-    </p>    
+    </p>   
+    <p>
+        <a href="{% url "dashboard:panel_modelos" %}">Modelos</a>
+    </p>     
+    <p>
+        <a href="{% url "dashboard:panel_procesadores" %}">Procesadores</a>
+    </p>     
+    <p>
+        <a href="{% url "dashboard:panel_marcas" %}">Marcas</a>
+    </p>     
+
+    {% endblock %}
