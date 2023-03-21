@@ -27,6 +27,8 @@ urlpatterns = [
     path('panel_modelos.html',panel_modelos.as_view(),name ='panel_modelos'),
     path('panel_procesadores.html',panel_procesadores.as_view(),name ='panel_procesadores'),
     path('panel_marcas.html',panel_marcas.as_view(),name ='panel_marcas'),
+    path('panel_mantencion.html',panel_mantenciones.as_view(),name ='panel_mantencion'),
+    path('mantencion/<int:pk>', views.listado_mantenciones.as_view(), name = 'mantenciones'),
 
 
     ### Usuarios ###
@@ -94,6 +96,12 @@ urlpatterns = [
     path('marcas/form/', crear_marca.as_view(), name = 'newma'),
     path('marcas/update/<str:pk>', actualizar_marca.as_view(), name= 'editma'),
     path('marcas/delete/<str:pk>', borrar_marca.as_view(), name = 'deletma'),
+
+        ### Mantenciones ###
+    path('mantencion/<str:pk>', detalle_mantencion.as_view(), name ='mantedetail'),
+    path('mantencion/form/', crear_mantencion.as_view(), name = 'newmante'),
+    path('mantencion/update/<str:pk>', actualizar_mantencion.as_view(), name= 'editmante'),
+    path('mantencion/delete/<str:pk>', borrar_mantencion.as_view(), name = 'deletmante'),
 
     ### Series ###
 #    path('series/<str:pk>', detalle_serie.as_view(), name='seriedetail'),

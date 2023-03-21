@@ -145,6 +145,7 @@ class Camionetas(models.Model):
     disponible = models.ForeignKey(Estados,on_delete=models.CASCADE) #contratada por la empresa ?
     modalidad = models.CharField(choices=listado_modalidades,max_length=20,verbose_name='listado modalidades')
     vin = models.CharField(max_length=20,unique=True)
+    kilometraje = models.IntegerField()
 
     def __str__(self):
         return (u"{} {}").format(
@@ -201,3 +202,13 @@ class Asignacion(models.Model):
 
     def __str__(self):
         return str(self.usuario)
+    
+class Mantenciones(models.Model):
+    m_patente = models.ForeignKey(Camionetas, on_delete=models.CASCADE)
+    fecha_mantencion = models.DateField(default= None)
+    m_kilometraje = models.IntegerField(verbose_name='Kilometraje aproximado de la mantencion')
+    m_estado = models.BooleanField(default=False)
+    responsable = models.ForeignKey(Asignacion,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.m_patente)

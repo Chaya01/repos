@@ -40,6 +40,7 @@
                 <td>{{ Camionetas.vin }}</td>
                 <td><a href="{% url "dashboard:editcam" Camionetas.pk %}" class="btn btn-warning btn-sm">Editar</a> 
                     <a href="{% url "dashboard:deletcam" Camionetas.pk %}" class="btn btn-danger btn-sm">Borrar</a>
+                    <a href="{% url "dashboard:mantenciones" pk=Camionetas.pk %}" class="btn btn-success btn-sm">Ver mantenciones</a>
                 </td>          
             </tr>
             {% endfor %}

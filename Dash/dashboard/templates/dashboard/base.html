@@ -59,7 +59,9 @@
         {% block header %}
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: rgb(30 41 59); z-index:2;">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Curimapu</a>
+                <a class="navbar-brand" href="{% url "dashboard:index" %}">
+                        <img src="{% static 'img/logocurimapu.png' %}" alt="Curimapu" width="250px" height="40px">
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
                 </button>
@@ -75,38 +77,41 @@
         <div class="sidebar">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link" href="{% url "dashboard:panel_usuarios" %}">Trabajadores</a>
+                <a class="nav-link" href="{% url "dashboard:panel_usuarios" %}">Trabajadores</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url "dashboard:panel_departamentos" %}">Departamentos</a>
+                <a class="nav-link" href="{% url "dashboard:panel_departamentos" %}">Departamentos</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url "dashboard:panel_telefonos" %}">Numeros Telefonicos</a>
+                <a class="nav-link" href="{% url "dashboard:panel_telefonos" %}">Numeros Telefonicos</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url "dashboard:panel_smartphones" %}">Smartphones</a>
+                <a class="nav-link" href="{% url "dashboard:panel_smartphones" %}">Smartphones</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url "dashboard:panel_tablets" %}">Tablets</a>
+                <a class="nav-link" href="{% url "dashboard:panel_tablets" %}">Tablets</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url "dashboard:panel_notebooks" %}">Notebooks</a>
+                <a class="nav-link" href="{% url "dashboard:panel_notebooks" %}">Notebooks</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url "dashboard:panel_camionetas" %}">Camionetas</a>
+                <a class="nav-link" href="{% url "dashboard:panel_camionetas" %}">Camionetas</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url "dashboard:panel_asignacion" %}">Asignacion</a>
+                <a class="nav-link" href="{% url "dashboard:panel_asignacion" %}">Asignacion</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url "dashboard:panel_modelos" %}">Modelos</a>
+                <a class="nav-link" href="{% url "dashboard:panel_modelos" %}">Modelos</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url "dashboard:panel_procesadores" %}">Procesadores</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url "dashboard:panel_marcas" %}">Marcas</a>
-              </li>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url "dashboard:panel_mantencion" %}">Mantencion</a>
+            </li>
           </ul>
         </div>
         {% endblock %}
@@ -126,12 +131,6 @@
             <footer>
                 <div class="container">
                   <div class="row">
-                    <div class="col-md-4">
-                      <img src="{% static 'img/marcalq.png' %}" alt="Curimapu Logo">
-                    </div>
-                    <div class="col-md-8">
-                      <p>Curimapu Export. | Direccion: San luis de Cerrillos, Bulnes. | Phone: 555-555-5555 | Email: curimapu@curimapu.com</p>
-                    </div>
                   </div>
                 </div>
               </footer>

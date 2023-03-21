@@ -155,12 +155,44 @@ class panel_marcas(ListView):
         context = super(panel_marcas, self).get_context_data(**kwargs)
         context['Marca'] = Marca.objects.all()
         return context
+    
+class panel_mantenciones(ListView):
+    context_object_name = 'panel_mantencion'
+    template_name = 'dashboard/panel_mantencion.html'
+    paginate_by = 20
+    queryset = Mantenciones.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super(panel_mantenciones, self).get_context_data(**kwargs)
+        context['Mantenciones'] = Mantenciones.objects.all()
+        return context
+    
+class listado_mantenciones(ListView):
+    model = Mantenciones
+    template_name = 'dashboard/listado_mantenciones.html'
+    context_object_name = 'mantenciones'
+    paginate_by = 20
+
+    def get_queryset(self):
+        camionetas_id = self.kwargs.get('pk')
+        return Mantenciones.objects.filter(m_patente_id=camionetas_id)
+"""    def get_queryset(self):
+        # Retrieve the user ID from the URL parameter
+        camionetas_id  = self.kwargs.get('pk')
+#        print("User ID:", matricula_id) print query data
+
+        # Return a queryset of all Cuotas objects that belong to the user
+        return Mantenciones.objects.filter(m_patente_id=camionetas_id)
+"""
+
+
+
 
 ###### CRUD USUARIO ######
 
 class detalle_usuario(DetailView):
     model = Usuarios
     template_name = 'dashboard/crud/user_detail.html'
+
 
 class crear_usuario(CreateView):
     model = Usuarios
@@ -605,9 +637,29 @@ class borrar_marca(DeleteView):
     template_name = 'dashboard/crud/delete.html'
     success_url = reverse_lazy('dashboard:panel_marcas')
 
+### Mantenciones ###
 
+class crear_mantencion(CreateView):
+    model = Mantenciones
+    template_name = 'dashboard/crud/form.html'
+    form_class = MantencionesForm
+    success_url = reverse_lazy('dashboard:panel_mantencion')
 
+class actualizar_mantencion(UpdateView):
+    model = Mantenciones
+    template_name = 'dashboard/crud/update.html'    
+    success_url = reverse_lazy('dashboard:panel_mantencion')
+    form_class = MantencionesForm
 
+class detalle_mantencion(DetailView):
+    model = Mantenciones
+    template_name = 'dashboard/crud/tablet_detail.html'
+    success_url = reverse_lazy('dashboard:panel_mantencion')
+
+class borrar_mantencion(DeleteView):
+    model = Mantenciones
+    template_name = 'dashboard/crud/delete.html'
+    success_url = reverse_lazy('dashboard:panel_mantencion')
 
 
 ##### Crud Series #####

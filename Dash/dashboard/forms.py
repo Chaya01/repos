@@ -105,7 +105,7 @@ class NotebooksForm(forms.ModelForm):
                  'valor_notebook','observaciones_notebook','nram','nhdd','nssd']
         
         widgets = {
-            'fecha_compra_notebook' : forms.DateTimeInput(
+            'fecha_compra_notebook' : forms.DateInput(
             format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker',
                                      'required':"true"}
             )
@@ -121,7 +121,7 @@ class CamionetasForm(forms.ModelForm):
         model = Camionetas
         fields = ['patente','modelo_camioneta','mantencion',
                   'observaciones_camionetas','disponible',
-                  'modalidad','vin']
+                  'modalidad','vin','kilometraje']
 
         widgets = {
             'mantencion' : forms.DateTimeInput(
@@ -159,4 +159,17 @@ class ProcesadorForm(forms.ModelForm):
           fields = {'marca_procesador','modelo_p','ghz','nucleos','año_mf'}
 
           widgets = {'marca_procesador': forms.Select(choices=listado_procesadores)}
-                     
+
+class MantencionesForm(forms.ModelForm):
+     
+     class Meta:
+            model = Mantenciones
+            fields = {
+               'm_patente','fecha_mantencion','m_kilometraje','m_estado','responsable'
+          }
+        
+            widgets = {
+                'fecha_mantencion' : forms.DateTimeInput(
+                format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker','required':'True'}
+                )
+            }
