@@ -1,0 +1,35 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+<p>{{ dashboard.name }}</p>
+
+  <h1>Detalle del Usuario</h1>
+  <ul>
+    <li>Rut: {{ Usuarios.rut }}</li>
+    <li>Nombre: {{ Usuarios.nombre }}</li>
+    <li>Apellido: {{ Usuarios.apellido }}</li>
+    <li>Área: {{ Usuarios.area }}</li>
+    <li>Correo: {{ Usuarios.correo }}</li>
+    <li>Empresa: {{ Usuarios.empresa }}</li>
+    <li>Gerente: {{ Usuarios.gerente }}</li>
+    <li>Centro de Costo: {{ Usuarios.centro_de_costo }}</li>
+    {% if asignaciones %}
+    <h2>Asignaciones:</h2>
+    <ul>
+      {% for asignacion in asignaciones %}
+        {% if asignacion.notebook_a %}
+          <li>Notebook: {{ asignacion.notebook_a }}</li>
+        {% endif %}
+        {% if asignacion.tablet_a %}
+          <li>Tablet: {{ asignacion.tablet_a }}</li>
+        {% endif %}
+        {% if asignacion.smartphone_a %}
+          <li>Smartphone: {{ asignacion.smartphone_a }}</li>
+        {% endif %}
+      {% empty %}
+        <p>No se ha asignado ningún dispositivo a este usuario</p>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  </ul>
+{% endblock %}

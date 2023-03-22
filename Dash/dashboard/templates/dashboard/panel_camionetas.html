@@ -5,6 +5,7 @@
     <!-- Custom navigation menu goes here -->
 {% endblock %}
 {% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 <h2> Camionetas </h2>
 <ul>
 
@@ -18,9 +19,55 @@
     <table class="table table-hover table-bordered">
         <thead style="background-color: rgb(25, 231, 227);">
             <tr>
-                <th>Patente</th>
-                <th>Modelo</th>
-                <th>Fecha Mantencion</th>
+                <th>
+                    <div class="d-flex align-items-center ">
+                      <span>Patente</span>
+                      <button class="btn btn-sm" type="submit" form="sort-form" name="sort" value="{% if request.GET.sort == 'patente' and request.session.current_order == 'asc' %}-patente{% else %}patente{% endif %}">
+                        {% if request.GET.sort == 'patente' %}
+                          {% if request.session.current_order == 'asc' %}
+                            <i class="bi bi-sort-up fs-6"></i>
+                          {% else %}
+                            <i class="bi bi-sort-down fs-6"></i>
+                          {% endif %}
+                        {% else %}
+                          <i class="bi bi-filter fs-6"></i>
+                        {% endif %}
+                      </button>
+                    </div>
+                  </th>
+                  <th>
+                    <div class="d-flex align-items-center">
+                      <span>Modelo</span>
+                      <button class="btn btn-sm" type="submit" form="sort-form" name="sort" value="{% if request.GET.sort == 'modelo_camioneta' and request.session.current_order == 'asc' %}-modelo_camioneta{% else %}modelo_camioneta{% endif %}">
+                        {% if request.GET.sort == 'modelo_camioneta' %}
+                          {% if request.session.current_order == 'asc' %}
+                            <i class="bi bi-sort-up fs-6"></i>
+                          {% else %}
+                            <i class="bi bi-sort-down fs-6"></i>
+                          {% endif %}
+                        {% else %}
+                          <i class="bi bi-filter fs-6"></i>
+                        {% endif %}
+                      </button>
+                    </div>
+                  </th>
+                  <th>
+                    <div class="d-flex align-items-center">
+                        <span> Mantencion </span>
+                      <button class="btn btn-sm" type="submit" form="sort-form" name="sort" value="{% if request.GET.sort == 'mantencion' and request.session.current_order == 'asc' %}-mantencion{% else %}mantencion{% endif %}">
+                        {% if request.GET.sort == 'mantencion' %}
+                          {% if request.session.current_order == 'asc' %}
+                            <i class="bi bi-sort-up"></i>
+                          {% else %}
+                            <i class="bi bi-sort-down"></i>
+                          {% endif %}
+                        {% else %}
+                          <i class="bi bi-filter"></i>
+                        {% endif %}
+                      </button>
+                    </div>
+                  </th>
+                  
                 <th>Observacion</th>
                 <th>contrato vigente</th>
                 <th>Modalidad</th>
@@ -28,6 +75,9 @@
                 <th>Acciones</th>
             </tr>
         </thead>
+        <form id="sort-form" method="get">
+            <input type="hidden" name="page" value="{{ page_obj.number }}" />   
+        </form>
         <tbody>
             {% for Camionetas in object_list %}
             <tr class="table-hover">
@@ -47,25 +97,49 @@
         </tbody>
     </table>
 </div>
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a href="?page=1" class="btn btn-secondary">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Anterior</a>
-            {% endif %}
-    
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
-    
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Siguiente</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary">Ultima &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
+<div class="pagination d-flex justify-content-start">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a href="?page=1" class="page-link" aria-label="First">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item">
+          <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous">
+            <span aria-hidden="true">&lsaquo;</span>
+          </a>
+        </li>
+      {% endif %}
+  
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+        {% endif %}
+      {% endfor %}
+  
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a href="?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next">
+            <span aria-hidden="true">&rsaquo;</span>
+          </a>
+        </li>
+        <li class="page-item">
+          <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link" aria-label="Last">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
     <p>
         <a href="{% url "dashboard:index" %}" class="btn btn-secondary">Volver al indice</a>
     </p>
 </ul>
 {% endblock %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js" integrity="sha512-Wy6NBksJmeUCrW8XvAYTlHlRnCxrs6E7k8FvEL1nghs/Ts3s3sS9G11cS1S0VlmZf3uN7Vx4vWTi4RdH/4FpKg
+
+

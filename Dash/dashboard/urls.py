@@ -29,6 +29,7 @@ urlpatterns = [
     path('panel_marcas.html',panel_marcas.as_view(),name ='panel_marcas'),
     path('panel_mantencion.html',panel_mantenciones.as_view(),name ='panel_mantencion'),
     path('mantencion/<int:pk>', views.listado_mantenciones.as_view(), name = 'mantenciones'),
+    path('usuarios/<int:pk>', views.reporte.as_view(), name = 'reporte'),
 
 
     ### Usuarios ###

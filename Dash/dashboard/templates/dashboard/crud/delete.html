@@ -5,6 +5,7 @@
     <!-- Custom navigation menu goes here -->
 {% endblock %}
 {% block content %}
+<h2> Eliminar </h2>
 <form method="post">{% csrf_token %}
     ¿Estás seguro que deseas borrar el usuario "{{ object }}"?
     <div>

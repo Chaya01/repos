@@ -50,7 +50,7 @@ class panel_usuarios(ListView):
     context_object_name = 'panel_usuarios'
     template_name = 'dashboard/panel_usuarios.html'
     paginate_by = 20
-    queryset = Usuarios.objects.all()
+    queryset = Usuarios.objects.order_by('nombre')
     def get_context_data(self, **kwargs):
         context = super(panel_usuarios, self).get_context_data(**kwargs)
         context['Usuarios'] = Usuarios.objects.all()
@@ -60,7 +60,7 @@ class panel_departamentos(ListView):
     context_object_name = 'panel_departamentos'
     template_name = 'dashboard/panel_departamentos.html'
     paginate_by = 20
-    queryset = Departamentos.objects.all()
+    queryset = Departamentos.objects.order_by('area')
     def get_context_data(self, **kwargs):
         context = super(panel_departamentos, self).get_context_data(**kwargs)
         context['Departamentos'] = Departamentos.objects.all()
@@ -70,7 +70,7 @@ class panel_telefonos(ListView):
     context_object_name = 'panel_telefonos'
     template_name = 'dashboard/panel_telefonos.html'
     paginate_by = 20
-    queryset = Num_telefono.objects.all()
+    queryset = Num_telefono.objects.order_by('numero_tel')
     def get_context_data(self, **kwargs):
         context = super(panel_telefonos, self).get_context_data(**kwargs)
         context['Num_telefono'] = Num_telefono.objects.all()
@@ -80,17 +80,18 @@ class panel_smartphones(ListView):
     context_object_name = 'panel_smartphones'
     template_name = 'dashboard/panel_smartphones.html'
     paginate_by = 20
-    queryset = Smartphones.objects.all()
+    queryset = Smartphones.objects.order_by('serie_smartphone')
     def get_context_data(self, **kwargs):
         context = super(panel_smartphones, self).get_context_data(**kwargs)
         context['Smartphones'] = Smartphones.objects.all()
         return context
+    
 
 class panel_tablets(ListView):
     context_object_name = 'panel_tablets'
     template_name = 'dashboard/panel_tablets.html'
     paginate_by = 20
-    queryset = Tablets.objects.all()
+    queryset = Tablets.objects.order_by('serie_tablet')
     def get_context_data(self, **kwargs):
         context = super(panel_tablets, self).get_context_data(**kwargs)
         context['Tablets'] = Tablets.objects.all()
@@ -100,7 +101,7 @@ class panel_notebooks(ListView):
     context_object_name = 'panel_notebooks'
     template_name = 'dashboard/panel_notebooks.html'
     paginate_by = 20
-    queryset = Notebooks.objects.all()
+    queryset = Notebooks.objects.order_by('serie_notebook')
     def get_context_data(self, **kwargs):
         context = super(panel_notebooks, self).get_context_data(**kwargs)
         context['Notebooks'] = Notebooks.objects.all()
@@ -110,17 +111,48 @@ class panel_camionetas(ListView):
     context_object_name = 'panel_camionetas'
     template_name = 'dashboard/panel_camionetas.html'
     paginate_by = 20
-    queryset = Camionetas.objects.all()
+    queryset = Camionetas.objects.order_by('patente')
     def get_context_data(self, **kwargs):
         context = super(panel_camionetas, self).get_context_data(**kwargs)
         context['Camionetas'] = Camionetas.objects.all()
         return context
     
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        patente = self.request.GET.get('patente')
+        sort_param = self.request.GET.get('sort')
+        current_order = self.request.session.get('current_order', 'asc')  # get the current sorting order from the session, default to ascending order
+        if sort_param == 'patente':
+            if current_order == 'asc':
+                queryset = queryset.order_by('patente')
+                self.request.session['current_order'] = 'desc'
+            else:
+                queryset = queryset.order_by('-patente')
+                self.request.session['current_order'] = 'asc'
+        elif sort_param == 'modelo_camioneta':
+            if current_order == 'asc':
+                queryset = queryset.order_by('modelo_camioneta')
+                self.request.session['current_order'] = 'desc'
+            else:
+                queryset = queryset.order_by('-modelo_camioneta')
+                self.request.session['current_order'] = 'asc'
+        elif sort_param == 'mantencion':
+            if current_order == 'asc':
+                queryset = queryset.order_by('mantencion')
+                self.request.session['current_order'] = 'desc'
+            else:
+                queryset = queryset.order_by('-mantencion')
+                self.request.session['current_order'] = 'asc'
+        else:
+            queryset = queryset.order_by('patente')
+            self.request.session['current_order'] = 'asc'
+        return queryset
+    
 class panel_asignacion(ListView):
     context_object_name = 'panel_asignacion'
     template_name = 'dashboard/panel_asignacion.html'
     paginate_by = 20
-    queryset = Asignacion.objects.all()
+    queryset = Asignacion.objects.order_by('usuario')
     def get_context_data(self, **kwargs):
         context = super(panel_asignacion, self).get_context_data(**kwargs)
         context['Asignacion'] = Asignacion.objects.all()
@@ -130,7 +162,7 @@ class panel_modelos(ListView):
     context_object_name = 'panel_modelos'
     template_name = 'dashboard/panel_modelos.html'
     paginate_by = 20
-    queryset = Modelos.objects.all()
+    queryset = Modelos.objects.order_by('-m_param')
     def get_context_data(self, **kwargs):
         context = super(panel_modelos, self).get_context_data(**kwargs)
         context['Modelos'] = Modelos.objects.all()
@@ -140,7 +172,7 @@ class panel_procesadores(ListView):
     context_object_name = 'panel_procesadores'
     template_name = 'dashboard/panel_procesadores.html'
     paginate_by = 20
-    queryset = Procesador.objects.all()
+    queryset = Procesador.objects.order_by('marca_procesador')
     def get_context_data(self, **kwargs):
         context = super(panel_procesadores, self).get_context_data(**kwargs)
         context['Procesador'] = Procesador.objects.all()
@@ -150,7 +182,7 @@ class panel_marcas(ListView):
     context_object_name = 'panel_marcas'
     template_name = 'dashboard/panel_marcas.html'
     paginate_by = 20
-    queryset = Marca.objects.all()
+    queryset = Marca.objects.order_by('marca')
     def get_context_data(self, **kwargs):
         context = super(panel_marcas, self).get_context_data(**kwargs)
         context['Marca'] = Marca.objects.all()
@@ -184,9 +216,39 @@ class listado_mantenciones(ListView):
         return Mantenciones.objects.filter(m_patente_id=camionetas_id)
 """
 
+class reporte(DetailView):
+    model = Usuarios
+    template_name = 'dashboard/crud/reporte_usuario.html'
+    context_object_name= 'Usuarios'
 
-
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        asignaciones = self.object.asignacion_set.all() # access all Asignacion objects related to the user
+        context['asignaciones'] = list(asignaciones) # add the Asignacion objects to the context as a list
+        return context
+"""
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        asignacion = self.object.asignacion_set.first() # access the first Asignacion object related to the user
+        if asignacion: # check if the user has any related Asignacion object
+            context['notebook_a'] = asignacion.notebook_a # add the notebook_a object to the context
+        elif asignacion :
+            context['tablet_a'] = asignacion.tablet_a
+        elif asignacion :
+            context['smartphone_a'] = asignacion.smartphone_a
+        return context
+"""
+"""
+    def get_context_data(selfw, **kwargs):
+        context = super().get_context_data(**kwargs)
+        usuario = self.get_object()
+        context['smartphones'] = usuario.asignacion_set.filter(smartphone_a__isnull=False).values_list('smartphone_a__modelo_smartphone__m_modelo', flat=True)
+        context['smartphones'] = usuario.asignacion_set.filter(smartphone_a__isnull=False).values_list('smartphone_a__modelo_smartphone__m_modelo', flat=True)
+        context['tablets'] = usuario.asignacion_set.filter(tablet_a__isnull=False).values_list('tablet_a__modelo_tablet__m_modelo', flat=True)
+        context['notebooks'] = usuario.asignacion_set.filter(notebook_a__isnull=False).values_list('notebook_a__modelo_notebook__m_modelo', flat=True)
+        context['camionetas'] = usuario.asignacion_set.filter(camionetas_a__isnull=False).values_list('camionetas_a__modelo_camioneta__m_modelo', flat=True)
+        return context
+"""
 ###### CRUD USUARIO ######
 
 class detalle_usuario(DetailView):
