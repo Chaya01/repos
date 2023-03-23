@@ -83,10 +83,18 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": {
+        "ENGINE": "mssql",
+        "NAME": "AdminEquipos",
+        "USER": "sa",
+        "PASSWORD": "Master.,",
+        "HOST": "192.168.4.6",
+        "PORT": "1433",
+        "OPTIONS": {"driver": "ODBC Driver 18 for SQL Server",
+            "MARS_Connection": True,
+            "extra_params": "TrustServerCertificate=yes;Connection Timeout=30;",
+        },
+    },
 }
 
 

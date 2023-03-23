@@ -170,5 +170,6 @@ class MantencionesForm(forms.ModelForm):
             widgets = {
                 'fecha_mantencion' : forms.DateTimeInput(
                 format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker','required':'True'}
-                )
+                ),
+                'kilometraje': forms.Select(choices=param_kilometros),
             }
