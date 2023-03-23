@@ -75,6 +75,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Dash.wsgi.application'
 
+LOGIN_URL = '/login.html'
+LOGIN_REDIRECT_URL = '/dashboard/'
+
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

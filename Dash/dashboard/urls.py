@@ -12,7 +12,11 @@ urlpatterns = [
     #path('',views.inicio,name='inicio',),
 
     ### Inicio ###
-    path('', index.as_view(), name='index'),
+    path('', views.login_request, name="login"),
+
+    path('index.html', index.as_view(), name='index'),
+
+
 
     #Paneles#
 

@@ -16,6 +16,11 @@ from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import (CreateView,UpdateView,DeleteView)
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
 
 #@login_required
 #def inicio(request):
@@ -32,7 +37,29 @@ from django.shortcuts import get_object_or_404
 #        ctx
 #    )
 
-class index(ListView):
+def login_request(request):
+	if request.method == "POST":
+		form = AuthenticationForm(request, data=request.POST)
+		if form.is_valid():
+			username = form.cleaned_data.get('username')
+			password = form.cleaned_data.get('password')
+			user = authenticate(username=username, password=password)
+			if user is not None:
+				login(request, user)
+				messages.info(request, f"You are now logged in as {username}.")
+				return redirect("dashboard:index")
+			else:
+				messages.error(request,"Invalid username or password.")
+		else:
+			messages.error(request,"Invalid username or password.")
+	form = AuthenticationForm()
+	return render(
+            request=request,
+            template_name="dashboard/login.html",
+            context={"login_form":form})
+
+@method_decorator(login_required, name='dispatch' )
+class index(ListView):  
     context_object_name = 'index'
     template_name = 'dashboard/index.html'
     queryset = Usuarios.objects.all()
@@ -46,6 +73,7 @@ class index(ListView):
 
 ##### Paneles de acceso ####
 
+@method_decorator(login_required, name='dispatch')
 class panel_usuarios(ListView):
     context_object_name = 'panel_usuarios'
     template_name = 'dashboard/panel_usuarios.html'
@@ -56,6 +84,7 @@ class panel_usuarios(ListView):
         context['Usuarios'] = Usuarios.objects.all()
         return context
 
+@method_decorator(login_required, name='dispatch' )
 class panel_departamentos(ListView):
     context_object_name = 'panel_departamentos'
     template_name = 'dashboard/panel_departamentos.html'
@@ -66,6 +95,8 @@ class panel_departamentos(ListView):
         context['Departamentos'] = Departamentos.objects.all()
         return context
     
+@method_decorator(login_required, name='dispatch' )
+
 class panel_telefonos(ListView):
     context_object_name = 'panel_telefonos'
     template_name = 'dashboard/panel_telefonos.html'
@@ -76,6 +107,7 @@ class panel_telefonos(ListView):
         context['Num_telefono'] = Num_telefono.objects.all()
         return context
 
+@method_decorator(login_required, name='dispatch' )
 class panel_smartphones(ListView):
     context_object_name = 'panel_smartphones'
     template_name = 'dashboard/panel_smartphones.html'
@@ -86,7 +118,7 @@ class panel_smartphones(ListView):
         context['Smartphones'] = Smartphones.objects.all()
         return context
     
-
+@method_decorator(login_required, name='dispatch' )
 class panel_tablets(ListView):
     context_object_name = 'panel_tablets'
     template_name = 'dashboard/panel_tablets.html'
@@ -97,6 +129,7 @@ class panel_tablets(ListView):
         context['Tablets'] = Tablets.objects.all()
         return context
 
+@method_decorator(login_required, name='dispatch' )
 class panel_notebooks(ListView):
     context_object_name = 'panel_notebooks'
     template_name = 'dashboard/panel_notebooks.html'
@@ -106,7 +139,8 @@ class panel_notebooks(ListView):
         context = super(panel_notebooks, self).get_context_data(**kwargs)
         context['Notebooks'] = Notebooks.objects.all()
         return context
-    
+
+@method_decorator(login_required, name='dispatch' )    
 class panel_camionetas(ListView):
     context_object_name = 'panel_camionetas'
     template_name = 'dashboard/panel_camionetas.html'
@@ -147,7 +181,8 @@ class panel_camionetas(ListView):
             queryset = queryset.order_by('patente')
             self.request.session['current_order'] = 'asc'
         return queryset
-    
+
+@method_decorator(login_required, name='dispatch' )   
 class panel_asignacion(ListView):
     context_object_name = 'panel_asignacion'
     template_name = 'dashboard/panel_asignacion.html'
@@ -157,7 +192,8 @@ class panel_asignacion(ListView):
         context = super(panel_asignacion, self).get_context_data(**kwargs)
         context['Asignacion'] = Asignacion.objects.all()
         return context
-    
+
+@method_decorator(login_required, name='dispatch' )    
 class panel_modelos(ListView):
     context_object_name = 'panel_modelos'
     template_name = 'dashboard/panel_modelos.html'
@@ -167,7 +203,8 @@ class panel_modelos(ListView):
         context = super(panel_modelos, self).get_context_data(**kwargs)
         context['Modelos'] = Modelos.objects.all()
         return context
-    
+
+@method_decorator(login_required, name='dispatch' )    
 class panel_procesadores(ListView):
     context_object_name = 'panel_procesadores'
     template_name = 'dashboard/panel_procesadores.html'
@@ -178,6 +215,7 @@ class panel_procesadores(ListView):
         context['Procesador'] = Procesador.objects.all()
         return context
 
+@method_decorator(login_required, name='dispatch' )
 class panel_marcas(ListView):
     context_object_name = 'panel_marcas'
     template_name = 'dashboard/panel_marcas.html'
@@ -187,7 +225,8 @@ class panel_marcas(ListView):
         context = super(panel_marcas, self).get_context_data(**kwargs)
         context['Marca'] = Marca.objects.all()
         return context
-    
+
+@method_decorator(login_required, name='dispatch' )    
 class panel_mantenciones(ListView):
     context_object_name = 'panel_mantencion'
     template_name = 'dashboard/panel_mantencion.html'
@@ -197,7 +236,8 @@ class panel_mantenciones(ListView):
         context = super(panel_mantenciones, self).get_context_data(**kwargs)
         context['Mantenciones'] = Mantenciones.objects.all()
         return context
-    
+
+@method_decorator(login_required, name='dispatch' )    
 class listado_mantenciones(ListView):
     model = Mantenciones
     template_name = 'dashboard/listado_mantenciones.html'
@@ -216,6 +256,7 @@ class listado_mantenciones(ListView):
         return Mantenciones.objects.filter(m_patente_id=camionetas_id)
 """
 
+@method_decorator(login_required, name='dispatch' )
 class reporte(DetailView):
     model = Usuarios
     template_name = 'dashboard/crud/reporte_usuario.html'
@@ -251,11 +292,13 @@ class reporte(DetailView):
 """
 ###### CRUD USUARIO ######
 
+@method_decorator(login_required, name='dispatch' )
 class detalle_usuario(DetailView):
     model = Usuarios
     template_name = 'dashboard/crud/user_detail.html'
 
 
+@method_decorator(login_required, name='dispatch' )
 class crear_usuario(CreateView):
     model = Usuarios
     form_class = UsuarioForm
@@ -288,6 +331,7 @@ class crear_usuario(CreateView):
         context['model_verbose_name'] = self.model._meta.verbose_name.title()
         return context
 
+@method_decorator(login_required, name='dispatch' )
 class actualizar_usuario(UpdateView):
     model = Usuarios
     form_class = UsuarioForm
@@ -315,6 +359,7 @@ class actualizar_usuario(UpdateView):
             return self.form_invalid(form)
         return super(actualizar_usuario, self).form_valid(form)
 
+@method_decorator(login_required, name='dispatch' )
 class borrar_usuario(DeleteView):
     model = Usuarios
     template_name = 'dashboard/crud/delete.html'
@@ -322,6 +367,7 @@ class borrar_usuario(DeleteView):
     
 ##### CRUD DEPARTAMENTOS #####
 
+@method_decorator(login_required, name='dispatch' )
 class crear_departamento(CreateView):
     model = Departamentos
     form_class = DepartamentoForm
@@ -345,6 +391,7 @@ class crear_departamento(CreateView):
             return self.form_invalid(form)
         return super(crear_departamento, self).form_valid(form)
 """
+@method_decorator(login_required, name='dispatch' )
 class actualizar_departamento (UpdateView):
     model = Departamentos
     form_class = DepartamentoForm
@@ -364,11 +411,13 @@ class actualizar_departamento (UpdateView):
             return self.form_invalid(form)
         return super(actualizar_departamento, self).form_valid(form)
 
+@method_decorator(login_required, name='dispatch' )
 class detalle_departamento(DetailView):
     model = Departamentos
     template_name = ('dashboard/crud/departamento_detail.html')
     succes_url = reverse_lazy('dashboard:index')
 
+@method_decorator(login_required, name='dispatch' )
 class borrar_departamento(DeleteView):
     model = Departamentos
     template_name = 'dashboard/crud/delete.html'
@@ -376,6 +425,7 @@ class borrar_departamento(DeleteView):
 
 ##### CRUD Num_telefono #####
 
+@method_decorator(login_required, name='dispatch' )
 class crear_telefono(CreateView):
     model = Num_telefono
     template_name = 'dashboard/crud/form.html'
@@ -394,7 +444,8 @@ class crear_telefono(CreateView):
         context = super().get_context_data(**kwargs)
         context['model_verbose_name'] = self.model._meta.verbose_name.title()
         return context
-    
+
+@method_decorator(login_required, name='dispatch' )    
 class actualizar_telefono(UpdateView):
     model = Num_telefono
     template_name = 'dashboard/crud/update.html'    
@@ -409,11 +460,13 @@ class actualizar_telefono(UpdateView):
             return self.form_invalid(form)
         return super(actualizar_telefono, self).form_valid(form)
 
+@method_decorator(login_required, name='dispatch' )
 class detalle_telefono(DetailView):
     model = Num_telefono
     template_name = 'dashboard/crud/telefono_detail.html'
     success_url = reverse_lazy('dashboard:index')
 
+@method_decorator(login_required, name='dispatch' )
 class borrar_telefono(DeleteView):
     model = Num_telefono
     template_name = 'dashboard/crud/delete.html'
@@ -421,6 +474,7 @@ class borrar_telefono(DeleteView):
 
 ### Crud Smartphones ###
 
+@method_decorator(login_required, name='dispatch' )
 class crear_smartphone(CreateView):
     model = Smartphones
     template_name = 'dashboard/crud/form.html'
@@ -431,18 +485,21 @@ class crear_smartphone(CreateView):
         context = super().get_context_data(**kwargs)
         context['model_verbose_name'] = self.model._meta.verbose_name.title()
         return context
-    
+
+@method_decorator(login_required, name='dispatch' )    
 class actualizar_smartphone(UpdateView):
     model = Smartphones
     template_name = 'dashboard/crud/update.html'    
     success_url = reverse_lazy('dashboard:panel_smartphones')
     form_class = SmartphonesForm
 
+@method_decorator(login_required, name='dispatch' )
 class detalle_smartphone(DetailView):
     model = Smartphones
     template_name = 'dashboard/crud/smartphone_detail.html'
     success_url = reverse_lazy('dashboard:panel_smartphones')
 
+@method_decorator(login_required, name='dispatch' )
 class borrar_smartphone(DeleteView):
     model = Smartphones
     template_name = 'dashboard/crud/delete.html'
@@ -450,6 +507,7 @@ class borrar_smartphone(DeleteView):
 
 ### Crud Tablet ###
 
+@method_decorator(login_required, name='dispatch' )
 class crear_tablet(CreateView):
     model = Tablets
     template_name = 'dashboard/crud/form.html'
@@ -460,18 +518,21 @@ class crear_tablet(CreateView):
         context = super().get_context_data(**kwargs)
         context['model_verbose_name'] = self.model._meta.verbose_name.title()
         return context
-    
+
+@method_decorator(login_required, name='dispatch' )    
 class actualizar_tablet(UpdateView):
     model = Tablets
     template_name = 'dashboard/crud/update.html'    
     success_url = reverse_lazy('dashboard:panel_tablets')
     form_class = TabletsForm
 
+@method_decorator(login_required, name='dispatch' )
 class detalle_tablet(DetailView):
     model = Tablets
     template_name = 'dashboard/crud/tablet_detail.html'
     success_url = reverse_lazy('dashboard:panel_tablets')
 
+@method_decorator(login_required, name='dispatch' )
 class borrar_tablet(DeleteView):
     model = Tablets
     template_name = 'dashboard/crud/delete.html'
@@ -479,6 +540,7 @@ class borrar_tablet(DeleteView):
 
 #### Crud Notebook ###
 
+@method_decorator(login_required, name='dispatch' )
 class crear_notebook(CreateView):
     model = Notebooks
     template_name = 'dashboard/crud/form.html'
@@ -489,18 +551,21 @@ class crear_notebook(CreateView):
         context = super().get_context_data(**kwargs)
         context['model_verbose_name'] = self.model._meta.verbose_name.title()
         return context
-    
+
+@method_decorator(login_required, name='dispatch' )    
 class actualizar_notebook(UpdateView):
     model = Notebooks
     template_name = 'dashboard/crud/update.html'    
     success_url = reverse_lazy('dashboard:panel_notebooks')
     form_class = NotebooksForm
 
+@method_decorator(login_required, name='dispatch' )
 class detalle_notebook(DetailView):
     model = Notebooks
     template_name = 'dashboard/crud/tablet_detail.html'
     success_url = reverse_lazy('dashboard:panel_notebooks')
 
+@method_decorator(login_required, name='dispatch' )
 class borrar_notebook(DeleteView):
     model = Notebooks
     template_name = 'dashboard/crud/delete.html'
@@ -508,6 +573,7 @@ class borrar_notebook(DeleteView):
 
 ### Crud Camionetas ###
 
+@method_decorator(login_required, name='dispatch' )
 class crear_camioneta(CreateView):
     model = Camionetas
     template_name = 'dashboard/crud/form.html'
@@ -519,17 +585,20 @@ class crear_camioneta(CreateView):
         context['model_verbose_name'] = self.model._meta.verbose_name.title()
         return context
     
+@method_decorator(login_required, name='dispatch' )    
 class actualizar_camioneta(UpdateView):
     model = Camionetas
     template_name = 'dashboard/crud/update.html'    
     success_url = reverse_lazy('dashboard:panel_camionetas')
     form_class = CamionetasForm
 
+@method_decorator(login_required, name='dispatch' )
 class detalle_camioneta(DetailView):
     model = Camionetas
     template_name = 'dashboard/crud/tablet_detail.html'
     success_url = reverse_lazy('dashboard:panel_camionetas')
 
+@method_decorator(login_required, name='dispatch' )
 class borrar_camioneta(DeleteView):
     model = Camionetas
     template_name = 'dashboard/crud/delete.html'
@@ -537,6 +606,7 @@ class borrar_camioneta(DeleteView):
 
 ### Crud asginacion ###
 
+@method_decorator(login_required, name='dispatch' )
 class crear_asignacion(CreateView):
     model = Asignacion
     template_name = 'dashboard/crud/form.html'
@@ -595,18 +665,21 @@ class crear_asignacion(CreateView):
         context = super().get_context_data(**kwargs)
         context['model_verbose_name'] = self.model._meta.verbose_name.title()
         return context
-    
+
+@method_decorator(login_required, name='dispatch' )    
 class actualizar_asignacion(UpdateView):
     model = Asignacion
     template_name = 'dashboard/crud/update.html'    
     success_url = reverse_lazy('dashboard:panel_asignacion')
     form_class = AsignacionForm
 
+@method_decorator(login_required, name='dispatch' )
 class detalle_asignacion(DetailView):
     model = Asignacion
     template_name = 'dashboard/crud/tablet_detail.html'
     success_url = reverse_lazy('dashboard:panel_asignacion')
 
+@method_decorator(login_required, name='dispatch' )
 class borrar_asignacion(DeleteView):
     model = Asignacion
     template_name = 'dashboard/crud/delete.html'
@@ -614,6 +687,7 @@ class borrar_asignacion(DeleteView):
 
 #### Modelos ####
 
+@method_decorator(login_required, name='dispatch' )
 class crear_modelo(CreateView):
     model = Modelos
     template_name = 'dashboard/crud/form.html'
@@ -625,17 +699,20 @@ class crear_modelo(CreateView):
         context['model_verbose_name'] = self.model._meta.verbose_name.title()
         return context
 
+@method_decorator(login_required, name='dispatch' )
 class actualizar_modelo(UpdateView):
     model = Modelos
     template_name = 'dashboard/crud/update.html'    
     success_url = reverse_lazy('dashboard:panel_modelos')
     form_class = ModelosForm
 
+@method_decorator(login_required, name='dispatch' )
 class detalle_modelo(DetailView):
     model = Modelos
     template_name = 'dashboard/crud/tablet_detail.html'
     success_url = reverse_lazy('dashboard:panel_modelos')
 
+@method_decorator(login_required, name='dispatch' )
 class borrar_modelo(DeleteView):
     model = Modelos
     template_name = 'dashboard/crud/delete.html'
@@ -643,6 +720,7 @@ class borrar_modelo(DeleteView):
 
 #### Procesadores ####
 
+@method_decorator(login_required, name='dispatch' )
 class crear_procesador(CreateView):
     model = Procesador
     template_name = 'dashboard/crud/form.html'
@@ -654,17 +732,20 @@ class crear_procesador(CreateView):
         context['model_verbose_name'] = self.model._meta.verbose_name.title()
         return context
 
+@method_decorator(login_required, name='dispatch' )
 class actualizar_procesador(UpdateView):
     model = Procesador
     template_name = 'dashboard/crud/update.html'    
     success_url = reverse_lazy('dashboard:panel_procesadores')
     form_class = ProcesadorForm
 
+@method_decorator(login_required, name='dispatch' )
 class detalle_procesador(DetailView):
     model = Procesador
     template_name = 'dashboard/crud/tablet_detail.html'
     success_url = reverse_lazy('dashboard:panel_procesadores')
 
+@method_decorator(login_required, name='dispatch' )
 class borrar_procesador(DeleteView):
     model = Procesador
     template_name = 'dashboard/crud/delete.html'
@@ -672,6 +753,7 @@ class borrar_procesador(DeleteView):
 
 #### Marcas ####
 
+@method_decorator(login_required, name='dispatch' )
 class crear_marca(CreateView):
     model = Marca
     template_name = 'dashboard/crud/form.html'
@@ -683,17 +765,20 @@ class crear_marca(CreateView):
         context['model_verbose_name'] = self.model._meta.verbose_name.title()
         return context
 
+@method_decorator(login_required, name='dispatch' )
 class actualizar_marca(UpdateView):
     model = Marca
     template_name = 'dashboard/crud/update.html'    
     success_url = reverse_lazy('dashboard:panel_marcas')
     form_class = MarcaForm
 
+@method_decorator(login_required, name='dispatch' )
 class detalle_marca(DetailView):
     model = Marca
     template_name = 'dashboard/crud/tablet_detail.html'
     success_url = reverse_lazy('dashboard:panel_marcas')
 
+@method_decorator(login_required, name='dispatch' )
 class borrar_marca(DeleteView):
     model = Marca
     template_name = 'dashboard/crud/delete.html'
@@ -701,23 +786,27 @@ class borrar_marca(DeleteView):
 
 ### Mantenciones ###
 
+@method_decorator(login_required, name='dispatch' )
 class crear_mantencion(CreateView):
     model = Mantenciones
     template_name = 'dashboard/crud/form.html'
     form_class = MantencionesForm
     success_url = reverse_lazy('dashboard:panel_mantencion')
 
+@method_decorator(login_required, name='dispatch' )
 class actualizar_mantencion(UpdateView):
     model = Mantenciones
     template_name = 'dashboard/crud/update.html'    
     success_url = reverse_lazy('dashboard:panel_mantencion')
     form_class = MantencionesForm
 
+@method_decorator(login_required, name='dispatch' )
 class detalle_mantencion(DetailView):
     model = Mantenciones
     template_name = 'dashboard/crud/tablet_detail.html'
     success_url = reverse_lazy('dashboard:panel_mantencion')
 
+@method_decorator(login_required, name='dispatch' )
 class borrar_mantencion(DeleteView):
     model = Mantenciones
     template_name = 'dashboard/crud/delete.html'

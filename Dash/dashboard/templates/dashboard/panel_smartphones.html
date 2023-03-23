@@ -5,17 +5,14 @@
     <!-- Custom navigation menu goes here -->
 {% endblock %}
 {% block content %}
-<h2> Smartphones </h2>
-
-<ul>
-<p>
-    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'dashboard:newsma' %}'">Ingresar Smartphone</button>
-</p>
 <p>{{ dashboard.name }}</p>
 
-<div class="table-responsive">
-    <table class="table table-hover table-bordered">
-        <thead style="background-color: rgb(25, 231, 227);">
+<div class="card text-dark bg-light mb-3">
+  <div class="card-body">
+      <h5 class="card-title">Listado de smartphones</h5>
+      <div class="table-responsive" style="max-height: calc(100vh - 230px); overflow-y: auto;">
+        <table class="table table-hover table-bordered">
+            <thead style="background-color: rgb(25, 231, 227);">
             <tr>
                 <th>Numero de Serie</th>
                 <th>Modelo</th>
@@ -49,45 +46,48 @@
         </tbody>
     </table>
 </div>
-<div class="pagination d-flex justify-content-start">
-    <ul class="pagination">
-      {% if page_obj.has_previous %}
-        <li class="page-item">
-          <a href="?page=1" class="page-link" aria-label="First">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li class="page-item">
-          <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous">
-            <span aria-hidden="true">&lsaquo;</span>
-          </a>
-        </li>
+<div class="pagination d-flex justify-content-between">
+  <p>
+    <a href="{% url "dashboard:index" %}" class="btn btn-secondary">Volver al indice</a>
+</p>
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a href="?page=1" class="page-link" aria-label="First">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous">
+          <span aria-hidden="true">&lsaquo;</span>
+        </a>
+      </li>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
       {% endif %}
-  
-      {% for num in page_obj.paginator.page_range %}
-        {% if page_obj.number == num %}
-          <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-          <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-        {% endif %}
-      {% endfor %}
-  
-      {% if page_obj.has_next %}
-        <li class="page-item">
-          <a href="?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next">
-            <span aria-hidden="true">&rsaquo;</span>
-          </a>
-        </li>
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a href="?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next">
+          <span aria-hidden="true">&rsaquo;</span>
+        </a>
+      </li>
         <li class="page-item">
           <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link" aria-label="Last">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
       {% endif %}
-    </ul>
-  </div>
+  </ul>
     <p>
-        <a href="{% url "dashboard:index" %}" class="btn btn-secondary btn-sm">Volver al indice</a>
+        <button type="button" class="btn btn-primary" onclick="location.href='{% url 'dashboard:newsma' %}'">Ingresar smartphone</button>
     </p>
-</ul>
+</div>
+</div>
 {% endblock %}

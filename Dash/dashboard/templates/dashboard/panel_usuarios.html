@@ -5,88 +5,88 @@
     <!-- Custom navigation menu goes here -->
 {% endblock %}
 {% block content %}
-<h2> Trabajadores </h2>
-<ul>
-<p>
-    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'dashboard:newuser' %}'">Ingresar Trabajador</button>
-</p>
-<p>{{ dashboard.name }}</p>
-
-<div class="table-responsive">
-    <table class="table table-hover table-bordered">
-        <thead style="background-color: rgb(25, 231, 227);">
-            <tr>
-                <th>Rut</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Area</th>
-                <th>Correo</th>
-                <th>Empresa</th>
-                <th>Gerente</th>
-                <th>Centro de costo</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for Usuarios in object_list %}
-            <tr class="table-hover">
-                <td>{{ Usuarios.rut }} </td> 
-                <td>{{ Usuarios.nombre }}</td>
-                <td>{{ Usuarios.apellido }}</td>
-                <td>{{ Usuarios.area }} </td> 
-                <td>{{ Usuarios.correo }} </td> 
-                <td>{{ Usuarios.empresa }}</td>
-                <td>{{ Usuarios.gerente }} </td> 
-                <td>{{ Usuarios.centro_de_costo }} </td> 
-                <td><a href="{% url "dashboard:edituser" Usuarios.pk %}" class="btn btn-warning btn-sm">Editar</a>
-                    <a href="{% url "dashboard:deleteuser" Usuarios.pk %}" class="btn btn-warning btn-sm">Borrar</a>
-                    <a href="{% url "dashboard:reporte" pk=Usuarios.pk %}" class="btn btn-success btn-sm">Ver detalle</a>
-
-                </td>          
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-<div class="pagination d-flex justify-content-start">
-    <ul class="pagination">
-      {% if page_obj.has_previous %}
-        <li class="page-item">
-          <a href="?page=1" class="page-link" aria-label="First">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li class="page-item">
-          <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous">
-            <span aria-hidden="true">&lsaquo;</span>
-          </a>
-        </li>
-      {% endif %}
-  
-      {% for num in page_obj.paginator.page_range %}
-        {% if page_obj.number == num %}
-          <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-          <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-        {% endif %}
-      {% endfor %}
-  
-      {% if page_obj.has_next %}
-        <li class="page-item">
-          <a href="?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next">
-            <span aria-hidden="true">&rsaquo;</span>
-          </a>
-        </li>
-        <li class="page-item">
-          <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link" aria-label="Last">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      {% endif %}
-    </ul>
-  </div>
-    <p>
-        <a href="{% url "dashboard:index" %}" class="btn btn-secondary">Volver al indice</a>
-    </p>
-</ul>
+    <p>{{ dashboard.name }}</p>
+    <div class="card text-dark bg-light mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Listado de trabajadores</h5>
+            <div class="table-responsive" style="max-height: calc(100vh - 230px); overflow-y: auto;">
+              <table class="table table-hover table-bordered">
+                  <thead style="background-color: rgb(25, 231, 227);">
+                        <tr>
+                            <th>Rut</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Area</th>
+                            <th>Correo</th>
+                            <th>Empresa</th>
+                            <th>Gerente</th>
+                            <th>Centro de costo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for Usuarios in object_list %}
+                        <tr class="table-hover">
+                            <td>{{ Usuarios.rut }} </td> 
+                            <td>{{ Usuarios.nombre }}</td>
+                            <td>{{ Usuarios.apellido }}</td>
+                            <td>{{ Usuarios.area }} </td> 
+                            <td>{{ Usuarios.correo }} </td> 
+                            <td>{{ Usuarios.empresa }}</td>
+                            <td>{{ Usuarios.gerente }} </td> 
+                            <td>{{ Usuarios.centro_de_costo }} </td> 
+                            <td>
+                                <a href="{% url "dashboard:edituser" Usuarios.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                                <a href="{% url "dashboard:deleteuser" Usuarios.pk %}" class="btn btn-danger btn-sm">Borrar</a>
+                                <a href="{% url "dashboard:reporte" pk=Usuarios.pk %}" class="btn btn-success btn-sm">Ver detalle</a>
+                            </td>          
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination d-flex justify-content-between">
+              <p>
+                <a href="{% url "dashboard:index" %}" class="btn btn-secondary">Volver al indice</a>
+            </p>
+              <ul class="pagination">
+                {% if page_obj.has_previous %}
+                  <li class="page-item">
+                    <a href="?page=1" class="page-link" aria-label="First">
+                      <span aria-hidden="true">&laquo;</span>
+                    </a>
+                  </li>
+                  <li class="page-item">
+                    <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous">
+                      <span aria-hidden="true">&lsaquo;</span>
+                    </a>
+                  </li>
+                {% endif %}
+            
+                {% for num in page_obj.paginator.page_range %}
+                  {% if page_obj.number == num %}
+                    <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                  {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                  {% endif %}
+                {% endfor %}
+            
+                {% if page_obj.has_next %}
+                  <li class="page-item">
+                    <a href="?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next">
+                      <span aria-hidden="true">&rsaquo;</span>
+                    </a>
+                  </li>
+                    <li class="page-item">
+                      <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link" aria-label="Last">
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>
+                  {% endif %}
+              </ul>
+                <p>
+                    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'dashboard:newuser' %}'">Ingresar Trabajador</button>
+                </p>
+            </div>
+      </div>
 {% endblock %}

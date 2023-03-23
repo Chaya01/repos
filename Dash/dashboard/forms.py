@@ -126,7 +126,8 @@ class CamionetasForm(forms.ModelForm):
             format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker',
                                      'required':"true"}
             ),
-            'modalidad' : forms.Select(choices=listado_modalidades)
+            'modalidad' : forms.Select(choices=listado_modalidades),
+            'kilometraje': forms.Select(choices=param_kilometros),
         }  
         
 class AsignacionForm(forms.ModelForm):

@@ -3,7 +3,9 @@
 {% block content %}
 <p>{{ dashboard.name }}</p>
 
-  <h1>Detalle del Usuario</h1>
+<div class="card text-dark bg-light mb-3">
+  <div class="card-body">
+      <h5 class="card-title">Detalle del usuario</h5>
   <ul>
     <li>Rut: {{ Usuarios.rut }}</li>
     <li>Nombre: {{ Usuarios.nombre }}</li>
@@ -32,4 +34,10 @@
     </ul>
   {% endif %}
   </ul>
+  <div class="pagination d-flex justify-content-between">
+    <p>
+      <a href="{% url "dashboard:panel_usuarios" %}" class="btn btn-secondary">Volver al listado de trabajadores</a>
+  </p>
+</div>
+</div>
 {% endblock %}
