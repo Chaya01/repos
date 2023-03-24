@@ -42,8 +42,8 @@ class Departamentos(models.Model):
 #        return self.area
 
 class Num_telefono(models.Model):    
-    numero_tel = models.CharField(max_length=9,null=True,blank=True,unique=True)
-    activo = models.ForeignKey(Estados, on_delete=models.CASCADE) #numero activo o dado de baja
+    numero_tel = models.CharField(max_length=9,null=True,blank=True,unique=True,verbose_name="Numero")
+    activo = models.BooleanField(verbose_name="contratado") #numero activo o dado de baja
 
     def __str__(self):
         return self.numero_tel
@@ -75,7 +75,7 @@ class Modelos(models.Model):
     
     m_marca = models.ForeignKey(Marca,on_delete=models.CASCADE)
     m_param = models.ForeignKey(ParamTipo,on_delete=models.CASCADE)
-    m_modelo = models.CharField(max_length=20,unique=True)
+    m_modelo = models.CharField(max_length=50,unique=True)
     m_procesador = models.ForeignKey(Procesador,default="01",on_delete=models.SET_DEFAULT,help_text="Por favor marcar 'No aplica' para las camionetas")
 
     def __str__(self):
@@ -89,13 +89,13 @@ class Modelos(models.Model):
 class Smartphones(models.Model):
     serie_smartphone = models.CharField(unique=True,max_length=20)
     modelo_smartphone = models.ForeignKey(Modelos,on_delete=models.CASCADE)
-    imei1 = models.IntegerField(unique=True,)
-    imei2 = models.IntegerField(unique = True, null=True)
+    imei1 = models.CharField(max_length=20,unique=True,)
+    imei2 = models.CharField(max_length=20,unique = True, null=True)
     estado_telefono = models.BooleanField()
     fecha_compra_telefono = models.DateField(help_text='Fecha en la que se recepciona el equipo en la empresa')
     valor_telefono = models.IntegerField(help_text='Por favor inserte el valor en CLP')
 #    funciona_telefono = models.ForeignKey(default=True, null=False) #si / no
-    observaciones_telefonos = models.CharField(max_length=50,blank=True) #pantalla rota, con mica, etc.
+    observaciones_telefonos = models.CharField(max_length=100,blank=True) #pantalla rota, con mica, etc.
     sram = models.IntegerField(verbose_name='Memoria Ram')
 
     def __str__(self):
@@ -108,10 +108,10 @@ class Tablets(models.Model): #crear views, forms and urls
     serie_tablet = models.CharField(unique=True,max_length=20)
     modelo_tablet = models.ForeignKey(Modelos,on_delete=models.CASCADE)
     imei_tb = models.CharField (max_length=20,null=True, unique=True, blank=True)
-    estado_tablet = models.BooleanField()
+    estado_tablet = models.BooleanField()   
     fecha_compra_tablet = models.DateField(help_text='Fecha en la que se recepciona el equipo en la empresa')
     valor_tablet = models.IntegerField(help_text='Por favor inserte el valor en CLP')
-    observaciones_tablets = models.CharField(max_length=50,blank=True)
+    observaciones_tablets = models.CharField(max_length=100,blank=True)
     tram = models.IntegerField(verbose_name='Memoria Ram')
 
     def __str__(self):
@@ -126,7 +126,7 @@ class Notebooks(models.Model):
     estado_notebook = models.BooleanField()
     fecha_compra_notebook = models.DateField(help_text='Fecha en la que se recepciona el equipo en la empresa')
     valor_notebook = models.IntegerField(help_text='Por favor inserte el valor en CLP')
-    observaciones_notebook = models.CharField(max_length=50, blank=True)
+    observaciones_notebook = models.CharField(max_length=100, blank=True)
     nram = models.IntegerField(verbose_name='Memoria Ram')
     nhdd = models.IntegerField(verbose_name='HDD',help_text='Por favor marcar 0 si no tiene HDD')
     nssd = models.IntegerField(verbose_name='SSD',help_text='Por favor marcar 0 si no tiene SSD')
@@ -141,11 +141,13 @@ class Camionetas(models.Model):
     patente = models.CharField(max_length=20,unique=True)
     modelo_camioneta = models.ForeignKey(Modelos,on_delete=models.CASCADE)
     mantencion = models.DateField()
-    observaciones_camionetas = models.CharField(max_length=50)
+    observaciones_camionetas = models.CharField(max_length=100)
     disponible = models.BooleanField()
     modalidad = models.CharField(choices=listado_modalidades,max_length=20,verbose_name='listado modalidades')
     vin = models.CharField(max_length=20,unique=True)
     kilometraje = models.IntegerField()
+    fecha_recepcion = models.DateField(null=True,blank=True)
+    fecha_entrega = models.DateField(null=True,blank=True)
 
     def __str__(self):
         return (u"{} {}").format(
@@ -188,16 +190,16 @@ class  Usuarios(models.Model): #Editar Views and Forms.
 
 
 class Asignacion(models.Model):
-    usuario = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
-    num = models.ForeignKey(Num_telefono, on_delete=models.CASCADE,null=True,blank=True)
-    smartphone_a = models.ForeignKey(Smartphones, on_delete=models.CASCADE, null=True,blank=True)
-    fecha_sma = models.DateField(default= None,null=True,blank=True)
-    tablet_a = models.ForeignKey(Tablets, on_delete=models.CASCADE,null=True,blank=True)
-    fecha_ta = models.DateField(default= None,null=True,blank=True)
-    notebook_a = models.ForeignKey(Notebooks, on_delete=models.CASCADE,null=True,blank=True)
-    fecha_nt = models.DateField(default= None,null=True,blank=True)
-    camionetas_a =models.ForeignKey(Camionetas, on_delete=models.CASCADE,null=True,blank=True)
-    fecha_cm = models.DateField(default= None,null=True,blank=True)
+    usuario = models.ForeignKey(Usuarios, on_delete=models.CASCADE,verbose_name="Trabajador")
+    num = models.ForeignKey(Num_telefono, on_delete=models.CASCADE,null=True,blank=True,verbose_name="Numero de telefono")
+    smartphone_a = models.ForeignKey(Smartphones, on_delete=models.CASCADE, null=True,blank=True,verbose_name="Smartphone")
+    fecha_sma = models.DateField(default= None,null=True,blank=True,verbose_name="Fecha de entrega")
+    tablet_a = models.ForeignKey(Tablets, on_delete=models.CASCADE,null=True,blank=True,verbose_name="Tablet")
+    fecha_ta = models.DateField(default= None,null=True,blank=True,verbose_name="Fecha de entrega")
+    notebook_a = models.ForeignKey(Notebooks, on_delete=models.CASCADE,null=True,blank=True,verbose_name="Notebook")
+    fecha_nt = models.DateField(default= None,null=True,blank=True,verbose_name="Fecha de entrega")
+    camionetas_a =models.ForeignKey(Camionetas, on_delete=models.CASCADE,null=True,blank=True,verbose_name="Camioneta")
+    fecha_cm = models.DateField(default= None,null=True,blank=True,verbose_name="Feha de entrega")
     vigente = models.BooleanField(help_text='marcar si es la asignacion actual del usuario.') #registro actual, si / no)
 
     def __str__(self):

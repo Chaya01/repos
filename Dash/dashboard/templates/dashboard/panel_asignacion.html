@@ -8,8 +8,17 @@
 <p>{{ dashboard.name }}</p>
 <div class="card text-dark bg-light mb-3">
   <div class="card-body">
-      <h5 class="card-title">Listadode asignaciones</h5>
-      <div class="table-responsive" style="max-height: calc(100vh - 230px); overflow-y: auto;">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Asignaciones de equipos</h5>
+      <form method="GET" class="search-form">
+        <input type="text" name="query" value="{{ search_form.value }}" placeholder="Buscar...">
+        <button type="submit">Search</button>
+        {% if search_form.value %}
+            <a href="{% url 'dashboard:panel_asignacion' %}" class="btn btn-secondary">Clear</a>
+        {% endif %}
+    </form>
+    </div>
+      <div class="table-responsive" style="max-height: calc(100vh - 270px); overflow-y: auto;">
         <table class="table table-hover table-bordered">
             <thead style="background-color: rgb(25, 231, 227);">
             <tr>
@@ -40,7 +49,13 @@
                 <td>{{ Asignacion.fecha_nt }}</td>
                 <td>{{ Asignacion.camionetas_a }}</td>
                 <td>{{ Asignacion.fecha_cm }}</td>
-                <td>{{ Asignacion.vigente }}</td>
+                <td>
+                  {% if Asignacion.vigente %}
+                      Vigente
+                  {% else %}
+                      No vigente
+                  {% endif %}
+              </td>
                 <td><a href="{% url "dashboard:editasg" Asignacion.pk %}" class="btn btn-warning btn-sm">Editar</a>
                     <a href="{% url "dashboard:deletasg" Asignacion.pk %}" class="btn btn-danger btn-sm">Borrar</a>
                 </td>
@@ -49,6 +64,7 @@
         </tbody>
     </table>
 </div>
+<div class="card-footer">
 <div class="pagination d-flex justify-content-between">
   <p>
     <a href="{% url "dashboard:index" %}" class="btn btn-secondary">Volver al indice</a>
@@ -91,6 +107,7 @@
     <p>
         <button type="button" class="btn btn-primary" onclick="location.href='{% url 'dashboard:newasg' %}'">Registrar</button>
     </p>
+</div>
 </div>
 </div>
 {% endblock %}

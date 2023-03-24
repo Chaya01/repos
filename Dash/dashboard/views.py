@@ -101,10 +101,21 @@ class panel_departamentos(ListView):
     context_object_name = 'panel_departamentos'
     template_name = 'dashboard/panel_departamentos.html'
     paginate_by = 20
-    queryset = Departamentos.objects.order_by('area')
+    search_form = SearchForm
+
+    def get_queryset(self):
+        queryset = Departamentos.objects.order_by('area')
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(
+                Q(area__icontains=query) |
+                Q(sucursal__icontains=query)
+            )
+        return queryset
+    
     def get_context_data(self, **kwargs):
         context = super(panel_departamentos, self).get_context_data(**kwargs)
-        context['Departamentos'] = Departamentos.objects.all()
+        context['search_form'] = self.search_form(self.request.GET or None)
         return context
     
 @method_decorator(login_required, name='dispatch' )
@@ -113,10 +124,21 @@ class panel_telefonos(ListView):
     context_object_name = 'panel_telefonos'
     template_name = 'dashboard/panel_telefonos.html'
     paginate_by = 20
-    queryset = Num_telefono.objects.order_by('numero_tel')
+    search_form = SearchForm
+    
+    def get_queryset(self):
+        queryset = Num_telefono.objects.order_by('numero_tel')
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(
+                Q(numero_tel__icontains=query) |
+                Q(activo__icontains=query)
+            )
+        return queryset
+    
     def get_context_data(self, **kwargs):
         context = super(panel_telefonos, self).get_context_data(**kwargs)
-        context['Num_telefono'] = Num_telefono.objects.all()
+        context['search_form'] = self.search_form(self.request.GET or None)
         return context
 
 @method_decorator(login_required, name='dispatch' )
@@ -124,10 +146,26 @@ class panel_smartphones(ListView):
     context_object_name = 'panel_smartphones'
     template_name = 'dashboard/panel_smartphones.html'
     paginate_by = 20
-    queryset = Smartphones.objects.order_by('serie_smartphone')
+    search_form = SearchForm
+
+    def get_queryset(self):
+        queryset = Smartphones.objects.order_by('serie_smartphone')
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(
+                Q(serie_smartphone__icontains=query) |
+                Q(modelo_smartphone__m_modelo__icontains=query)  |
+                Q(modelo_smartphone__m_marca__marca__icontains=query) |
+                Q(modelo_smartphone__m_param__nombre_param__icontains=query) |
+                Q(imei1__icontains=query) |
+                Q(imei2__icontains=query) |
+                Q(estado_telefono__icontains=query)  
+            )
+        return queryset
+    
     def get_context_data(self, **kwargs):
         context = super(panel_smartphones, self).get_context_data(**kwargs)
-        context['Smartphones'] = Smartphones.objects.all()
+        context['search_form'] = self.search_form(self.request.GET or None)
         return context
     
 @method_decorator(login_required, name='dispatch' )
@@ -135,10 +173,24 @@ class panel_tablets(ListView):
     context_object_name = 'panel_tablets'
     template_name = 'dashboard/panel_tablets.html'
     paginate_by = 20
-    queryset = Tablets.objects.order_by('serie_tablet')
+    search_form = SearchForm
+
+    def get_queryset(self):
+        queryset = Tablets.objects.order_by('serie_tablet')
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(
+                Q(serie_tablet__icontains=query) |
+                Q(modelo_tablet__m_modelo__icontains=query)  |
+                Q(modelo_tablet__m_marca__marca__icontains=query)  |
+                Q(modelo_tablet__m_param__nombre_param__icontains=query)  |
+                Q(estado_tablet__icontains=query)  
+            )
+        return queryset
+    
     def get_context_data(self, **kwargs):
         context = super(panel_tablets, self).get_context_data(**kwargs)
-        context['Tablets'] = Tablets.objects.all()
+        context['search_form'] = self.search_form(self.request.GET or None)
         return context
 
 @method_decorator(login_required, name='dispatch' )
@@ -146,10 +198,26 @@ class panel_notebooks(ListView):
     context_object_name = 'panel_notebooks'
     template_name = 'dashboard/panel_notebooks.html'
     paginate_by = 20
-    queryset = Notebooks.objects.order_by('serie_notebook')
+    search_form = SearchForm
+
+    def get_queryset(self):
+        queryset = Notebooks.objects.order_by('serie_notebook')
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(
+                Q(serie_notebook__icontains=query) |
+                Q(modelo_notebook__m_modelo__icontains=query)  |
+                Q(modelo_notebook__m_marca__marca__icontains=query)  |
+                Q(modelo_notebook__m_procesador__modelo_p__icontains=query)  |
+                Q(nram__icontains=query)  |
+                Q(estado_notebook__icontains=query)
+
+            )
+        return queryset
+    
     def get_context_data(self, **kwargs):
         context = super(panel_notebooks, self).get_context_data(**kwargs)
-        context['Notebooks'] = Notebooks.objects.all()
+        context['search_form'] = self.search_form(self.request.GET or None)
         return context
 
 @method_decorator(login_required, name='dispatch' )    
@@ -157,12 +225,28 @@ class panel_camionetas(ListView):
     context_object_name = 'panel_camionetas'
     template_name = 'dashboard/panel_camionetas.html'
     paginate_by = 20
-    queryset = Camionetas.objects.order_by('patente')
+    search_form = SearchForm
+
+    def get_queryset(self):
+        queryset = Camionetas.objects.order_by('patente')
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(
+                Q(patente__icontains=query) |
+                Q(modelo_camioneta__m_modelo__icontains=query) |
+                Q(modelo_camioneta__m_marca__marca__icontains=query) |
+                Q(disponible__icontains=query) |
+                Q(modalidad__icontains=query) |
+                Q(vin__icontains=query)
+            )
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super(panel_camionetas, self).get_context_data(**kwargs)
-        context['Camionetas'] = Camionetas.objects.all()
+        context['search_form'] = self.search_form(self.request.GET or None)
         return context
     
+    """"
     def get_queryset(self):
         queryset = super().get_queryset()
         patente = self.request.GET.get('patente')
@@ -193,38 +277,94 @@ class panel_camionetas(ListView):
             queryset = queryset.order_by('patente')
             self.request.session['current_order'] = 'asc'
         return queryset
-
+"""
 @method_decorator(login_required, name='dispatch' )   
 class panel_asignacion(ListView):
     context_object_name = 'panel_asignacion'
     template_name = 'dashboard/panel_asignacion.html'
     paginate_by = 20
-    queryset = Asignacion.objects.order_by('usuario')
+    search_form = SearchForm
+
+    def get_queryset(self):
+        queryset = Asignacion.objects.order_by('usuario')
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(
+                Q(usuario__nombre__icontains=query) |
+                Q(num__numero_tel__icontains=query) |
+                Q(smartphone_a__modelo_smartphone__m_modelo__icontains=query) |
+                Q(smartphone_a__modelo_smartphone__m_marca__marca__icontains=query) |
+                Q(tablet_a__modelo_tablet__m_modelo__icontains=query) |
+                Q(tablet_a__modelo_tablet__m_marca__marca__icontains=query) |
+                Q(notebook_a__modelo_notebook__m_modelo__icontains=query) |
+                Q(notebook_a__modelo_notebook__m_marca__marca__icontains=query) |
+                Q(camionetas_a__modelo_camioneta__m_modelo__icontains=query) |
+                Q(camionetas_a__modelo_camioneta__m_marca__marca__icontains=query) |
+                Q(vigente__icontains=query)
+            )
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super(panel_asignacion, self).get_context_data(**kwargs)
-        context['Asignacion'] = Asignacion.objects.all()
+        get_vigente_display = lambda asignacion: 'Vigente' if asignacion.vigente else 'No vigente'
+        vigente_display_list = [get_vigente_display(asignacion) for asignacion in context['panel_asignacion']]
+        context['vigente_display_list'] = vigente_display_list
+        context['search_form'] = self.search_form(self.request.GET or None)
         return context
+    
+    # Define a lambda function to get the display value of 'vigente'
+    # Use a list comprehension to get the display value of 'vigente' for each object
+    # Add the 'vigente_display_list' to the context
 
 @method_decorator(login_required, name='dispatch' )    
 class panel_modelos(ListView):
     context_object_name = 'panel_modelos'
     template_name = 'dashboard/panel_modelos.html'
     paginate_by = 20
-    queryset = Modelos.objects.order_by('-m_param')
+    search_form = SearchForm
+
+    def get_queryset(self):
+        queryset = Modelos.objects.order_by('m_marca')
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(
+                Q(m_marca__marca__icontains=query) |
+                Q(m_param__nombre_param__icontains=query)  |
+                Q(m_modelo__icontains=query)  |
+                Q(m_procesador__modelo_p__icontains=query) |
+                Q(m_procesador__marca_procesador__icontains=query)
+            )
+        return queryset
+    
     def get_context_data(self, **kwargs):
         context = super(panel_modelos, self).get_context_data(**kwargs)
-        context['Modelos'] = Modelos.objects.all()
+        context['search_form'] = self.search_form(self.request.GET or None)
         return context
+    
 
 @method_decorator(login_required, name='dispatch' )    
 class panel_procesadores(ListView):
     context_object_name = 'panel_procesadores'
     template_name = 'dashboard/panel_procesadores.html'
     paginate_by = 20
-    queryset = Procesador.objects.order_by('marca_procesador')
+    search_form = SearchForm
+
+    def get_queryset(self):
+        queryset = Procesador.objects.order_by('marca_procesador')
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(
+                Q(marca_procesador__icontains=query) |
+                Q(modelo_p__icontains=query)  |
+                Q(ghz__icontains=query)  |
+                Q(nucleos__icontains=query) |
+                Q(año_mf__icontains=query)
+            )
+        return queryset
+    
     def get_context_data(self, **kwargs):
         context = super(panel_procesadores, self).get_context_data(**kwargs)
-        context['Procesador'] = Procesador.objects.all()
+        context['search_form'] = self.search_form(self.request.GET or None)
         return context
 
 @method_decorator(login_required, name='dispatch' )
@@ -232,10 +372,20 @@ class panel_marcas(ListView):
     context_object_name = 'panel_marcas'
     template_name = 'dashboard/panel_marcas.html'
     paginate_by = 20
-    queryset = Marca.objects.order_by('marca')
+    search_form = SearchForm
+
+    def get_queryset(self):
+        queryset = Marca.objects.order_by('marca')
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(
+                Q(marca__icontains=query)
+            )
+        return queryset
+    
     def get_context_data(self, **kwargs):
         context = super(panel_marcas, self).get_context_data(**kwargs)
-        context['Marca'] = Marca.objects.all()
+        context['search_form'] = self.search_form(self.request.GET or None)
         return context
 
 @method_decorator(login_required, name='dispatch' )    
@@ -243,10 +393,23 @@ class panel_mantenciones(ListView):
     context_object_name = 'panel_mantencion'
     template_name = 'dashboard/panel_mantencion.html'
     paginate_by = 20
-    queryset = Mantenciones.objects.all()
+    search_form = SearchForm
+
+    def get_queryset(self):
+        queryset = Mantenciones.objects.order_by('m_patente')
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(
+                Q(m_patente__patente__icontains=query)  |
+                Q(m_kilometraje__icontains=query)  |
+                Q(m_estado__icontains=query)  |
+                Q(responsable__usuario__nombre__icontains=query) 
+            )
+        return queryset
+    
     def get_context_data(self, **kwargs):
         context = super(panel_mantenciones, self).get_context_data(**kwargs)
-        context['Mantenciones'] = Mantenciones.objects.all()
+        context['search_form'] = self.search_form(self.request.GET or None)
         return context
 
 @method_decorator(login_required, name='dispatch' )    
@@ -633,7 +796,7 @@ class crear_asignacion(CreateView):
         smartphones = form.fields['smartphone_a'].queryset.filter(
             (Q(asignacion__smartphone_a__isnull=True)
               | Q(asignacion__smartphone_a__isnull=False,
-                   asignacion__vigente=True)) 
+                   asignacion__vigente=False)) 
                 & Q(estado_telefono=True)
               )
         form.fields['smartphone_a'].queryset = smartphones
@@ -643,27 +806,27 @@ class crear_asignacion(CreateView):
         tablets = form.fields['tablet_a'].queryset.filter(
             (Q(asignacion__tablet_a__isnull=True)
               | Q(asignacion__tablet_a__isnull=False,
-                   asignacion__vigente=True))
+                   asignacion__vigente=False))
                 & Q(estado_tablet=True)
         )
-
         form.fields['tablet_a'].queryset = tablets
+
         # Excluir Notebooks
         #notebooks = form.fields['notebook_a'].queryset.filter(~Q(asignacion__notebook_a__isnull=False))
         notebooks = form.fields['notebook_a'].queryset.filter(
             (Q(asignacion__notebook_a__isnull=True)
               | Q(asignacion__notebook_a__isnull=False,
-                   asignacion__vigente=True))
+                   asignacion__vigente=False))
                 & Q(estado_notebook=True)
         )
-
         form.fields['notebook_a'].queryset = notebooks
+
         # Excluir Camionetas
         #camioneta = form.fields['camionetas_a'].queryset.filter(~Q(asignacion__camionetas_a__isnull=False))
         camioneta = form.fields['camionetas_a'].queryset.filter(
             (Q(asignacion__camionetas_a__isnull=True)
               | Q(asignacion__camionetas_a__isnull=False,
-                   asignacion__vigente=True))
+                   asignacion__vigente=False))
                 & Q(disponible=True)
         )
         form.fields['camionetas_a'].queryset = camioneta
@@ -677,6 +840,7 @@ class crear_asignacion(CreateView):
         context = super().get_context_data(**kwargs)
         context['model_verbose_name'] = self.model._meta.verbose_name.title()
         return context
+        
 
 @method_decorator(login_required, name='dispatch' )    
 class actualizar_asignacion(UpdateView):

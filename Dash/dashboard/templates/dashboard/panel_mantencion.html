@@ -7,9 +7,18 @@
 {% block content %}
 <p>{{ dashboard.name }}</p>
 <div class="card text-dark bg-light mb-3">
-    <div class="card-body">
-        <h5 class="card-title">Listado de mantenciones</h5>
-        <div class="table-responsive" style="max-height: calc(100vh - 230px); overflow-y: auto;">
+  <div class="card-body">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Listado de mantenciones</h5>
+      <form method="GET" class="search-form">
+        <input type="text" name="query" value="{{ search_form.value }}" placeholder="Buscar...">
+        <button type="submit">Search</button>
+        {% if search_form.value %}
+            <a href="{% url 'dashboard:panel_mantencion' %}" class="btn btn-secondary">Clear</a>
+        {% endif %}
+    </form>
+    </div>
+        <div class="table-responsive" style="max-height: calc(100vh - 270px); overflow-y: auto;">
           <table class="table table-hover table-bordered">
               <thead style="background-color: rgb(25, 231, 227);">
             <tr>
@@ -37,6 +46,7 @@
         </tbody>
     </table>
 </div>
+<div class="card-footer">
 <div class="pagination d-flex justify-content-between">
   <p>
     <a href="{% url "dashboard:index" %}" class="btn btn-secondary">Volver al indice</a>
@@ -79,6 +89,7 @@
     <p>
         <button type="button" class="btn btn-primary" onclick="location.href='{% url 'dashboard:newmante' %}'">Ingresar mantencion</button>
     </p>
+</div>
 </div>
 </div>
 {% endblock %}

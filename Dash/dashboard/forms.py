@@ -121,7 +121,7 @@ class CamionetasForm(forms.ModelForm):
         model = Camionetas
         fields = ['patente','modelo_camioneta','mantencion',
                   'observaciones_camionetas','disponible',
-                  'modalidad','vin','kilometraje']
+                  'modalidad','vin','kilometraje','fecha_recepcion','fecha_entrega']
 
         widgets = {
             'mantencion' : forms.DateInput(
@@ -129,6 +129,14 @@ class CamionetasForm(forms.ModelForm):
                                      'required':"true"}
             ),
             'modalidad' : forms.Select(choices=listado_modalidades),
+            'fecha_recepcion' : forms.DateInput(
+             format='%Y-%m-%d',attrs={'type':'date','class': 'dtpicker',
+                                     'required':"true"}
+            ),
+            'fecha_entrega' : forms.DateInput(
+             format='%Y-%m-%d',attrs={'type':'date','class': 'dtpicker',
+                                     'required':"true"}
+            ),
         }
 
 class AsignacionForm(forms.ModelForm):

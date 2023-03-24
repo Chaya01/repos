@@ -11,64 +11,29 @@
 
 <div class="card text-dark bg-light mb-3">
   <div class="card-body">
-      <h5 class="card-title">Listado de camionetas</h5>
-      <div class="table-responsive" style="max-height: calc(100vh - 230px); overflow-y: auto;">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Listado de camionetas</h5>
+      <form method="GET" class="search-form">
+        <input type="text" name="query" value="{{ search_form.value }}" placeholder="Buscar...">
+        <button type="submit">Search</button>
+        {% if search_form.value %}
+            <a href="{% url 'dashboard:panel_camionetas' %}" class="btn btn-secondary">Clear</a>
+        {% endif %}
+    </form>
+    </div>
+      <div class="table-responsive" style="max-height: calc(100vh - 270px); overflow-y: auto;">
         <table class="table table-hover table-bordered">
             <thead style="background-color: rgb(25, 231, 227);">
             <tr>
-                <th>
-                    <div class="d-flex align-items-center ">
-                      <span>Patente</span>
-                      <button class="btn btn-sm" type="submit" form="sort-form" name="sort" value="{% if request.GET.sort == 'patente' and request.session.current_order == 'asc' %}-patente{% else %}patente{% endif %}">
-                        {% if request.GET.sort == 'patente' %}
-                          {% if request.session.current_order == 'asc' %}
-                            <i class="bi bi-sort-up fs-6"></i>
-                          {% else %}
-                            <i class="bi bi-sort-down fs-6"></i>
-                          {% endif %}
-                        {% else %}
-                          <i class="bi bi-filter fs-6"></i>
-                        {% endif %}
-                      </button>
-                    </div>
-                  </th>
-                  <th>
-                    <div class="d-flex align-items-center">
-                      <span>Modelo</span>
-                      <button class="btn btn-sm" type="submit" form="sort-form" name="sort" value="{% if request.GET.sort == 'modelo_camioneta' and request.session.current_order == 'asc' %}-modelo_camioneta{% else %}modelo_camioneta{% endif %}">
-                        {% if request.GET.sort == 'modelo_camioneta' %}
-                          {% if request.session.current_order == 'asc' %}
-                            <i class="bi bi-sort-up fs-6"></i>
-                          {% else %}
-                            <i class="bi bi-sort-down fs-6"></i>
-                          {% endif %}
-                        {% else %}
-                          <i class="bi bi-filter fs-6"></i>
-                        {% endif %}
-                      </button>
-                    </div>
-                  </th>
-                  <th>
-                    <div class="d-flex align-items-center">
-                        <span> Mantencion </span>
-                      <button class="btn btn-sm" type="submit" form="sort-form" name="sort" value="{% if request.GET.sort == 'mantencion' and request.session.current_order == 'asc' %}-mantencion{% else %}mantencion{% endif %}">
-                        {% if request.GET.sort == 'mantencion' %}
-                          {% if request.session.current_order == 'asc' %}
-                            <i class="bi bi-sort-up"></i>
-                          {% else %}
-                            <i class="bi bi-sort-down"></i>
-                          {% endif %}
-                        {% else %}
-                          <i class="bi bi-filter"></i>
-                        {% endif %}
-                      </button>
-                    </div>
-                  </th>
-                  
+                <th>Patente</th>
+                <th>Modelo</th>
+                <th>Mantencion</th>
                 <th>Observacion</th>
                 <th>contrato vigente</th>
                 <th>Modalidad</th>
                 <th>VIN</th>
+                <th>Fecha Recepcion</th>
+                <th>Fecha Entrega</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -85,6 +50,8 @@
                 <td>{{ Camionetas.disponible }}</td>
                 <td>{{ Camionetas.modalidad }}</td>
                 <td>{{ Camionetas.vin }}</td>
+                <td>{{ Camionetas.fecha_recepcion }}</td>
+                <td>{{ Camionetas.fecha_entrega}}</td>
                 <td><a href="{% url "dashboard:editcam" Camionetas.pk %}" class="btn btn-warning btn-sm">Editar</a> 
                     <a href="{% url "dashboard:deletcam" Camionetas.pk %}" class="btn btn-danger btn-sm">Borrar</a>
                     <a href="{% url "dashboard:mantenciones" pk=Camionetas.pk %}" class="btn btn-success btn-sm">Ver mantenciones</a>
@@ -94,6 +61,7 @@
         </tbody>
     </table>
 </div>
+<div class="card-footer">
 <div class="pagination d-flex justify-content-between">
   <p>
     <a href="{% url "dashboard:index" %}" class="btn btn-secondary">Volver al indice</a>
@@ -138,8 +106,7 @@
     </p>
 </div>
 </div>
+</div>
 {% endblock %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js" integrity="sha512-Wy6NBksJmeUCrW8XvAYTlHlRnCxrs6E7k8FvEL1nghs/Ts3s3sS9G11cS1S0VlmZf3uN7Vx4vWTi4RdH/4FpKg
-
-

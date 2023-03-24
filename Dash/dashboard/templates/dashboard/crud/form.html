@@ -10,18 +10,22 @@
 {% block content %}
     <body>
         <div class="card text-dark bg-light mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Formulario de ingreso de {{ model_verbose_name }}</h5>
+            <div class="card-header">
+                <h5 class="card-title mb-0">Formulario de ingreso de {{ model_verbose_name }}</h5>
+            </div>
+            <div class="card-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                 <h6>Por favor ingrese los siguientes datos </h6>
                 <form method="post">
                     <div class="fieldWrapper">
                         {% csrf_token %}
                         {{form.non_field_errors}}
                         {{ form | crispy }} 
-                        <button type="submit" class="btn btn-success" value="Save"> Guardar </button>
-                        <input type="button" class="btn btn-cancel" onclick="history.back();" value="Regresar">
                     </div>
                 </form>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success" value="Save"> Guardar </button>
+                <input type="button" class="btn btn-cancel" onclick="history.back();" value="Regresar">
             </div>
         </div>
     </body>
