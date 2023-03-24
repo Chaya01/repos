@@ -78,10 +78,22 @@ class panel_usuarios(ListView):
     context_object_name = 'panel_usuarios'
     template_name = 'dashboard/panel_usuarios.html'
     paginate_by = 20
-    queryset = Usuarios.objects.order_by('nombre')
+    search_form = SearchForm
+
+    def get_queryset(self):
+        queryset = Usuarios.objects.order_by('nombre')
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(
+                Q(nombre__icontains=query) |
+                Q(apellido__icontains=query) |
+                Q(rut__icontains=query)
+            )
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super(panel_usuarios, self).get_context_data(**kwargs)
-        context['Usuarios'] = Usuarios.objects.all()
+        context['search_form'] = self.search_form(self.request.GET or None)
         return context
 
 @method_decorator(login_required, name='dispatch' )

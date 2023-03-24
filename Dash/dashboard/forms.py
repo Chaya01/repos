@@ -20,8 +20,10 @@ class UsuarioForm(forms.ModelForm):
             'empresa' : forms.Select(choices=listado_empresas,attrs={'class':'form-control'}),
             'gerente' : forms.Select(choices=listado_gerentes,attrs={'class':'form-control'}),
             'centro_de_costo' : forms.Select(choices=listado_centrosdecostos,attrs={'class':'form-control'}),
-
         }
+
+class SearchForm(forms.Form):
+    query = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'Buscar...'}))
 
 class DepartamentoForm(forms.ModelForm):
     class Meta:
@@ -53,7 +55,7 @@ class SmartphonesForm(forms.ModelForm):
         
         widgets = {
             'fecha_compra_telefono' : forms.DateInput(
-            format="%d/%m/%Y",attrs={
+            format='%Y-%m-%d',attrs={
                                      }
             )
         }
@@ -86,7 +88,7 @@ class TabletsForm(forms.ModelForm):
         
         widgets = {
             'fecha_compra_tablet' : forms.DateTimeInput(
-            format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker',
+            format='%Y-%m-%d',attrs={'type':'date','class': 'dtpicker',
                                      'required':"true"}
             )
         }        
@@ -104,7 +106,7 @@ class NotebooksForm(forms.ModelForm):
         
         widgets = {
             'fecha_compra_notebook' : forms.DateInput(
-            format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker',
+            format='%Y-%m-%d',attrs={'type':'date','class': 'dtpicker',
                                      'required':"true"}
             )
         }        
@@ -122,14 +124,13 @@ class CamionetasForm(forms.ModelForm):
                   'modalidad','vin','kilometraje']
 
         widgets = {
-            'mantencion' : forms.DateTimeInput(
-            format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker',
+            'mantencion' : forms.DateInput(
+             format='%Y-%m-%d',attrs={'type':'date','class': 'dtpicker',
                                      'required':"true"}
             ),
             'modalidad' : forms.Select(choices=listado_modalidades),
-            'kilometraje': forms.Select(choices=param_kilometros),
-        }  
-        
+        }
+
 class AsignacionForm(forms.ModelForm):
 
     class Meta: 
@@ -138,16 +139,16 @@ class AsignacionForm(forms.ModelForm):
                   'notebook_a','fecha_nt','camionetas_a','fecha_cm','vigente']
         widgets = {
             'fecha_sma' : forms.DateTimeInput(
-            format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker'}
+            format='%Y-%m-%d',attrs={'type':'date','class': 'dtpicker'}
             ),
             'fecha_ta' : forms.DateTimeInput(
-            format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker'}
+            format='%Y-%m-%d',attrs={'type':'date','class': 'dtpicker'}
             ),
             'fecha_nt' : forms.DateTimeInput(
-            format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker'}
+            format='%Y-%m-%d',attrs={'type':'date','class': 'dtpicker'}
             ),
             'fecha_cm' : forms.DateTimeInput(
-            format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker'}
+            format='%Y-%m-%d',attrs={'type':'date','class': 'dtpicker'}
             ),
         }    
 
@@ -169,7 +170,7 @@ class MantencionesForm(forms.ModelForm):
         
             widgets = {
                 'fecha_mantencion' : forms.DateTimeInput(
-                format="%d/%m/%Y",attrs={'type':'date','class': 'dtpicker','required':'True'}
+                format='%Y-%m-%d',attrs={'type':'date','class': 'dtpicker','required':'True'}
                 ),
-                'kilometraje': forms.Select(choices=param_kilometros),
+                'm_kilometraje': forms.Select(choices=param_kilometros),
             }

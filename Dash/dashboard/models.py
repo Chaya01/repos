@@ -91,7 +91,7 @@ class Smartphones(models.Model):
     modelo_smartphone = models.ForeignKey(Modelos,on_delete=models.CASCADE)
     imei1 = models.IntegerField(unique=True,)
     imei2 = models.IntegerField(unique = True, null=True)
-    estado_telefono = models.ForeignKey(Estados,on_delete=models.CASCADE) #Funciona / no Funiona
+    estado_telefono = models.BooleanField()
     fecha_compra_telefono = models.DateField(help_text='Fecha en la que se recepciona el equipo en la empresa')
     valor_telefono = models.IntegerField(help_text='Por favor inserte el valor en CLP')
 #    funciona_telefono = models.ForeignKey(default=True, null=False) #si / no
@@ -108,7 +108,7 @@ class Tablets(models.Model): #crear views, forms and urls
     serie_tablet = models.CharField(unique=True,max_length=20)
     modelo_tablet = models.ForeignKey(Modelos,on_delete=models.CASCADE)
     imei_tb = models.CharField (max_length=20,null=True, unique=True, blank=True)
-    estado_tablet = models.ForeignKey(Estados,on_delete=models.CASCADE) #funciona / no funciona
+    estado_tablet = models.BooleanField()
     fecha_compra_tablet = models.DateField(help_text='Fecha en la que se recepciona el equipo en la empresa')
     valor_tablet = models.IntegerField(help_text='Por favor inserte el valor en CLP')
     observaciones_tablets = models.CharField(max_length=50,blank=True)
@@ -123,7 +123,7 @@ class Tablets(models.Model): #crear views, forms and urls
 class Notebooks(models.Model):
     serie_notebook = models.CharField(unique=True,max_length=20)
     modelo_notebook = models.ForeignKey(Modelos,on_delete=models.CASCADE)
-    estado_notebook = models.ForeignKey(Estados,on_delete=models.CASCADE)
+    estado_notebook = models.BooleanField()
     fecha_compra_notebook = models.DateField(help_text='Fecha en la que se recepciona el equipo en la empresa')
     valor_notebook = models.IntegerField(help_text='Por favor inserte el valor en CLP')
     observaciones_notebook = models.CharField(max_length=50, blank=True)
@@ -142,7 +142,7 @@ class Camionetas(models.Model):
     modelo_camioneta = models.ForeignKey(Modelos,on_delete=models.CASCADE)
     mantencion = models.DateField()
     observaciones_camionetas = models.CharField(max_length=50)
-    disponible = models.ForeignKey(Estados,on_delete=models.CASCADE) #contratada por la empresa ?
+    disponible = models.BooleanField()
     modalidad = models.CharField(choices=listado_modalidades,max_length=20,verbose_name='listado modalidades')
     vin = models.CharField(max_length=20,unique=True)
     kilometraje = models.IntegerField()
@@ -198,7 +198,7 @@ class Asignacion(models.Model):
     fecha_nt = models.DateField(default= None,null=True,blank=True)
     camionetas_a =models.ForeignKey(Camionetas, on_delete=models.CASCADE,null=True,blank=True)
     fecha_cm = models.DateField(default= None,null=True,blank=True)
-    vigente = models.ForeignKey(Estados,on_delete=models.CASCADE,help_text='marcar si es la asignacion actual del usuario.') #registro actual, si / no)
+    vigente = models.BooleanField(help_text='marcar si es la asignacion actual del usuario.') #registro actual, si / no)
 
     def __str__(self):
         return str(self.usuario)
