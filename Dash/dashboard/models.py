@@ -90,7 +90,7 @@ class Smartphones(models.Model):
     serie_smartphone = models.CharField(unique=True,max_length=20)
     modelo_smartphone = models.ForeignKey(Modelos,on_delete=models.CASCADE)
     imei1 = models.CharField(max_length=20,unique=True,)
-    imei2 = models.CharField(max_length=20,unique = True, null=True)
+    imei2 = models.CharField(max_length=20,unique = True, null=True,blank=True)
     estado_telefono = models.BooleanField()
     fecha_compra_telefono = models.DateField(help_text='Fecha en la que se recepciona el equipo en la empresa')
     valor_telefono = models.IntegerField(help_text='Por favor inserte el valor en CLP')

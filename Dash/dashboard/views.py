@@ -67,6 +67,26 @@ class index(ListView):
     def get_context_data(self, **kwargs):
         context = super(index, self).get_context_data(**kwargs)
         context['Usuarios'] = Usuarios.objects.all()
+        ### Contadores de Smartphones ###
+        context['total_smartphones'] = Smartphones.objects.count()
+        context['assigned_smartphones'] = Asignacion.objects.filter(smartphone_a__estado_telefono=True, vigente=True).count()
+        context['unusable_smartphones'] = Smartphones.objects.filter(estado_telefono=False).count()
+        context['available_smartphones'] = context['total_smartphones'] - context['assigned_smartphones'] - context ['unusable_smartphones']
+        ###Contadores de Notebooks ####
+        context['total_notebooks'] = Notebooks.objects.count()
+        context['assigned_notebooks'] = Asignacion.objects.exclude(notebook_a=None).exclude(vigente=False).count()
+        context['unusable_notebooks'] = Notebooks.objects.filter(estado_notebook=False).count()
+        context['available_notebooks'] = context['total_notebooks'] - context['assigned_notebooks'] - context['unusable_notebooks']
+        ### Contadores de Tablets###
+        context['total_tablets'] = Tablets.objects.count()
+        context['assigned_tablets'] = Asignacion.objects.exclude(tablet_a=None).exclude(vigente=False).count()
+        context['unusable_tablets'] = Tablets.objects.filter(estado_tablet=False).count()
+        context['available_tablets'] = context['total_tablets'] - context['assigned_tablets'] - context['unusable_tablets']
+        ### Contadores de camionetas ###
+        context['total_camionetas'] = Camionetas.objects.count()
+        context['assigned_camionetas'] = Asignacion.objects.exclude(camionetas_a=None).exclude(vigente=False).count()
+        context['unusable_camionetas'] = Camionetas.objects.filter(disponible=False).count()
+        context['available_camionetas'] = context['total_camionetas'] - context['assigned_camionetas'] - context['unusable_camionetas']
 
         return context
         #return super().get_context_data(**kwargs)

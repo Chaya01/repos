@@ -21,11 +21,11 @@
                         {{form.non_field_errors}}
                         {{ form | crispy }} 
                     </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-success" value="Save"> Guardar </button>
+                        <input type="button" class="btn btn-cancel" onclick="history.back();" value="Regresar">
+                    </div>
                 </form>
-            </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-success" value="Save"> Guardar </button>
-                <input type="button" class="btn btn-cancel" onclick="history.back();" value="Regresar">
             </div>
         </div>
     </body>
