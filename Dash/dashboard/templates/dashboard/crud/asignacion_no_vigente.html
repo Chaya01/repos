@@ -1,0 +1,48 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+{% load static %}
+{% block header %}
+{% endblock %}
+{% block side %}
+{% endblock %}
+<p>{{ dashboard.name }}</p>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <img src="data:image/png;base64,{{ logo }}" alt="Curimapu" width="250px" height="40px">
+    </div>
+    <div class="col-md-9">
+      <h1 class="mb-3">Se reciben los siguientes equipos de {{ asignacion.usuario }}</h1>
+      <table class="table table-bordered">
+        <tr>
+          <th>Usuario</th>
+          <td>{{ asignacion.usuario }}</td>
+        </tr>
+        <tr>
+          <th>Notebook</th>
+          <td>{{ asignacion.notebook_a }}</td>
+        </tr>
+        <tr>
+          <th>Tablet</th>
+          <td>{{ asignacion.tablet_a }}</td>
+        </tr>
+        <tr>
+          <th>Smartphone</th>
+          <td>{{ asignacion.smartphone_a }}</td>
+        </tr>
+        <tr>
+          <th>Camionetas</th>
+          <td>{{ asignacion.camionetas_a }}</td>
+        </tr>
+        <tr>
+            <th>Telefono</th>
+            <td>{{ asignacion.num }}</td>
+          </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

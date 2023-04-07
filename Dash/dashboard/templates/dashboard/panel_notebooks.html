@@ -31,6 +31,7 @@
                 <th>SSD</th>
                 <th>Estado</th>
                 <th>Fecha de compra</th>
+                <th>Fecha de mantencion</th>
                 <th>Valor del dispositivo</th>
                 <th>Observaciones</th>
                 <th>Acciones</th>
@@ -47,6 +48,7 @@
                 <td>{{ Notebooks.nssd }}</td>
                 <td>{{ Notebooks.estado_notebook }}</td>
                 <td>{{ Notebooks.fecha_compra_notebook }}</td>
+                <td>{{ Notebooks.mantencion_notebook }}</td>
                 <td>${{ Notebooks.valor_notebook }}</td>
                 <td>{{ Notebooks.observaciones_notebook }}</td>
                 <td><a href="{% url "dashboard:editnot" Notebooks.pk %}" class="btn btn-warning btn-sm">Editar</a> 

@@ -1,13 +1,6 @@
 #from __future__ import unicode_literals
-from contextlib import nullcontext
-from enum import auto
-from tkinter import CASCADE
 from django.db import models
-from django.forms import NullBooleanField
-from django.utils import timezone
-from datetime import date
 from django.utils.translation import gettext as _
-from django.utils import timezone
 from .listados import *
 
 class Procesador(models.Model):
@@ -29,15 +22,7 @@ class Estados(models.Model):
     def __str__ (self):
         return str(self.e_equipos)
 
-class Departamentos(models.Model):
-    area = models.CharField(choices=listado_areas,max_length=20,null=True,verbose_name='Listado Areas')
-    sucursal = models.CharField(choices=listado_sucursales,max_length=20,null=False,verbose_name='listado sucursales')
 
-    def __str__ (self):
-        return str(u"{} - {}").format(
-            self.area,
-            self.sucursal,
-        )
 #    def __str__(self):          #nombre Visible#
 #        return self.area
 
@@ -66,7 +51,7 @@ class Marca(models.Model):
         return self.marca
 
 class ParamTipo(models.Model):
-    nombre_param = models.CharField(max_length=20, unique=True)
+    nombre_param = models.CharField(max_length=20, unique=True) #camioneta,tablet,notebook,smartphone
 
     def __str__(self):
         return self.nombre_param
@@ -79,10 +64,9 @@ class Modelos(models.Model):
     m_procesador = models.ForeignKey(Procesador,default="01",on_delete=models.SET_DEFAULT,help_text="Por favor marcar 'No aplica' para las camionetas")
 
     def __str__(self):
-        return str(u"{} - {} - {}").format(
+        return str(u"{} - {}").format(
             self.m_marca,
             self.m_modelo,  
-            self.m_param,
         )
 
 ####
@@ -125,6 +109,7 @@ class Notebooks(models.Model):
     modelo_notebook = models.ForeignKey(Modelos,on_delete=models.CASCADE)
     estado_notebook = models.BooleanField()
     fecha_compra_notebook = models.DateField(help_text='Fecha en la que se recepciona el equipo en la empresa')
+    mantencion_notebook = models.DateField(help_text="Fecha de la ultima mantecion")
     valor_notebook = models.IntegerField(help_text='Por favor inserte el valor en CLP')
     observaciones_notebook = models.CharField(max_length=100, blank=True)
     nram = models.IntegerField(verbose_name='Memoria Ram')
@@ -157,13 +142,12 @@ class Camionetas(models.Model):
 
 class  Usuarios(models.Model): #Editar Views and Forms.
     rut = models.CharField(max_length=10, null=False, blank=False, unique=True)
-    nombre = models.CharField(max_length=20, null=False)
+    nombre = models.CharField(max_length=30, null=False)
     apellido = models.CharField(max_length=20, null=False)
-    area = models.ForeignKey(Departamentos,on_delete=models.SET_NULL, null=True) #revisar
-    correo = models.EmailField(max_length=50)
+    correo = models.EmailField(max_length=50,null=True)
     empresa = models.CharField(max_length=20)
     gerente = models.CharField(max_length=20)
-    centro_de_costo = models.CharField(choices=listado_centrosdecostos, max_length=25, verbose_name='Centro de Costo')
+    centro_de_costo = models.CharField(choices=listado_centrosdecostos, max_length=30, verbose_name='Centro de Costo')
 
 #    def nombre_completo(self):
 #        return u"{} {}".format(

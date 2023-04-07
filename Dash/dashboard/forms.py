@@ -14,7 +14,7 @@ class EstadosForm(forms.ModelForm):
 class UsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuarios
-        fields = ['rut', 'nombre','apellido','area', 'correo','empresa','gerente','centro_de_costo']
+        fields = ['rut', 'nombre','apellido','correo','empresa','gerente','centro_de_costo']
 
         widgets ={
             'empresa' : forms.Select(choices=listado_empresas,attrs={'class':'form-control'}),
@@ -24,16 +24,6 @@ class UsuarioForm(forms.ModelForm):
 
 class SearchForm(forms.Form):
     query = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'Buscar...'}))
-
-class DepartamentoForm(forms.ModelForm):
-    class Meta:
-        model = Departamentos
-        fields = ['area','sucursal']
-
-        widgets ={
-            'area' : forms.Select(choices=listado_areas,attrs={'class':'form-control'}),
-            'sucursal' : forms.Select(choices=listado_sucursales,attrs={'class':'form-control'}),
-        }
 
 class TelefonoForm(forms.ModelForm):
     class Meta:
@@ -101,11 +91,15 @@ class NotebooksForm(forms.ModelForm):
 
     class Meta:
         model = Notebooks
-        fields =['serie_notebook','modelo_notebook','estado_notebook','fecha_compra_notebook',
+        fields =['serie_notebook','modelo_notebook','estado_notebook','fecha_compra_notebook','mantencion_notebook',
                  'valor_notebook','observaciones_notebook','nram','nhdd','nssd']
         
         widgets = {
             'fecha_compra_notebook' : forms.DateInput(
+            format='%Y-%m-%d',attrs={'type':'date','class': 'dtpicker',
+                                     'required':"true"}
+            ),
+            'mantencion_notebook' : forms.DateInput(
             format='%Y-%m-%d',attrs={'type':'date','class': 'dtpicker',
                                      'required':"true"}
             )

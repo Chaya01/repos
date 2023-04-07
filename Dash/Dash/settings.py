@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-1=2s2c@51ia2u+8%clssv=k3-aku*l!2ffbm*=fo915hs*76ml
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.4.3','127.0.0.1','localhost','0.0.0.0:8000']
 
 
 # Application definition
@@ -90,7 +90,7 @@ DATABASES = {
         "PASSWORD": "Master.,",
         "HOST": "192.168.4.6",
         "PORT": "1433",
-        "OPTIONS": {"driver": "ODBC Driver 18 for SQL Server",
+        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server",
             "MARS_Connection": True,
             "extra_params": "TrustServerCertificate=yes;Connection Timeout=30;",
         },
@@ -143,3 +143,12 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+### Email Settings ###
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mail.movil.curimapu.com'
+EMAIL_USE_TLS = True    
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "documentos@movil.curimapu.com"
+EMAIL_HOST_PASSWORD = "cur.2008"

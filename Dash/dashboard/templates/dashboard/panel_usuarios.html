@@ -26,7 +26,6 @@
                             <th>Rut</th>
                             <th>Nombre</th>
                             <th>Apellido</th>
-                            <th>Area</th>
                             <th>Correo</th>
                             <th>Empresa</th>
                             <th>Gerente</th>
@@ -40,7 +39,6 @@
                             <td>{{ Usuarios.rut }} </td> 
                             <td>{{ Usuarios.nombre }}</td>
                             <td>{{ Usuarios.apellido }}</td>
-                            <td>{{ Usuarios.area }} </td> 
                             <td>{{ Usuarios.correo }} </td> 
                             <td>{{ Usuarios.empresa }}</td>
                             <td>{{ Usuarios.gerente }} </td> 
@@ -98,6 +96,8 @@
                 <p>
                     <button type="button" class="btn btn-primary" onclick="location.href='{% url 'dashboard:newuser' %}'">Ingresar Trabajador</button>
                 </p>
+                <a href="{% url 'dashboard:cargar_excel' %}">Cargar Excel</a>
+
             </div>
       </div>
         </div>

@@ -1,0 +1,100 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+{% load static %}
+{% block header %}
+{% endblock %}
+{% block side %}
+{% endblock %}
+<p>{{ dashboard.name }}</p>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <img src="data:image/png;base64,{{ logo }}" alt="Curimapu" width="250px" height="40px">
+    </div>
+    <div class="col-md-9">
+      <h1 class="mb-3">Detalle del usuario</h1>
+      <table class="table table-bordered">
+        <tr>
+          <th>Rut</th>
+          <td>{{ Usuarios.rut }}</td>
+        </tr>
+        <tr>
+          <th>Nombre</th>
+          <td>{{ Usuarios.nombre }}</td>
+        </tr>
+        <tr>
+          <th>Apellido</th>
+          <td>{{ Usuarios.apellido }}</td>
+        </tr>
+        <tr>
+          <th>Correo</th>
+          <td>{{ Usuarios.correo }}</td>
+        </tr>
+        <tr>
+          <th>Empresa</th>
+          <td>{{ Usuarios.empresa }}</td>
+        </tr>
+        <tr>
+          <th>Gerente</th>
+          <td>{{ Usuarios.gerente }}</td>
+        </tr>
+        <tr>
+          <th>Centro de Costo</th>
+          <td>{{ Usuarios.centro_de_costo }}</td>
+        </tr>
+      </table>
+      {% if asignaciones %}
+        <h2 class="mt-5 mb-3">Asignaciones:</h2>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Equipos</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for asignacion in asignaciones %}
+              {% if asignacion.notebook_a %}
+                <tr>
+                  <td>Notebook</td>
+                  <td>{{ asignacion.notebook_a }}</td>
+                </tr>
+              {% endif %}
+              {% if asignacion.tablet_a %}
+                <tr>
+                  <td>Tablet</td>
+                  <td>{{ asignacion.tablet_a }}</td>
+                </tr>
+              {% endif %}
+              {% if asignacion.smartphone_a %}
+                <tr>
+                  <td>Smartphone</td>
+                  <td>{{ asignacion.smartphone_a }}</td>
+                </tr>
+              {% endif %}
+              {% if asignacion.num %}
+                <tr>
+                  <td>Número de contacto</td>
+                  <td>+56 {{ asignacion.num }}</td>
+                </tr>
+              {% endif %}
+              {% if asignacion.camionetas_a %}
+                <tr>
+                  <td>Camioneta</td>
+                  <td>{{ asignacion.camionetas_a }}</td>
+                </tr>
+              {% endif %}
+            {% empty %}
+              <tr>
+                <td colspan="2">No se ha asignado ningún dispositivo a este usuario</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

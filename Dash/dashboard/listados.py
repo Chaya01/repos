@@ -1,8 +1,9 @@
 ### Tuplas de datos###
 listado_areas =(
     ('Administracion','Administracion'),
-    ('Terreno','Terreno'),
+    ('Supervision Terreno','Supervision Terreno'),
     ('Planta','Planta'),
+    ('Produccion','Produccion'),
     )
 
 listado_sucursales =(
@@ -42,18 +43,27 @@ listado_gerentes =(
     )
 
 listado_centrosdecostos =(
-    ('Supervision Ja','Supervision Ja'),
-    ('Supervision Gc','Supervision Gc'),
-    ('Supervision CVS','Supervision CVS'),
+    ('Supervision Terreno JA','Supervision Terreno JA'),
+    ('Supervision Terreno GC','Supervision Terreno GC'),
+    ('Supervision Terreno Verano','Supervision Terreno Verano'),
+    ('Supervision Terreno Invierno','Supervision Terreno Invierno'),
     ('Administracion','Administracion'),
     ('Parentales','Parentales'),
     ('Comex','Comex'),
-    ('Planta','Planta'),
+    ('Planta Curimapu Los Tilos','Planta Curimapu Los Tilos'),
+    ('Planta Semilla Humeda','Planta Semilla Humeda'),
+    ('Planta Semilla Seca','Planta Semilla Seca'),
+    ('Prevencion de Riesgo','Prevencion de Riesgo'),
+    ('Operación Agricola','Operación Agricola'),
     ('Ventas','Ventas'),
     ('HomeFarm','HomeFarm'),
     ('Operaciones Agricolas','Operaciones Agricolas'),
-    ('Laboratiorio','Laboratiorio'),
-    ('Plantas de Maiz','Plantas de Maiz'),
+    ('Laboratorio','Laboratorio'),
+    ('Bodega','Bodega'),
+    ('Operación Mantenimiento','Operación Mantenimiento'),
+    ('Planta Maiz A','Planta Maiz A'),
+    ('Planta Maiz B','Planta Maiz B'),
+    ('SA','SA'),
     )
 
 listado_modalidades =(

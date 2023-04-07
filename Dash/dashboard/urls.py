@@ -21,7 +21,6 @@ urlpatterns = [
     #Paneles#
 
     path('panel_usuarios.html',panel_usuarios.as_view(),name ='panel_usuarios'),
-    path('panel_departamentos.html',panel_departamentos.as_view(),name ='panel_departamentos'),
     path('panel_telefonos.html',panel_telefonos.as_view(),name ='panel_telefonos'),
     path('panel_smartphones.html',panel_smartphones.as_view(),name ='panel_smartphones'),
     path('panel_tablets.html',panel_tablets.as_view(),name ='panel_tablets'),
@@ -34,6 +33,8 @@ urlpatterns = [
     path('panel_mantencion.html',panel_mantenciones.as_view(),name ='panel_mantencion'),
     path('mantencion/<int:pk>', views.listado_mantenciones.as_view(), name = 'mantenciones'),
     path('usuarios/<int:pk>', views.reporte.as_view(), name = 'reporte'),
+    path('reporte/<int:pk>/imprimir/', imprimir_reporte, name='imprimir_reporte'),
+
 
 
     ### Usuarios ###
@@ -41,12 +42,8 @@ urlpatterns = [
     path('usuario/form/', crear_usuario.as_view(), name='newuser'),
     path('usuario/update/<str:pk>', actualizar_usuario.as_view(), name='edituser'),
     path('usuario/delete/<str:pk>', borrar_usuario.as_view(), name='deleteuser'),
+    path('usuarios/<int:pk>/imprimir_reporte/', imprimir_reporte, name='imprimir_reporte'),
 
-    ### Departamentos ###
-    path('departamento/<str:pk>', detalle_departamento.as_view(), name='depadetail'),
-    path('departamento/form/', crear_departamento.as_view(),name='newdepa'),
-    path('departamento/update/<str:pk>', actualizar_departamento.as_view(), name='editdepa'),
-    path('departamento/delete/<str:pk>', borrar_departamento.as_view(), name= 'deletedepa'),
 
     ### Telefonos ###
     path('telefonos/<str:pk>', detalle_telefono.as_view(), name ='teldetail'),
@@ -107,6 +104,8 @@ urlpatterns = [
     path('mantencion/form/', crear_mantencion.as_view(), name = 'newmante'),
     path('mantencion/update/<str:pk>', actualizar_mantencion.as_view(), name= 'editmante'),
     path('mantencion/delete/<str:pk>', borrar_mantencion.as_view(), name = 'deletmante'),
+
+    path('cargar_excel/', cargar_excel, name='cargar_excel'),
 
     ### Series ###
 #    path('series/<str:pk>', detalle_serie.as_view(), name='seriedetail'),

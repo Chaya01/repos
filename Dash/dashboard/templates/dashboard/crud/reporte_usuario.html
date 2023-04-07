@@ -10,7 +10,6 @@
     <li>Rut: {{ Usuarios.rut }}</li>
     <li>Nombre: {{ Usuarios.nombre }}</li>
     <li>Apellido: {{ Usuarios.apellido }}</li>
-    <li>Área: {{ Usuarios.area }}</li>
     <li>Correo: {{ Usuarios.correo }}</li>
     <li>Empresa: {{ Usuarios.empresa }}</li>
     <li>Gerente: {{ Usuarios.gerente }}</li>
@@ -28,6 +27,12 @@
         {% if asignacion.smartphone_a %}
           <li>Smartphone: {{ asignacion.smartphone_a }}</li>
         {% endif %}
+        {% if asignacion.num %}
+        <li>Numero de contacto: +56 {{ asignacion.num }}</li>
+      {% endif %}
+        {% if asignacion.camionetas_a %}
+        <li>Camioneta: {{ asignacion.camionetas_a }}</li>
+      {% endif %}
       {% empty %}
         <p>No se ha asignado ningún dispositivo a este usuario</p>
       {% endfor %}
@@ -37,7 +42,11 @@
   <div class="pagination d-flex justify-content-between">
     <p>
       <a href="{% url "dashboard:panel_usuarios" %}" class="btn btn-secondary">Volver al listado de trabajadores</a>
-  </p>
+      <p>
+        <a href="{% url 'dashboard:imprimir_reporte' Usuarios.pk %}" class="btn btn-primary">Imprimir reporte</a>
+    </p>
+    </p>
 </div>
 </div>
+
 {% endblock %}
