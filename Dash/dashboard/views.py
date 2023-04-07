@@ -20,6 +20,14 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+import pdfkit
+from django.template.loader import get_template
+import base64
+import openpyxl
+from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+
 
 
 #@login_required
@@ -107,7 +115,10 @@ class panel_usuarios(ListView):
             queryset = queryset.filter(
                 Q(nombre__icontains=query) |
                 Q(apellido__icontains=query) |
-                Q(rut__icontains=query)
+                Q(rut__icontains=query) |
+                Q(centro_de_costo__icontains=query) |
+                Q(gerente__icontains=query) |
+                Q(empresa__icontains=query)
             )
         return queryset
 
@@ -117,29 +128,6 @@ class panel_usuarios(ListView):
         return context
 
 @method_decorator(login_required, name='dispatch' )
-class panel_departamentos(ListView):
-    context_object_name = 'panel_departamentos'
-    template_name = 'dashboard/panel_departamentos.html'
-    paginate_by = 20
-    search_form = SearchForm
-
-    def get_queryset(self):
-        queryset = Departamentos.objects.order_by('area')
-        query = self.request.GET.get('query')
-        if query:
-            queryset = queryset.filter(
-                Q(area__icontains=query) |
-                Q(sucursal__icontains=query)
-            )
-        return queryset
-    
-    def get_context_data(self, **kwargs):
-        context = super(panel_departamentos, self).get_context_data(**kwargs)
-        context['search_form'] = self.search_form(self.request.GET or None)
-        return context
-    
-@method_decorator(login_required, name='dispatch' )
-
 class panel_telefonos(ListView):
     context_object_name = 'panel_telefonos'
     template_name = 'dashboard/panel_telefonos.html'
@@ -459,9 +447,48 @@ class reporte(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        asignaciones = self.object.asignacion_set.all() # access all Asignacion objects related to the user
-        context['asignaciones'] = list(asignaciones) # add the Asignacion objects to the context as a list
+        asignaciones = self.object.asignacion_set.exclude(vigente=False).all()
+        context['asignaciones'] = list(asignaciones)
         return context
+    
+def imprimir_reporte(request, pk):
+    # Obtener el objeto usuario y sus asignaciones relacionadas
+    usuario = Usuarios.objects.get(pk=pk)
+    asignaciones = usuario.asignacion_set.all()
+
+    with open('static/img/logocurimapu.png', 'rb') as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode()
+    # Agregar las asignaciones a un diccionario de contexto
+    context = {
+        'Usuarios': usuario,
+        'asignaciones': list(asignaciones),
+        'logo': encoded_string,  # agregar la imagen codificada como contexto
+
+    }
+
+    # Obtener el contenido HTML a partir del template y el contexto
+    template = get_template('dashboard/crud/impresion_usuario.html')
+    html = template.render(context)
+
+    # Configurar opciones de pdfkit
+    options = {
+        'page-size': 'Letter',
+        'encoding': "UTF-8",
+        'enable-local-file-access': '',
+        'user-style-sheet': '/static/img/',
+
+    }
+
+    # Convertir el HTML a PDF utilizando pdfkit
+    pdf = pdfkit.from_string(html, False, options=options)
+
+    # Configurar la respuesta HTTP para el archivo PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="reporte_{usuario.nombre}.pdf"'
+
+    # Agregar el contenido del PDF a la respuesta y devolverla
+    response.write(pdf)
+    return response
 """
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -508,7 +535,7 @@ class crear_usuario(CreateView):
         apellido = form.cleaned_data['apellido']
         a = re.search("[a-z]$",nombre) #validar nombre
         b = re.search("[a-z]$",apellido) #validar apellido
-        x = re.search("[0-9]{8}[0-9kK]{1}$", rut) #validar rut
+        x = re.search("[0-9]{7,8}[0-9kK]{1}$", rut) #validar rut    
 
         if not x:
             form.add_error('rut', 'rut invalido')
@@ -562,61 +589,6 @@ class borrar_usuario(DeleteView):
     
 ##### CRUD DEPARTAMENTOS #####
 
-@method_decorator(login_required, name='dispatch' )
-class crear_departamento(CreateView):
-    model = Departamentos
-    form_class = DepartamentoForm
-    template_name = 'dashboard/crud/form.html'
-    success_url = reverse_lazy('dashboard:panel_departamentos')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['model_verbose_name'] = self.model._meta.verbose_name.title()
-        return context
-"""    def form_valid(self,form):
-        area = form.cleaned_data['area']
-        sucursal = form.cleaned_data['sucursal']
-        a = re.search("[a-z]$", area) #validar area
-        b = re.search("[a-z]$", sucursal)#validar sucursal
-        if not a:
-            form.add_error('area', 'El area solo debe contener caracteres alfanumericos')
-            return self.form_invalid(form)
-        elif not b:
-            form.add_error('sucursal','La sucursal solo debe contener caracteres alfanumericos')
-            return self.form_invalid(form)
-        return super(crear_departamento, self).form_valid(form)
-"""
-@method_decorator(login_required, name='dispatch' )
-class actualizar_departamento (UpdateView):
-    model = Departamentos
-    form_class = DepartamentoForm
-    template_name = 'dashboard/crud/update.html'
-    success_url = reverse_lazy('dashboard:panel_departamentos')
-
-    def form_valid(self,form):
-        area = form.cleaned_data['area']
-        sucursal = form.cleaned_data['sucursal']
-        a = re.search("[a-z]$", area) #validar area
-        b = re.search("[a-z]$", sucursal)#validar sucursal
-        if not a:
-            form.add_error('area', 'El area solo debe contener caracteres alfanumericos')
-            return self.form_invalid(form)
-        elif not b:
-            form.add_error('sucursal','La sucursal solo debe contener caracteres alfanumericos')
-            return self.form_invalid(form)
-        return super(actualizar_departamento, self).form_valid(form)
-
-@method_decorator(login_required, name='dispatch' )
-class detalle_departamento(DetailView):
-    model = Departamentos
-    template_name = ('dashboard/crud/departamento_detail.html')
-    succes_url = reverse_lazy('dashboard:index')
-
-@method_decorator(login_required, name='dispatch' )
-class borrar_departamento(DeleteView):
-    model = Departamentos
-    template_name = 'dashboard/crud/delete.html'
-    success_url = reverse_lazy('dashboard:panel_departamentos')
 
 ##### CRUD Num_telefono #####
 
@@ -854,6 +826,31 @@ class crear_asignacion(CreateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
+        asignacion = form.save(commit=False)
+        asignacion.save()
+
+        # Get the user associated with the assignment
+        usuario = asignacion.usuario
+
+        # Get all the assignments associated with the user
+        asignaciones = usuario.asignacion_set.filter(vigente=True)
+
+        # Generate the context for the email template
+        context = {
+            'Usuarios': usuario,
+            'asignaciones': asignaciones,
+        }
+        # Send email
+        subject = f'Nuevo dispositivo asignado a {asignacion.usuario.nombre} {asignacion.usuario.apellido}'
+        to = ['kevinaroca@curimapu.com','franciscovillalobos@curimapu.com','pedroalarcon@curimapu.com','benjaminramos@curimapu.com']
+        #to = ['kevinaroca@curimapu.com']
+        from_email = 'documentos@curimapu.com'
+        context = {'asignacion': asignacion}
+        message = render_to_string('dashboard/crud/asignacion_equipo.html', context)
+        email = EmailMessage(subject, message, to=to, from_email=from_email)
+        email.content_subtype = 'html'
+        email.send()
+
         return response
     
     def get_context_data(self, **kwargs):
@@ -862,12 +859,35 @@ class crear_asignacion(CreateView):
         return context
         
 
+def send_asignacion_no_vigente_notification(asignacion):
+    """
+    Sends an email notification to the configured recipients when an Asignacion object is marked as 'no vigente'.
+    """
+    subject = f'Recepcion de equipos de {asignacion.usuario}'
+    to = ['kevinaroca@curimapu.com','franciscovillalobos@curimapu.com','pedroalarcon@curimapu.com','benjaminramos@curimapu.com']
+    from_email = 'documentos@curimapu.com'
+    context = {'asignacion': asignacion}
+    message = render_to_string('dashboard/crud/asignacion_no_vigente.html', context)
+    email = EmailMessage(subject, message, to=to, from_email=from_email)
+    email.content_subtype = 'html'
+    email.send()
+
 @method_decorator(login_required, name='dispatch' )    
 class actualizar_asignacion(UpdateView):
     model = Asignacion
     template_name = 'dashboard/crud/update.html'    
     success_url = reverse_lazy('dashboard:panel_asignacion')
     form_class = AsignacionForm
+        
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        asignacion = form.save(commit=False)
+        asignacion.save()
+
+        if asignacion.vigente == False:
+            send_asignacion_no_vigente_notification(asignacion)
+
+        return response
 
 @method_decorator(login_required, name='dispatch' )
 class detalle_asignacion(DetailView):
@@ -1008,6 +1028,28 @@ class borrar_mantencion(DeleteView):
     template_name = 'dashboard/crud/delete.html'
     success_url = reverse_lazy('dashboard:panel_mantencion')
 
+def cargar_excel(request):
+    if request.method == 'POST':
+        archivo_excel = request.FILES['archivo_excel']
+        libro_excel = openpyxl.load_workbook(archivo_excel)
+        hoja_excel = libro_excel.active
+
+        for fila in hoja_excel.iter_rows(min_row=2, values_only=True):
+            rut, nombre, apellido, correo, empresa, gerente, centro_de_costo, *_ = fila
+            usuario = Usuarios(
+                rut=rut,
+                nombre=nombre,
+                apellido=apellido,
+                correo=correo,
+                empresa=empresa,
+                gerente=gerente,
+                centro_de_costo=centro_de_costo
+            )
+            usuario.save()
+
+        return render(request, 'dashboard/crud/excel_cargado.html')
+
+    return render(request, 'dashboard/crud/cargar_excel.html')
 
 ##### Crud Series #####
 
@@ -1034,3 +1076,32 @@ class borrar_mantencion(DeleteView):
 #    success_url = reverse_lazy('dashboard:index')
 
 # Create your views here.
+""" Desarrollado por Kevin Aroca
+      ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣴⣆⣠⣤⠀⠀⠀⠀⠀⠀⠀
+  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣻⣿⣯⣘⠹⣧⣤⡀⠀⠀⠀⠀⠀
+  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠿⢿⣿⣷⣾⣯⠉⠀⠀⠀⠀⠀⠀
+  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⠜⣿⡍⠀⠀⠀⠀⠀⠀⠀
+  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⠁⠀⠘⣿⣆⠀⠀⠀⠀⠀⠀
+  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⡟⠃⡄⠀⠘⢿⣆⠀⠀⠀⠀⠀
+  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⣁⣋⣈ ⣤⣮⣿⣧⡀⠀
+  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⣤⣤⣤⣤⣶⣦⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀
+  ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⡿⠛⠉⠙⠛⠛⠛⠛⠻⢿⣿⣷⣤⡀⠀⠀⠀⠀⠀
+  ⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⠋⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⠈⢻⣿⣿⡄⠀⠀⠀⠀
+  ⠀⠀⠀⠀⠀⠀⠀⣸⣿⡏⠀⠀⠀⣠⣶⣾⣿⣿⣿⠿⠿⠿⢿⣿⣿⣿⣄⠀⠀⠀
+  ⠀⠀⠀⠀⠀⠀⠀⣿⣿⠁⠀⠀⢰⣿⣿⣯⠁⠀⠀⠀⠀⠀⠀⠀⠈⠙⢿⣷⡄⠀
+  ⠀⠀⣀⣤⣴⣶⣶⣿⡟⠀⠀⠀⢸⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⠀
+  ⠀⢰⣿⡟⠋⠉⣹⣿⡇⠀⠀⠀⠘⣿⣿⣿⣿⣷⣦⣤⣤⣤⣶⣶⣶⣶⣿⣿⣿⠀
+  ⠀⢸⣿⡇⠀⠀⣿⣿⡇⠀⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠀
+  ⠀⣸⣿⡇⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠉⠻⠿⣿⣿⣿⣿⡿⠿⠿⠛⢻⣿⡇⠀⠀
+  ⠀⣿⣿⠁⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣧⠀⠀
+  ⠀⣿⣿⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀
+  ⠀⣿⣿⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀
+  ⠀⢿⣿⡆⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀
+  ⠀⠸⣿⣧⡀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠃⠀⠀
+  ⠀⠀⠛⢿⣿⣿⣿⣿⣇⠀⠀⠀⠀⠀⣰⣿⣿⣷⣶⣶⣶⣶⠶⠀⢠⣿⣿⠀⠀⠀
+  ⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⠀⣿⣿⡇⠀⣽⣿⡏⠁⠀⠀⢸⣿⡇⠀⠀⠀
+  ⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⠀⣿⣿⡇⠀⢹⣿⡆⠀⠀⠀⣸⣿⠇⠀⠀⠀
+  ⠀⠀⠀⠀⠀⠀⠀⢿⣿⣦⣄⣀⣠⣴⣿⣿⠁⠀⠈⠻⣿⣿⣿⣿⡿⠏⠀⠀⠀⠀
+  ⠀⠀⠀⠀⠀⠀⠀⠈⠛⠻⠿⠿⠿⠿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+  
+  """
