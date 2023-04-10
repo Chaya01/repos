@@ -45,7 +45,7 @@ class SmartphonesForm(forms.ModelForm):
         
         widgets = {
             'fecha_compra_telefono' : forms.DateInput(
-            format='%Y-%m-%d',attrs={
+            format='%Y-%m-%d',attrs={'type':'date','class': 'dtpicker','required': "True"
                                      }
             )
         }

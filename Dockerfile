@@ -4,7 +4,11 @@ FROM python:3.10-slim
 # Install MySQL development libraries
 # Install system dependencies and ODBC driver for SQL Server
 RUN sudo -s
+RUN yum -y upgrade
+RUN yum -y install wget
 RUN curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/mssql-release.repo
+RUN yum install wkhtmltopdf
+RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox-0.12.6-1.centos7.x86_64.rpm
 RUN yum remove unixODBC-utf16 unixODBC-utf16-devel #to avoid conflicts
 RUN ACCEPT_EULA=Y yum install -y msodbcsql18
 # optional: for bcp and sqlcmd
@@ -13,6 +17,11 @@ RUN echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc
 RUN source ~/.bashrc
 # optional: for unixODBC development headers
 RUN yum install -y unixODBC-devel
+RUN yum localinstall wkhtmltox-0.12.6-1.centos7.x86_64.rpm
+RUN python manage.py collectstatic --noinput
+ENV WKHTMLTOPDF_PATH=/usr/local/bin/wkhtmltopdf
+ENV WKHTMLTOPDF_CMD=/usr/local/bin/wkhtmltopdf
+ENV PATH="/usr/local/bin/wkhtmltox/bin:${PATH}"
     
 EXPOSE 8000
 

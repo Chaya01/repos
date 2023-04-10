@@ -842,7 +842,8 @@ class crear_asignacion(CreateView):
         }
         # Send email
         subject = f'Nuevo dispositivo asignado a {asignacion.usuario.nombre} {asignacion.usuario.apellido}'
-        to = ['kevinaroca@curimapu.com','franciscovillalobos@curimapu.com','pedroalarcon@curimapu.com','benjaminramos@curimapu.com']
+        to = ['kevinaroca@curimapu.com','franciscovillalobos@curimapu.com',
+              'pedroalarcon@curimapu.com','benjaminramos@curimapu.com','yeniverodriguez@curimapu.com','analuisarodriguez@curimapu.com']
         #to = ['kevinaroca@curimapu.com']
         from_email = 'documentos@curimapu.com'
         context = {'asignacion': asignacion}
@@ -864,7 +865,9 @@ def send_asignacion_no_vigente_notification(asignacion):
     Sends an email notification to the configured recipients when an Asignacion object is marked as 'no vigente'.
     """
     subject = f'Recepcion de equipos de {asignacion.usuario}'
-    to = ['kevinaroca@curimapu.com','franciscovillalobos@curimapu.com','pedroalarcon@curimapu.com','benjaminramos@curimapu.com']
+    to = ['kevinaroca@curimapu.com','franciscovillalobos@curimapu.com',
+            'pedroalarcon@curimapu.com','benjaminramos@curimapu.com','yeniverodriguez@curimapu.com','analuisarodriguez@curimapu.com']
+    #to = ['kevinaroca@curimapu.com']
     from_email = 'documentos@curimapu.com'
     context = {'asignacion': asignacion}
     message = render_to_string('dashboard/crud/asignacion_no_vigente.html', context)
@@ -1028,7 +1031,7 @@ class borrar_mantencion(DeleteView):
     template_name = 'dashboard/crud/delete.html'
     success_url = reverse_lazy('dashboard:panel_mantencion')
 
-def cargar_excel(request):
+def cargar_excel(request): #Modelo Usuarios
     if request.method == 'POST':
         archivo_excel = request.FILES['archivo_excel']
         libro_excel = openpyxl.load_workbook(archivo_excel)

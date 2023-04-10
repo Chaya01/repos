@@ -7,44 +7,61 @@
 {% block side %}
 {% endblock %}
 <p>{{ dashboard.name }}</p>
-
-<div class="container">
-  <div class="row">
-    <div class="col-md-3">
-      <img src="data:image/png;base64,{{ logo }}" alt="Curimapu" width="250px" height="40px">
-    </div>
-    <div class="col-md-9">
-    <h1 class="mb-3">Correo de prueba de Equipos Curimapu</h1>
       <h1 class="mb-3">Detalle de la asignación de dispositivos</h1>
-      <table class="table table-bordered">
+      <table>
         <tr>
           <th>Usuario</th>
           <td>{{ asignacion.usuario }}</td>
         </tr>
         <tr>
-          <th>Notebook</th>
-          <td>{{ asignacion.notebook_a }}</td>
+          <th>Equipo</th>
+          <th>Serie</th>
+          <th>Modelo</th>
+          <th>Marca</th>
+          <th>Observacion</th>
         </tr>
+        {% if asignacion.notebook_a %}
         <tr>
-          <th>Tablet</th>
-          <td>{{ asignacion.tablet_a }}</td>
+          <td>Notebook</td>
+          <td>{{ asignacion.notebook_a.serie_notebook }}</td>
+          <td>{{ asignacion.notebook_a.modelo_notebook.m_modelo }}</td>
+          <td>{{ asignacion.notebook_a.modelo_notebook.m_marca.marca }}</td>
+          <td>{{ asignacion.notebook_a.observaciones_notebook }}</td>
         </tr>
+        {% endif %}
+        {% if asignacion.tablet_a %}
         <tr>
-          <th>Smartphone</th>
-          <td>{{ asignacion.smartphone_a }}</td>
+          <td>Tablet</td>
+          <td>{{ asignacion.tablet_a.serie_tablet }}</td>
+          <td>{{ asignacion.tablet_a.modelo_tablet.m_modelo }}</td>
+          <td>{{ asignacion.tablet_a.modelo_tablet.m_marca.marca }}</td>
         </tr>
+        {% endif %}
+        {% if asignacion.smartphone_a %}
         <tr>
-          <th>Camionetas</th>
-          <td>{{ asignacion.camionetas_a }}</td>
+          <td>Smartphone</td>
+          <td>{{ asignacion.smartphone_a.serie_smartphone}}</td> <!-- Prueba 1-->
+          <td>{{ asignacion.smartphone_a.modelo_smartphone.m_modelo }}</td>
+          <td>{{ asignacion.smartphone_a.modelo_smartphone.m_marca.marca }}</td>
         </tr>
+        {% endif %}
+        {% if asignacion.camioneta_a %}
         <tr>
-            <th>Telefono</th>
-            <td>{{ asignacion.num }}</td>
-          </tr>
+          <td>Camioneta</td>
+          <td>{{ asignacion.camionetas_a.patente }}</td>
+          <td>{{ asignacion.camionetas_a.modelo_camioneta.m_modelo }}</td>
+          <td>{{ asignacion.camionetas_a.modelo_camioneta.m_marca.marca }}</td>
+        </tr>
+        {% endif %}
+        {% if asignacion.num %}
+        <tr>
+          <th>Telefono</th>
+          <td>{{ asignacion.num }}</td>
+        </tr>
+          {% endif %}
       </table>
-    </div>
-  </div>
-</div>
+
+<!--
   <div class="row">
     <div class="col-md-3" style="font-family: monospace; white-space: pre-wrap;">
 
@@ -110,5 +127,5 @@
 
 </div>
 </div>
-
+-->
 {% endblock %}
