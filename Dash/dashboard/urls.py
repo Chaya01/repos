@@ -4,6 +4,8 @@ from django.urls import path
 from dashboard import views
 from django.urls import re_path
 from .views import *
+from django.urls import include, path
+
 
 app_name = 'dashboard'
 
@@ -34,6 +36,7 @@ urlpatterns = [
     path('mantencion/<int:pk>', views.listado_mantenciones.as_view(), name = 'mantenciones'),
     path('usuarios/<int:pk>', views.reporte.as_view(), name = 'reporte'),
     path('reporte/<int:pk>/imprimir/', imprimir_reporte, name='imprimir_reporte'),
+
 
 
 
@@ -106,7 +109,6 @@ urlpatterns = [
     path('mantencion/delete/<str:pk>', borrar_mantencion.as_view(), name = 'deletmante'),
 
     path('cargar_excel/', cargar_excel, name='cargar_excel'),
-
     ### Series ###
 #    path('series/<str:pk>', detalle_serie.as_view(), name='seriedetail'),
 #    path('series/form/', crear_serie.as_view(), name='newserie'),

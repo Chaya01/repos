@@ -6,6 +6,7 @@ from django.db.models import Q
 from .listados import *
 
 
+
 class EstadosForm(forms.ModelForm):
     class Meta:
         model = Estados
@@ -152,6 +153,7 @@ class AsignacionForm(forms.ModelForm):
             'fecha_cm' : forms.DateTimeInput(
             format='%Y-%m-%d',attrs={'type':'date','class': 'dtpicker'}
             ),
+
         }    
 
 class ProcesadorForm(forms.ModelForm):

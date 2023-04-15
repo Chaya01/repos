@@ -822,7 +822,17 @@ class crear_asignacion(CreateView):
                 & Q(disponible=True)
         )
         form.fields['camionetas_a'].queryset = camioneta
+
+        # Excluir Numero
+        numero = form.fields['num'].queryset.filter(
+            (Q(asignacion__num__isnull=True)
+              | Q(asignacion__num__isnull=False,
+                   asignacion__vigente=False))
+                & Q(activo=True)
+        )
+        form.fields['num'].queryset = numero
         return form
+
 
     def form_valid(self, form):
         response = super().form_valid(form)

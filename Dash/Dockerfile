@@ -10,6 +10,9 @@ RUN apt-get update && \
     curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
     apt-get update && \
     ACCEPT_EULA=Y apt-get install -y msodbcsql17 && \
+    apt-get install -y wkhtmltopdf && \
+    apt-get install -y qtcreator qtbase5-dev qt5-qmake cmake && \
+    strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
     
@@ -28,6 +31,7 @@ COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
 
 WORKDIR /app
+RUN mkdir -p /app/staticfiles
 COPY . /app
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder

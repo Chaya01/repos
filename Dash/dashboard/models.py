@@ -15,6 +15,8 @@ class Procesador(models.Model):
             self.marca_procesador,
             self.modelo_p,
         )
+    class Meta: 
+        ordering = ['marca_procesador']
 
 class Estados(models.Model):
     e_equipos = models.BooleanField(default=False)
@@ -58,16 +60,19 @@ class ParamTipo(models.Model):
 
 class Modelos(models.Model):
     
-    m_marca = models.ForeignKey(Marca,on_delete=models.CASCADE)
-    m_param = models.ForeignKey(ParamTipo,on_delete=models.CASCADE)
-    m_modelo = models.CharField(max_length=50,unique=True)
-    m_procesador = models.ForeignKey(Procesador,default="01",on_delete=models.SET_DEFAULT,help_text="Por favor marcar 'No aplica' para las camionetas")
+    m_marca = models.ForeignKey(Marca,on_delete=models.CASCADE,verbose_name='Marca')
+    m_param = models.ForeignKey(ParamTipo,on_delete=models.CASCADE,verbose_name='Tipo')
+    m_modelo = models.CharField(max_length=50,unique=True,verbose_name='Modelo')
+    m_procesador = models.ForeignKey(Procesador,default="01",on_delete=models.SET_DEFAULT,help_text="Por favor marcar 'No aplica' para las camionetas"
+                                     ,verbose_name='Procesador')
 
     def __str__(self):
         return str(u"{} - {}").format(
             self.m_marca,
             self.m_modelo,  
         )
+    class Meta: 
+        ordering = ['m_marca']
 
 ####
 class Smartphones(models.Model):
@@ -87,6 +92,8 @@ class Smartphones(models.Model):
             self.modelo_smartphone,
             self.serie_smartphone,
         )
+    class Meta: 
+        ordering = ['modelo_smartphone']
     
 class Tablets(models.Model): #crear views, forms and urls
     serie_tablet = models.CharField(unique=True,max_length=20)
@@ -103,6 +110,8 @@ class Tablets(models.Model): #crear views, forms and urls
             self.modelo_tablet,
             self.serie_tablet,
         )
+    class Meta: 
+        ordering = ['modelo_tablet']
     
 class Notebooks(models.Model):
     serie_notebook = models.CharField(unique=True,max_length=20)
@@ -121,6 +130,8 @@ class Notebooks(models.Model):
             self.modelo_notebook,
             self.serie_notebook,
         )
+    class Meta: 
+        ordering = ['modelo_notebook']
     
 class Camionetas(models.Model):
     patente = models.CharField(max_length=20,unique=True)
@@ -139,12 +150,14 @@ class Camionetas(models.Model):
             self.patente,
             self.modelo_camioneta,
         )
+    class Meta: 
+        ordering = ['patente']
 
 class  Usuarios(models.Model): #Editar Views and Forms.
     rut = models.CharField(max_length=10, null=False, blank=False, unique=True)
     nombre = models.CharField(max_length=30, null=False)
     apellido = models.CharField(max_length=20, null=False)
-    correo = models.EmailField(max_length=50,null=True)
+    correo = models.EmailField(max_length=50,null=True, blank=True)
     empresa = models.CharField(max_length=20)
     gerente = models.CharField(max_length=20)
     centro_de_costo = models.CharField(choices=listado_centrosdecostos, max_length=30, verbose_name='Centro de Costo')
@@ -161,7 +174,8 @@ class  Usuarios(models.Model): #Editar Views and Forms.
         )
     
     class Meta:
-        verbose_name = "Trabajadores"
+        verbose_name = "Trabajadores" 
+        ordering = ['nombre']
     
 #Datos Redundantes por la tabla Asignacion #
 ''' numero_asignado = models.ForeignKey(Num_telefono,on_delete=models.SET_NULL, null=True) #revisar

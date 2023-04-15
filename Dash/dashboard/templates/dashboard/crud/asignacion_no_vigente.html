@@ -8,13 +8,35 @@
 {% endblock %}
 <p>{{ dashboard.name }}</p>
 
+<head>
+  <style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+  </style>
+  </head>
       <h1 class="mb-3">Se reciben los siguientes equipos de {{ asignacion.usuario }}</h1>
       <table>
         <tr>
-          <th>Usuario</th>
+          <th>Usuario</th>          
           <td>{{ asignacion.usuario }}</td>
+          {% if asignacion.num %}
+          <th>Telefono</th>
+          <td>{{ asignacion.num }}</td>        
+            {% endif %}
         </tr>
-        <tr>
           <th>Equipo</th>
           <th>Serie</th>
           <th>Modelo</th>
@@ -53,12 +75,6 @@
           <td>{{ asignacion.camionetas_a.modelo_camioneta.m_marca.marca }}</td>
         </tr>
         {% endif %}
-        {% if asignacion.num %}
-        <tr>
-          <th>Telefono</th>
-          <td>{{ asignacion.num }}</td>
-        </tr>
-          {% endif %}
       </table>
 
 {% endblock %}
