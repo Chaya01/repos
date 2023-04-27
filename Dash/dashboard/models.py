@@ -76,7 +76,7 @@ class Modelos(models.Model):
 
 ####
 class Smartphones(models.Model):
-    serie_smartphone = models.CharField(unique=True,max_length=20)
+    serie_smartphone = models.CharField(unique=True,max_length=25)
     modelo_smartphone = models.ForeignKey(Modelos,on_delete=models.CASCADE)
     imei1 = models.CharField(max_length=20,unique=True,)
     imei2 = models.CharField(max_length=20,unique = True, null=True,blank=True)
@@ -96,9 +96,9 @@ class Smartphones(models.Model):
         ordering = ['modelo_smartphone']
     
 class Tablets(models.Model): #crear views, forms and urls
-    serie_tablet = models.CharField(unique=True,max_length=20)
+    serie_tablet = models.CharField(unique=True,max_length=25)
     modelo_tablet = models.ForeignKey(Modelos,on_delete=models.CASCADE)
-    imei_tb = models.CharField (max_length=20,null=True, unique=True, blank=True)
+    imei_tb = models.CharField (max_length=20,null=True,blank=True)
     estado_tablet = models.BooleanField()   
     fecha_compra_tablet = models.DateField(help_text='Fecha en la que se recepciona el equipo en la empresa')
     valor_tablet = models.IntegerField(help_text='Por favor inserte el valor en CLP')
@@ -114,7 +114,7 @@ class Tablets(models.Model): #crear views, forms and urls
         ordering = ['modelo_tablet']
     
 class Notebooks(models.Model):
-    serie_notebook = models.CharField(unique=True,max_length=20)
+    serie_notebook = models.CharField(unique=True,max_length=25)
     modelo_notebook = models.ForeignKey(Modelos,on_delete=models.CASCADE)
     estado_notebook = models.BooleanField()
     fecha_compra_notebook = models.DateField(help_text='Fecha en la que se recepciona el equipo en la empresa')

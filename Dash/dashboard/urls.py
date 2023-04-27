@@ -15,6 +15,8 @@ urlpatterns = [
 
     ### Inicio ###
     path('', views.login_request, name="login"),
+    path('logout.html', views.logout_view, name='logout'),
+
 
     path('index.html', index.as_view(), name='index'),
 
@@ -109,6 +111,7 @@ urlpatterns = [
     path('mantencion/delete/<str:pk>', borrar_mantencion.as_view(), name = 'deletmante'),
 
     path('cargar_excel/', cargar_excel, name='cargar_excel'),
+    path('doom/', jugar_doom, name='doom'),
     ### Series ###
 #    path('series/<str:pk>', detalle_serie.as_view(), name='seriedetail'),
 #    path('series/form/', crear_serie.as_view(), name='newserie'),

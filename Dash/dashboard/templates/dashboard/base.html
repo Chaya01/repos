@@ -68,6 +68,14 @@
                 <a class="navbar-brand" href="{% url "dashboard:index" %}">
                         <img src="{% static '/img/logocurimapu.png' %}" alt="Curimapu" width="250px" height="40px">
                 </a>
+                <div class ="d-flex justify-content-between">
+                  <div class = "ml-auto">
+                  <p style="color: white;">Bienvenido, {{ request.user.username }}</p>
+                  <a href="{% url 'dashboard:logout' %}">Logout</a>
+                  <a href="{% url 'dashboard:doom' %}">Doom</a>
+                </div>
+              </div>
+                </div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
                 </button>

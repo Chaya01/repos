@@ -12,6 +12,11 @@
   <div class="card-body">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h5 class="mb-0">Listado de tablets</h5>
+      {% with request.GET.show_available as show_available %}
+  <a href="?show_available={% if show_available == 'true' %}false{% else %}true{% endif %}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}" class="btn btn-secondary">
+    {% if show_available == 'true' %}Mostrar todos los dispositivos{% else %}Mostrar dispositivos disponibles{% endif %}
+  </a>
+{% endwith %}
       <form method="GET" class="search-form">
         <input type="text" name="query" value="{{ search_form.value }}" placeholder="Buscar...">
         <button type="submit">Search</button>

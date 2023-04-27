@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-1=2s2c@51ia2u+8%clssv=k3-aku*l!2ffbm*=fo915hs*76ml
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.4.3','127.0.0.1','localhost','0.0.0.0:8000']
+ALLOWED_HOSTS = ['192.168.4.174','127.0.0.1','localhost','0.0.0.0:8000']
 
 
 # Application definition
@@ -49,6 +49,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -75,9 +76,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Dash.wsgi.application'
-
-LOGIN_URL = '/login.html'
-LOGIN_REDIRECT_URL = '/dashboard/'
 
 
 # Database
@@ -153,3 +151,13 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "documentos@movil.curimapu.com"
 EMAIL_HOST_PASSWORD = "cur.2008"
+
+#### Logout settings ###
+
+SESSION_EXPIRE_SECONDS = 1800
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True # contar desde la ultima actividad
+SESSION_TIMEOUT_REDIRECT = '/dashboard' 
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True 
+
+
+

@@ -58,6 +58,7 @@
           <td>{{ asignacion.tablet_a.serie_tablet }}</td>
           <td>{{ asignacion.tablet_a.modelo_tablet.m_modelo }}</td>
           <td>{{ asignacion.tablet_a.modelo_tablet.m_marca.marca }}</td>
+          <td>{{ asignacion.tablet_a.observaciones_tablets }}</td>
         </tr>
         {% endif %}
         {% if asignacion.smartphone_a %}
@@ -66,6 +67,7 @@
           <td>{{ asignacion.smartphone_a.serie_smartphone}}</td> <!-- Prueba 1-->
           <td>{{ asignacion.smartphone_a.modelo_smartphone.m_modelo }}</td>
           <td>{{ asignacion.smartphone_a.modelo_smartphone.m_marca.marca }}</td>
+          <td>{{ asignacion.smartphone_a.observaciones_telefonos }}</td>
         </tr>
         {% endif %}
         {% if asignacion.camioneta_a %}
@@ -74,6 +76,7 @@
           <td>{{ asignacion.camionetas_a.patente }}</td>
           <td>{{ asignacion.camionetas_a.modelo_camioneta.m_modelo }}</td>
           <td>{{ asignacion.camionetas_a.modelo_camioneta.m_marca.marca }}</td>
+          <td>{{ asignacion.camionetas_a.observaciones_camionetas }}</td>
         </tr>
         {% endif %}
       </table>

@@ -27,7 +27,7 @@ import openpyxl
 from django.core.mail import send_mail
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-
+from datetime import date, datetime, timedelta
 
 
 #@login_required
@@ -66,6 +66,10 @@ def login_request(request):
             template_name="dashboard/login.html",
             context={"login_form":form})
 
+def logout_view(request):
+    logout(request)
+    return redirect('/dashboard') # replace 'login' with the URL name of your login page
+
 @method_decorator(login_required, name='dispatch' )
 class index(ListView):  
     context_object_name = 'index'
@@ -74,7 +78,7 @@ class index(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(index, self).get_context_data(**kwargs)
-        context['Usuarios'] = Usuarios.objects.all()
+
         ### Contadores de Smartphones ###
         context['total_smartphones'] = Smartphones.objects.count()
         context['assigned_smartphones'] = Asignacion.objects.filter(smartphone_a__estado_telefono=True, vigente=True).count()
@@ -96,6 +100,8 @@ class index(ListView):
         context['unusable_camionetas'] = Camionetas.objects.filter(disponible=False).count()
         context['available_camionetas'] = context['total_camionetas'] - context['assigned_camionetas'] - context['unusable_camionetas']
 
+        threshold_date = date.today() - timedelta(days=365)
+        context['notebooks_for_maintenance'] = Notebooks.objects.filter(mantencion_notebook__lte=threshold_date)
         return context
         #return super().get_context_data(**kwargs)
 
@@ -105,7 +111,7 @@ class index(ListView):
 class panel_usuarios(ListView):
     context_object_name = 'panel_usuarios'
     template_name = 'dashboard/panel_usuarios.html'
-    paginate_by = 20
+    paginate_by = 50
     search_form = SearchForm
 
     def get_queryset(self):
@@ -131,7 +137,7 @@ class panel_usuarios(ListView):
 class panel_telefonos(ListView):
     context_object_name = 'panel_telefonos'
     template_name = 'dashboard/panel_telefonos.html'
-    paginate_by = 20
+    paginate_by = 50
     search_form = SearchForm
     
     def get_queryset(self):
@@ -153,11 +159,20 @@ class panel_telefonos(ListView):
 class panel_smartphones(ListView):
     context_object_name = 'panel_smartphones'
     template_name = 'dashboard/panel_smartphones.html'
-    paginate_by = 20
+    paginate_by = 50
     search_form = SearchForm
 
     def get_queryset(self):
+        show_available = self.request.GET.get('show_available')
         queryset = Smartphones.objects.order_by('serie_smartphone')
+        
+        if show_available == 'true':
+            available_devices = Asignacion.objects.filter(vigente=False).values_list('smartphone_a_id', flat=True)
+            queryset = queryset.filter(
+                Q(id__in=available_devices) |
+                Q(asignacion__isnull=True)
+            )
+
         query = self.request.GET.get('query')
         if query:
             queryset = queryset.filter(
@@ -170,21 +185,31 @@ class panel_smartphones(ListView):
                 Q(estado_telefono__icontains=query)  
             )
         return queryset
-    
+
     def get_context_data(self, **kwargs):
         context = super(panel_smartphones, self).get_context_data(**kwargs)
         context['search_form'] = self.search_form(self.request.GET or None)
+
         return context
     
 @method_decorator(login_required, name='dispatch' )
 class panel_tablets(ListView):
     context_object_name = 'panel_tablets'
     template_name = 'dashboard/panel_tablets.html'
-    paginate_by = 20
+    paginate_by = 50
     search_form = SearchForm
 
     def get_queryset(self):
+        show_available = self.request.GET.get('show_available')
         queryset = Tablets.objects.order_by('serie_tablet')
+
+        if show_available == 'true':
+            available_devices = Asignacion.objects.filter(vigente=False).values_list('tablet_a_id', flat=True)
+            queryset = queryset.filter(
+                Q(id__in=available_devices) |
+                Q(asignacion__isnull=True)
+            )
+
         query = self.request.GET.get('query')
         if query:
             queryset = queryset.filter(
@@ -195,21 +220,31 @@ class panel_tablets(ListView):
                 Q(estado_tablet__icontains=query)  
             )
         return queryset
-    
+
     def get_context_data(self, **kwargs):
         context = super(panel_tablets, self).get_context_data(**kwargs)
         context['search_form'] = self.search_form(self.request.GET or None)
         return context
 
+
 @method_decorator(login_required, name='dispatch' )
 class panel_notebooks(ListView):
     context_object_name = 'panel_notebooks'
     template_name = 'dashboard/panel_notebooks.html'
-    paginate_by = 20
+    paginate_by = 50
     search_form = SearchForm
 
     def get_queryset(self):
+        show_available = self.request.GET.get('show_available')
         queryset = Notebooks.objects.order_by('serie_notebook')
+
+        if show_available == 'true':
+            available_devices = Asignacion.objects.filter(vigente=False).values_list('notebook_a_id', flat=True)
+            queryset = queryset.filter(
+                Q(id__in=available_devices) |
+                Q(asignacion__isnull=True)
+            )
+
         query = self.request.GET.get('query')
         if query:
             queryset = queryset.filter(
@@ -219,24 +254,33 @@ class panel_notebooks(ListView):
                 Q(modelo_notebook__m_procesador__modelo_p__icontains=query)  |
                 Q(nram__icontains=query)  |
                 Q(estado_notebook__icontains=query)
-
             )
         return queryset
-    
+
     def get_context_data(self, **kwargs):
         context = super(panel_notebooks, self).get_context_data(**kwargs)
         context['search_form'] = self.search_form(self.request.GET or None)
         return context
 
+
 @method_decorator(login_required, name='dispatch' )    
 class panel_camionetas(ListView):
     context_object_name = 'panel_camionetas'
     template_name = 'dashboard/panel_camionetas.html'
-    paginate_by = 20
+    paginate_by = 50
     search_form = SearchForm
 
     def get_queryset(self):
+        show_available = self.request.GET.get('show_available')
         queryset = Camionetas.objects.order_by('patente')
+
+        if show_available == 'true':
+            available_devices = Asignacion.objects.filter(vigente=False).values_list('camionetas_a_id', flat=True)
+            queryset = queryset.filter(
+                Q(id__in=available_devices) |
+                Q(asignacion__isnull=True)
+            )
+
         query = self.request.GET.get('query')
         if query:
             queryset = queryset.filter(
@@ -253,7 +297,7 @@ class panel_camionetas(ListView):
         context = super(panel_camionetas, self).get_context_data(**kwargs)
         context['search_form'] = self.search_form(self.request.GET or None)
         return context
-    
+
     """"
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -296,9 +340,14 @@ class panel_asignacion(ListView):
     def get_queryset(self):
         queryset = Asignacion.objects.order_by('usuario')
         query = self.request.GET.get('query')
+
+        show_vigente = self.request.GET.get('show_vigente', 'true').lower() == 'true'
+        queryset = queryset.filter(vigente=show_vigente)
+
         if query:
             queryset = queryset.filter(
-                Q(usuario__nombre__icontains=query) |
+                Q(usuario__nombre__icontains=query) | #concatenar
+                Q(usuario__apellido__icontains=query) | # concatenar
                 Q(num__numero_tel__icontains=query) |
                 Q(smartphone_a__modelo_smartphone__m_modelo__icontains=query) |
                 Q(smartphone_a__modelo_smartphone__m_marca__marca__icontains=query) |
@@ -318,6 +367,7 @@ class panel_asignacion(ListView):
         vigente_display_list = [get_vigente_display(asignacion) for asignacion in context['panel_asignacion']]
         context['vigente_display_list'] = vigente_display_list
         context['search_form'] = self.search_form(self.request.GET or None)
+        context['show_vigente'] = self.request.GET.get('show_vigente', 'true').lower() == 'true'
         return context
     
     # Define a lambda function to get the display value of 'vigente'
@@ -527,7 +577,7 @@ class crear_usuario(CreateView):
     #fields = ['rut','nombre','apellido','area','correo','telefono']
     template_name = 'dashboard/crud/form.html'
     success_url = reverse_lazy('dashboard:panel_usuarios')
-
+    """
     #validamos que el formulario sea valido
     def form_valid(self, form):
         rut = form.cleaned_data['rut']
@@ -547,7 +597,7 @@ class crear_usuario(CreateView):
             form.add_error('apellido','el apellido solo debe contener caracteres alfanumericos')
             return self.form_invalid(form)
         return super(crear_usuario, self).form_valid(form)
-    
+    """
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['model_verbose_name'] = self.model._meta.verbose_name.title()
@@ -833,7 +883,7 @@ class crear_asignacion(CreateView):
         form.fields['num'].queryset = numero
         return form
 
-
+    """
     def form_valid(self, form):
         response = super().form_valid(form)
         asignacion = form.save(commit=False)
@@ -863,17 +913,17 @@ class crear_asignacion(CreateView):
         email.send()
 
         return response
-    
+    """
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['model_verbose_name'] = self.model._meta.verbose_name.title()
         return context
         
-
+    """
 def send_asignacion_no_vigente_notification(asignacion):
-    """
-    Sends an email notification to the configured recipients when an Asignacion object is marked as 'no vigente'.
-    """
+
+    #Sends an email notification to the configured recipients when an Asignacion object is marked as 'no vigente'.
+
     subject = f'Recepcion de equipos de {asignacion.usuario}'
     to = ['kevinaroca@curimapu.com','franciscovillalobos@curimapu.com',
             'pedroalarcon@curimapu.com','benjaminramos@curimapu.com','yeniverodriguez@curimapu.com','analuisarodriguez@curimapu.com']
@@ -884,14 +934,48 @@ def send_asignacion_no_vigente_notification(asignacion):
     email = EmailMessage(subject, message, to=to, from_email=from_email)
     email.content_subtype = 'html'
     email.send()
-
+    """
 @method_decorator(login_required, name='dispatch' )    
 class actualizar_asignacion(UpdateView):
     model = Asignacion
     template_name = 'dashboard/crud/update.html'    
     success_url = reverse_lazy('dashboard:panel_asignacion')
     form_class = AsignacionForm
-        
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        usuario = self.object.usuario
+
+        assigned_to_current_user = Q(asignacion__usuario=usuario, asignacion__vigente=True)
+        available_devices = Q(asignacion__isnull=True) | assigned_to_current_user
+        valid_devices = Q(estado_telefono=True)
+
+        # Smartphones
+        smartphones = form.fields['smartphone_a'].queryset.filter(available_devices & valid_devices)
+        form.fields['smartphone_a'].queryset = smartphones
+
+        # Tablets
+        valid_tablets = Q(estado_tablet=True)
+        tablets = form.fields['tablet_a'].queryset.filter(available_devices & valid_tablets)
+        form.fields['tablet_a'].queryset = tablets
+
+        # Notebooks
+        valid_notebooks = Q(estado_notebook=True)
+        notebooks = form.fields['notebook_a'].queryset.filter(available_devices & valid_notebooks)
+        form.fields['notebook_a'].queryset = notebooks
+
+        # Camionetas
+        valid_camionetas = Q(disponible=True)
+        camionetas = form.fields['camionetas_a'].queryset.filter(available_devices & valid_camionetas)
+        form.fields['camionetas_a'].queryset = camionetas
+
+        # Numero
+        valid_numero = Q(activo=True)
+        numero = form.fields['num'].queryset.filter(available_devices & valid_numero)
+        form.fields['num'].queryset = numero
+
+        return form
+    """
     def form_valid(self, form):
         response = super().form_valid(form)
         asignacion = form.save(commit=False)
@@ -901,7 +985,7 @@ class actualizar_asignacion(UpdateView):
             send_asignacion_no_vigente_notification(asignacion)
 
         return response
-
+    """
 @method_decorator(login_required, name='dispatch' )
 class detalle_asignacion(DetailView):
     model = Asignacion
@@ -1041,28 +1125,34 @@ class borrar_mantencion(DeleteView):
     template_name = 'dashboard/crud/delete.html'
     success_url = reverse_lazy('dashboard:panel_mantencion')
 
-def cargar_excel(request): #Modelo Usuarios
+def cargar_excel(request):
     if request.method == 'POST':
-        archivo_excel = request.FILES['archivo_excel']
-        libro_excel = openpyxl.load_workbook(archivo_excel)
-        hoja_excel = libro_excel.active
+        archivo_numeros = request.FILES['archivo_excel']
+        libro_numeros = openpyxl.load_workbook(archivo_numeros)
+        hoja_numeros = libro_numeros.active
 
-        for fila in hoja_excel.iter_rows(min_row=2, values_only=True):
-            rut, nombre, apellido, correo, empresa, gerente, centro_de_costo, *_ = fila
-            usuario = Usuarios(
-                rut=rut,
-                nombre=nombre,
-                apellido=apellido,
-                correo=correo,
-                empresa=empresa,
-                gerente=gerente,
-                centro_de_costo=centro_de_costo
+        for fila in hoja_numeros.iter_rows(min_row=2, values_only=True):
+            rut, numero, activo, vigente, *_ = fila
+            usuario = Usuarios.objects.get(rut=rut)
+            telefono = Num_telefono(
+                numero_tel=numero,
+                activo=activo
             )
-            usuario.save()
+            telefono.save()
+
+            asignacion = Asignacion(
+                usuario=usuario,
+                num=telefono,
+                vigente=vigente
+            )
+            asignacion.save()
 
         return render(request, 'dashboard/crud/excel_cargado.html')
 
-    return render(request, 'dashboard/crud/cargar_excel.html')
+    return render(request, 'dashboard/crud/cargar_numeros.html')
+
+def jugar_doom(request):
+    return render(request,'dashboard/doom.html')    
 
 ##### Crud Series #####
 

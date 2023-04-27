@@ -10,6 +10,7 @@
   <div class="card-body">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h5 class="mb-0">Asignaciones de equipos</h5>
+      <a href="?show_vigente={% if show_vigente %}false{% else %}true{% endif %}" class="btn btn-secondary">{% if show_vigente %}Mostrar no Vigentes{% else %}Mostrar Vigentes{% endif %}</a>
       <form method="GET" class="search-form">
         <input type="text" name="query" value="{{ search_form.value }}" placeholder="Buscar...">
         <button type="submit">Search</button>

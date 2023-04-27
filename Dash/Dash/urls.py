@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, re_path, path
+from django.shortcuts import redirect
 #from dashboard.views import mi_vista
 
 appname ='dashboard'
 
 urlpatterns = [
+    path('', lambda request: redirect('dashboard/', permanent=False)),
     path('admin/', admin.site.urls),
     path('dashboard/', include('dashboard.urls')),
 
