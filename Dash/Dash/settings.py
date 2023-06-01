@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,24 +26,30 @@ SECRET_KEY = 'django-insecure-1=2s2c@51ia2u+8%clssv=k3-aku*l!2ffbm*=fo915hs*76ml
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.4.3','127.0.0.1','localhost','0.0.0.0:8000']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'dashboard.apps.DashboardConfig',
+    'crispy_forms',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_bootstrap5',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -75,10 +82,18 @@ WSGI_APPLICATION = 'Dash.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": {
+        "ENGINE": "mssql",
+        "NAME": "AdminEquipos",
+        "USER": "sa",
+        "PASSWORD": "Master.,",
+        "HOST": "192.168.4.6",
+        "PORT": "1433",
+        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server",
+            "MARS_Connection": True,
+            "extra_params": "TrustServerCertificate=yes;Connection Timeout=30;",
+        },
+    },
 }
 
 
@@ -104,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-es' #es-es cambiar#
 
 TIME_ZONE = 'America/Santiago'
 
@@ -118,7 +133,31 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    'static/',
+]
+STATIC_ROOT = 'staticroot/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+### Email Settings ###
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mail.movil.curimapu.com'
+EMAIL_USE_TLS = True    
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "documentos@movil.curimapu.com"
+EMAIL_HOST_PASSWORD = "cur.2008"
+
+#### Logout settings ###
+
+SESSION_EXPIRE_SECONDS = 1800
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True # contar desde la ultima actividad
+SESSION_TIMEOUT_REDIRECT = '/dashboard' 
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True 
+
+
+

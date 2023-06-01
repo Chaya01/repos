@@ -1,0 +1,114 @@
+{% extends "dashboard/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block nav %}
+    <!-- Custom navigation menu goes here -->
+{% endblock %}
+{% block content %}
+<p>{{ dashboard.name }}</p>
+<div class="card text-dark bg-light mb-3">
+  <div class="card-body">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Asignaciones de equipos</h5>
+      <a href="?show_vigente={% if show_vigente %}false{% else %}true{% endif %}" class="btn btn-secondary">{% if show_vigente %}Mostrar no Vigentes{% else %}Mostrar Vigentes{% endif %}</a>
+      <form method="GET" class="search-form">
+        <input type="text" name="query" value="{{ search_form.value }}" placeholder="Buscar...">
+        <button type="submit">Search</button>
+        {% if search_form.value %}
+            <a href="{% url 'dashboard:panel_asignacion' %}" class="btn btn-secondary">Clear</a>
+        {% endif %}
+    </form>
+    </div>
+      <div class="table-responsive" style="max-height: calc(100vh - 270px); overflow-y: auto;">
+        <table class="table table-hover table-bordered">
+            <thead style="background-color: rgb(25, 231, 227);">
+            <tr>
+                <th>Usuario</th>
+                <th>Numero de telefono</th>
+                <th>Smartphone asignado</th>
+                <th>Fecha de entrega</th>
+                <th>Tablet asignada</th>
+                <th>Fecha de entrega</th>
+                <th>Notebook asignada</th>
+                <th>Fecha de entrega</th>
+                <th>Camioneta asignada</th> 
+                <th>Fecha de entrega</th>
+                <th>Registro vigente</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for Asignacion in object_list %}
+            <tr class="table-hover">
+                <td>{{ Asignacion.usuario }}</td>
+                <td>{{ Asignacion.num }}</td>
+                <td>{{ Asignacion.smartphone_a }}</td>
+                <td>{{ Asignacion.fecha_sma }}</td>
+                <td>{{ Asignacion.tablet_a }}</td>
+                <td>{{ Asignacion.fecha_ta }}</td>
+                <td>{{ Asignacion.notebook_a }}</td>
+                <td>{{ Asignacion.fecha_nt }}</td>
+                <td>{{ Asignacion.camionetas_a }}</td>
+                <td>{{ Asignacion.fecha_cm }}</td>
+                <td>
+                  {% if Asignacion.vigente %}
+                      Vigente
+                  {% else %}
+                      No vigente
+                  {% endif %}
+              </td>
+                <td><a href="{% url "dashboard:editasg" Asignacion.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="{% url "dashboard:deletasg" Asignacion.pk %}" class="btn btn-danger btn-sm">Borrar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="card-footer">
+<div class="pagination d-flex justify-content-between">
+  <p>
+    <a href="{% url "dashboard:index" %}" class="btn btn-secondary">Volver al indice</a>
+</p>
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a href="?page=1" class="page-link" aria-label="First">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous">
+          <span aria-hidden="true">&lsaquo;</span>
+        </a>
+      </li>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a href="?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next">
+          <span aria-hidden="true">&rsaquo;</span>
+        </a>
+      </li>
+        <li class="page-item">
+          <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link" aria-label="Last">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      {% endif %}
+  </ul>
+    <p>
+        <button type="button" class="btn btn-primary" onclick="location.href='{% url 'dashboard:newasg' %}'">Registrar</button>
+    </p>
+</div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+version: '3.4'
+
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 192.168.4.3:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=AdminEquipos
+      - POSTGRES_USER=sa
+      - POSTGRES_PASSWORD=Master.,
+  nginx:
+    image: nginx:1.19
+    volumes:
+      - ./nginx.conf:/etc/nginx/dashboard.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - web

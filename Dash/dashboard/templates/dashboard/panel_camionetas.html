@@ -1,0 +1,118 @@
+{% extends "dashboard/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block nav %}
+    <!-- Custom navigation menu goes here -->
+{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+<p>{{ dashboard.name }}</p>
+
+<div class="card text-dark bg-light mb-3">
+  <div class="card-body">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Listado de camionetas</h5>
+      {% with request.GET.show_available as show_available %}
+  <a href="?show_available={% if show_available == 'true' %}false{% else %}true{% endif %}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}" class="btn btn-secondary">
+    {% if show_available == 'true' %}Show All Devices{% else %}Show Available Devices{% endif %}
+  </a>
+{% endwith %}
+
+      <form method="GET" class="search-form">
+        <input type="text" name="query" value="{{ search_form.value }}" placeholder="Buscar...">
+        <button type="submit">Search</button>
+        {% if search_form.value %}
+            <a href="{% url 'dashboard:panel_camionetas' %}" class="btn btn-secondary">Clear</a>
+        {% endif %}
+    </form>
+    </div>
+      <div class="table-responsive" style="max-height: calc(100vh - 270px); overflow-y: auto;">
+        <table class="table table-hover table-bordered">
+            <thead style="background-color: rgb(25, 231, 227);">
+            <tr>
+                <th>Patente</th>
+                <th>Modelo</th>
+                <th>Mantencion</th>
+                <th>Observacion</th>
+                <th>contrato vigente</th>
+                <th>Modalidad</th>
+                <th>VIN</th>
+                <th>Fecha Recepcion</th>
+                <th>Fecha Entrega</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <form id="sort-form" method="get">
+            <input type="hidden" name="page" value="{{ page_obj.number }}" />   
+        </form>
+        <tbody>
+            {% for Camionetas in object_list %}
+            <tr class="table-hover">
+                <td>{{ Camionetas.patente }} </td> 
+                <td>{{ Camionetas.modelo_camioneta }}</td>
+                <td>{{ Camionetas.mantencion }}</td>
+                <td>{{ Camionetas.observaciones_camionetas }}</td>
+                <td>{{ Camionetas.disponible }}</td>
+                <td>{{ Camionetas.modalidad }}</td>
+                <td>{{ Camionetas.vin }}</td>
+                <td>{{ Camionetas.fecha_recepcion }}</td>
+                <td>{{ Camionetas.fecha_entrega}}</td>
+                <td><a href="{% url "dashboard:editcam" Camionetas.pk %}" class="btn btn-warning btn-sm">Editar</a> 
+                    <a href="{% url "dashboard:deletcam" Camionetas.pk %}" class="btn btn-danger btn-sm">Borrar</a>
+                    <a href="{% url "dashboard:mantenciones" pk=Camionetas.pk %}" class="btn btn-success btn-sm">Ver mantenciones</a>
+                </td>          
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="card-footer">
+<div class="pagination d-flex justify-content-between">
+  <p>
+    <a href="{% url "dashboard:index" %}" class="btn btn-secondary">Volver al indice</a>
+</p>
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a href="?page=1" class="page-link" aria-label="First">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous">
+          <span aria-hidden="true">&lsaquo;</span>
+        </a>
+      </li>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a href="?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next">
+          <span aria-hidden="true">&rsaquo;</span>
+        </a>
+      </li>
+        <li class="page-item">
+          <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link" aria-label="Last">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      {% endif %}
+  </ul>
+    <p>
+        <button type="button" class="btn btn-primary" onclick="location.href='{% url 'dashboard:newcam' %}'">Ingresar camioneta</button>
+    </p>
+</div>
+</div>
+</div>
+{% endblock %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js" integrity="sha512-Wy6NBksJmeUCrW8XvAYTlHlRnCxrs6E7k8FvEL1nghs/Ts3s3sS9G11cS1S0VlmZf3uN7Vx4vWTi4RdH/4FpKg

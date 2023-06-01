@@ -1,0 +1,264 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+<!-- Desarrollado por Kevin Aroca -->
+<h2>Resumen de equipos</h2>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card text-dark bg-light mb-3">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Smartphones</h5>
+        </div>
+        <div class="card-body">
+          <canvas id="smartphonesChart" width="400" height="400"></canvas>
+          <div class="card-footer d-flex justify-content-between" >
+            <p class="card-text">Asignados: {{ assigned_smartphones }}</p>
+            <p class="card-text">Disponibles: {{ available_smartphones }}</p>
+            <p class="card-text">No disponibles: {{ unusable_smartphones }}</p>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card text-dark bg-light mb-3">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Notebooks</h5>
+      </div>
+      <div class="card-body">
+        <canvas id="notebookChart" width="400" height="400"></canvas>
+        <div class="card-footer d-flex justify-content-between" >
+            <p class="card-text">Asignados: {{ assigned_notebooks }}</p>
+            <p class="card-text">Disponibles: {{ available_notebooks }}</p>
+            <p class="card-text">No disponibles: {{ unusable_notebooks }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card text-dark bg-light mb-3">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Tablets</h5>
+      </div>
+      <div class="card-body">
+        <canvas id="tabletChart" width="400" height="400"></canvas>
+        <div class="card-footer d-flex justify-content-between" >
+            <p class="card-text">Asignados: {{ assigned_tablets }}</p>
+            <p class="card-text">Disponibles: {{ available_tablets }}</p>
+            <p class="card-text">No disponibles: {{ unusable_tablets }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card text-dark bg-light mb-3">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Camionetas</h5>
+      </div>
+      <div class="card-body">
+        <canvas id="camionetasChart" width="400" height="400"></canvas>
+        <div class="card-footer d-flex justify-content-between" >
+            <p class="card-text">Asignados: {{ assigned_camionetas }}</p>
+            <p class="card-text">Disponibles: {{ available_camionetas }}</p>
+            <p class="card-text">No disponibles: {{ unusable_camionetas }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div>
+    <h2>Notebooks para mantenimiento</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Serie Notebook</th>
+          <th scope="col">Modelo Notebook</th>
+          <th scope="col">Fecha Última Mantención</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for notebook in notebooks_for_maintenance %}
+        <tr>
+          <td>{{ notebook.serie_notebook }} </td> 
+          <td>{{ notebook.modelo_notebook }}</td>
+          <td>{{ notebook.mantencion_notebook }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>    // Grafico de Smartphones
+    var ctx = document.getElementById('smartphonesChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Disponibles', 'Asignados', 'No disponibles'],
+            datasets: [{
+                label: 'Smartphones',
+                data: [{{ available_smartphones }}, {{ assigned_smartphones }}, {{ unusable_smartphones }}],
+                backgroundColor: ['#28a745', '#007bff', '#dc3545'],
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'right',
+                },
+            },
+            cutout: 100,
+        },
+        plugins: [{
+    id: 'text',
+    beforeDraw: function(chart, a, b) {
+      var width = chart.width,
+        height = chart.height,
+        ctx = chart.ctx;
+
+      ctx.restore();
+      var fontSize = (height / 150).toFixed(2);
+      ctx.font = fontSize + "em sans-serif";
+      ctx.textBaseline = "middle";
+
+      var text = {{total_smartphones}},
+        textX = Math.round((width - ctx.measureText(text).width) / 2.85),
+        textY = height / 2;
+
+      ctx.fillText(text, textX, textY);
+      ctx.save();
+    }
+  }]
+    });
+               ////////// Grafico de Notebooks //////////
+    var ctx = document.getElementById('notebookChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Disponibles', 'Asignados', 'No disponibles'],
+            datasets: [{
+                label: 'Notebooks',
+                data: [{{ available_notebooks }}, {{ assigned_notebooks }}, {{ unusable_notebooks }}],
+                backgroundColor: ['#28a745', '#007bff', '#dc3545'],
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'right',
+                },
+            },
+            cutout: 100,
+        },
+        plugins: [{
+    id: 'text',
+    beforeDraw: function(chart, a, b) {
+      var width = chart.width,
+        height = chart.height,
+        ctx = chart.ctx;
+
+      ctx.restore();
+      var fontSize = (height / 150).toFixed(2);
+      ctx.font = fontSize + "em sans-serif";
+      ctx.textBaseline = "middle";
+
+      var text = {{total_notebooks}},
+        textX = Math.round((width - ctx.measureText(text).width) / 2.85),
+        textY = height / 2;
+
+      ctx.fillText(text, textX, textY);
+      ctx.save();
+    }
+  }]
+    });
+                //// Grafico de Tablets ////
+    var ctx = document.getElementById('tabletChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Disponibles', 'Asignados', 'No disponibles'],
+            datasets: [{
+                label: 'Tablets',
+                data: [{{ available_tablets }}, {{ assigned_tablets }}, {{ unusable_tablets }}],
+                backgroundColor: ['#28a745', '#007bff', '#dc3545'],
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'right',
+                },
+            },
+            cutout: 100,
+        },
+        plugins: [{
+    id: 'text',
+    beforeDraw: function(chart, a, b) {
+      var width = chart.width,
+        height = chart.height,
+        ctx = chart.ctx;
+
+      ctx.restore();
+      var fontSize = (height / 150).toFixed(2);
+      ctx.font = fontSize + "em sans-serif";
+      ctx.textBaseline = "middle";
+
+      var text = {{total_tablets}},
+        textX = Math.round((width - ctx.measureText(text).width) / 2.85),
+        textY = height / 2;
+
+      ctx.fillText(text, textX, textY);
+      ctx.save();
+    }
+  }]
+    });
+                    //// Grafico de camionetas ////
+    var ctx = document.getElementById('camionetasChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Disponibles', 'Asignados', 'No disponibles'],
+            datasets: [{
+                label: 'Camionetas',
+                data: [{{ available_camionetas }}, {{ assigned_camionetas }}, {{ unusable_camionetas }}],
+                backgroundColor: ['#28a745', '#007bff', '#dc3545'],
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'right',
+                },
+            },
+            cutout: 100,
+        },
+        plugins: [{
+    id: 'text',
+    beforeDraw: function(chart, a, b) {
+      var width = chart.width,
+        height = chart.height,
+        ctx = chart.ctx;
+
+      ctx.restore();
+      var fontSize = (height / 150).toFixed(2);
+      ctx.font = fontSize + "em sans-serif";
+      ctx.textBaseline = "middle";
+
+      var text = {{total_camionetas}},
+        textX = Math.round((width - ctx.measureText(text).width) / 2.85),
+        textY = height / 2;
+
+      ctx.fillText(text, textX, textY);
+      ctx.save();
+    }
+  }]
+    });
+
+</script>
+{% endblock %}
