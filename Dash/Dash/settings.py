@@ -86,7 +86,7 @@ DATABASES = {
         "ENGINE": "mssql",
         "NAME": "AdminEquipos",
         "USER": "sa",
-        "PASSWORD": "Master.,",
+        "PASSWORD": "",
         "HOST": "192.168.4.6",
         "PORT": "1433",
         "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server",
@@ -145,12 +145,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ### Email Settings ###
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'mail.movil.curimapu.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBacken'
+EMAIL_HOST = ''
 EMAIL_USE_TLS = True    
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "documentos@movil.curimapu.com"
-EMAIL_HOST_PASSWORD = "cur.2008"
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
 
 #### Logout settings ###
 
