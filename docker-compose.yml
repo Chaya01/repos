@@ -16,7 +16,7 @@ services:
     environment:
       - POSTGRES_DB=AdminEquipos
       - POSTGRES_USER=sa
-      - POSTGRES_PASSWORD=Master.,
+      - POSTGRES_PASSWORD=
   nginx:
     image: nginx:1.19
     volumes:
